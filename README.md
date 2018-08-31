@@ -1,2 +1,2 @@
 # six_squids
-@pablo plz add website
+https://github.com/pdr64/six_squids

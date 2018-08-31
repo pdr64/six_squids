@@ -10,13 +10,39 @@
      ECE 3400 - Team 6 - The Good Noodles
      </center>
     </h1>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <div class="navbar">
       <a class="active" href="#"><i class="fa fa-fw fa-home"></i> Home</a>
       <a href="#"><i class="fa fa-fw fa-search"></i> Search</a>
       <a href="#"><i class="fa fa-fw fa-envelope"></i> Contact</a>
       <a href="#"><i class="fa fa-fw fa-user"></i> Login</a>
     </div>
+    <style>
+body {font-family: Arial, Helvetica, sans-serif;}
+.navbar {
+  width: 100%;
+  background-color: #555;
+  overflow: auto;
+}
+.navbar a {
+  float: left;
+  padding: 12px;
+  color: white;
+  text-decoration: none;
+  font-size: 17px;
+}
+.navbar a:hover {
+  background-color: #000;
+}
+.active {
+  background-color: #4CAF50;
+}
+@media screen and (max-width: 500px) {
+  .navbar a {
+    float: none;
+    display: block;
+  }
+}
+</style>
     <h2>Team Members</h2>
     <ul>
       <li>Katie Bradford (keb278)</li>

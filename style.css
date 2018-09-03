@@ -1,8 +1,6 @@
 .header {
   overflow: hidden;
-  background: url(bob_title.PNG);
-  background-repeat: no-repeat;
-  background-size: cover;
+  background-color:seablue;
   padding: 20px 10px;
 }
 
@@ -25,13 +23,13 @@
 
 /* Change the background color on mouse-over */
 .header a:hover {
-  background-color: 2DD8F0;
+  background-color: lightyellow;
   color: black;
 }
 
 /* Style the active/current link*/
 .header a.active {
-  background-color: 2DB1F0;
+  background-color: teal;
   color: black;
 }
 
@@ -55,7 +53,7 @@ body{
   background-color: white;
 }
 .container{
-  background: url(bob_bg.png);
+  background: url(Spongebob_Title.png);
   background-repeat: no-repeat;
   background-size: cover;
   height: auto;

@@ -1,14 +1,13 @@
 .header {
   overflow: hidden;
-  background-color:seablue;
   padding: 20px 10px;
 }
 
 /* Style the header links */
 .header a {
   float: left;
-  color: black;
-  background-color: white;
+  color: white;
+  background-color: dimgray;
   text-align: center;
   padding: 12px;
   text-decoration: none;
@@ -23,14 +22,14 @@
 
 /* Change the background color on mouse-over */
 .header a:hover {
-  background-color: lightyellow;
-  color: black;
+  background-color: red;
+  color: white;
 }
 
 /* Style the active/current link*/
 .header a.active {
-  background-color: teal;
-  color: black;
+  background-color: black;
+  color: white;
 }
 
 /* Float the link section to the right */

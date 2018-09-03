@@ -1,10 +1,10 @@
 .header {
   overflow: hidden;
-  background: url(bob.jpeg);
+  background: url(Spongebob_Title.png);
   background-repeat: no-repeat;
   background-size: cover;
   padding: 20px 10px;
-  opacity: 0.2;
+  opacity: 0.7;
 }
 
 /* Style the header links */

@@ -32,7 +32,7 @@
 /* Style the active/current link*/
 .header a.active {
   background-color: 2DB1F0;
-  color: white;
+  color: black;
 }
 
 /* Float the link section to the right */

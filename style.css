@@ -1,7 +1,8 @@
 body{
   background: url(bob.jpeg);
+  background-repeat: no-repeat;
   margin: 100px;
-  opacity: 0.5;
+  border: 2px solidblack;
 }
 
 h1{

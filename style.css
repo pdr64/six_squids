@@ -53,6 +53,8 @@
 }
 body{
   background: url(bob_bg.png);
+  background-repeat: no-repeat;
+  background-size: cover;
   height: auto;
   width: auto;
   text-align: center;
@@ -63,12 +65,12 @@ h2{
   font-weight: bold;
 }
 
-.dashed{
+.box{
   margin: 30px;
   background-color: #ffffff;
-  border: 1px dashed black;
-  opacity: 0.6;
-  padding: 20px 50px;
+  border: 1px solid black;
+  opacity: 0.5;
+  padding: 20px 100px;
   text-align: center;
 }
 

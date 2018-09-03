@@ -1,10 +1,9 @@
 .header {
   overflow: hidden;
-  background: url(Spongebob_Title.png);
+  background: url(bob.jpeg);
   background-repeat: no-repeat;
   background-size: cover;
   padding: 20px 10px;
-  opacity: 0.7;
 }
 
 /* Style the header links */
@@ -22,12 +21,11 @@
 .header h1 {
   font-size: 30px;
   font-weight: bold;
-  background-color: white;
 }
 
 /* Change the background color on mouse-over */
 .header a:hover {
-  background-color: lightred;
+  background-color: olive;
   color: black;
 }
 
@@ -42,7 +40,7 @@
   float: right;
 }
 
-/* Add media queries for responsiveness - when the screen is 500px wide or less, stack the links on top of each other */
+/* Add media queries for responsiveness*/
 @media screen and (max-width: auto) {
   .header a {
     float: none;
@@ -54,17 +52,19 @@
   }
 }
 body{
-  background-color: white;
+  background-color: lightblue;
   height: auto;
   width: auto;
 }
 
 h2{
-  color:lightgreen;
+  color: black;
+  font-weight: bold;
 }
 
 .dashed{
   border-style: dashed;
+  padding: 10px 50px;
 }
 
 

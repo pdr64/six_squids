@@ -25,13 +25,13 @@
 
 /* Change the background color on mouse-over */
 .header a:hover {
-  background-color: MediumSeaGreen;
+  background-color: 2DD8F0;
   color: black;
 }
 
 /* Style the active/current link*/
 .header a.active {
-  background-color: dodgerblue;
+  background-color: 2DB1F0;
   color: white;
 }
 
@@ -52,12 +52,16 @@
   }
 }
 body{
+  background-color: white;
+}
+.container{
   background: url(bob_bg.png);
   background-repeat: no-repeat;
   background-size: cover;
   height: auto;
   width: auto;
   text-align: center;
+  padding: 20px
 }
 
 h2{

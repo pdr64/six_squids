@@ -52,9 +52,6 @@ body{
   background-color: white;
 }
 .container{
-  background: url(Spongebob_Title.png);
-  background-repeat: no-repeat;
-  background-size: cover;
   height: auto;
   width: auto;
   text-align: center;

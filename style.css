@@ -2,6 +2,7 @@
   overflow: hidden;
   background: url(bob.jpeg);
   background-repeat: no-repeat;
+  background-size: cover;
   padding: 20px 10px;
   opacity: 0.2;
 }
@@ -10,6 +11,7 @@
 .header a {
   float: left;
   color: black;
+  background-color: white;
   text-align: center;
   padding: 12px;
   text-decoration: none;
@@ -18,13 +20,14 @@
   border-radius: 4px;
 }
 .header h1 {
-  font-size: 25px;
+  font-size: 30px;
   font-weight: bold;
+  background-color: white;
 }
 
 /* Change the background color on mouse-over */
 .header a:hover {
-  background-color: #ddd;
+  background-color: lightred;
   color: black;
 }
 
@@ -40,7 +43,7 @@
 }
 
 /* Add media queries for responsiveness - when the screen is 500px wide or less, stack the links on top of each other */
-@media screen and (max-width: 500px) {
+@media screen and (max-width: auto) {
   .header a {
     float: none;
     display: block;
@@ -52,6 +55,9 @@
 }
 body{
   background-color: white;
+  height: auto;
+  width: auto;
+}
 
 h2{
   color:lightgreen;

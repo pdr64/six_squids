@@ -32,13 +32,24 @@
          <li>ball bearings</li>
        </ul>
       <h2>Procedure</h2>
-    <h3>Blinking Internal LED</h3>
-    <h3>Blinking External LED</h3>
-    <h3>Reading Potentiometer</h3>
-    <h3>Map Potentiometer to LED</h3>
-    <h3>Map Potentiometer to Servo</h3>
-    <h3>Assemble Robot</h3>
-    <h3>Driving robot autonomously</h3>
+    <h3>Blinking LEDs</h3>
+    To begin the lab, we opened up the blink sketch and examined it to understand how it works. 
+    We successfully blinked the internal LED with the following code:
+    <code>
+      void setup() {
+  pinMode(LED_BUILTIN, OUTPUT);  //This initializes the LED_BUILTIN as an output
+}
+
+void loop() {
+  digitalWrite(LED_BUILTIN, HIGH);  //Turns the LED on 
+  delay(1000);  //Leaves the LED on for one second            
+  digitalWrite(LED_BUILTIN, LOW);  //Turns the LED off
+  delay(1000);  //Leaves the LED off for one second                   
+}
+
+     </code>
+    <h3>Reading and Writing Analog Values with Potentiometer</h3>
+    <h3>Assembling and Testing Robot</h3>
     
   </body>
     

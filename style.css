@@ -1,8 +1,12 @@
 body{
+  
+}
+.heading{
   background: url(bob.jpeg);
   background-repeat: no-repeat;
   margin: 100px;
   border: 2px solidblack;
+  opacity: 0.2;
 }
 
 h1{

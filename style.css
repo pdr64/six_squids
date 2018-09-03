@@ -1,8 +1,25 @@
+body{
+  background: url(bob.jpeg);
+  margin: 100px;
+  opacity: 0.5;
+}
+
 h1{
   color: MediumSeaGreen;
   text-orientation: center;
   font-weight: Bold;
 }
+
 h2{
   color:lightgreen;
 }
+
+.dashed{
+  border-style: dashed;
+}
+
+.navbar{
+  background-color: Teal;
+}
+
+

@@ -1,5 +1,9 @@
 body{
-  background-color: white;
+  background-image: url("Spongebob_Title.png");
+  background-repeat: no-repeat;
+  background-position: right top;
+  margin-right: 100px;
+  background-attachment: fixed;
 }
 html{
   height:100%;

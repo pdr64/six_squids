@@ -50,6 +50,23 @@
        <h2>Team Contract</h2>
        <a target="_blank" href="https://github.com/pdr64/six_squids/blob/master/Lab1/Team6_Contract.pdf">Link to Team Contract</a>
     </div>
+    <script>
+    /* When the user clicks on the button, 
+    toggle between hiding and showing the dropdown content */
+    function myFunction() {
+        document.getElementById("myDropdown").classList.toggle("show");
+    }
+
+    // Close the dropdown if the user clicks outside of it
+    window.onclick = function(e) {
+      if (!e.target.matches('.dropbtn')) {
+        var myDropdown = document.getElementById("myDropdown");
+          if (myDropdown.classList.contains('show')) {
+            myDropdown.classList.remove('show');
+          }
+      }
+    }
+    </script>
   </body>
     
 </html>

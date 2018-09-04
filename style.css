@@ -61,6 +61,7 @@ h1{
 h2{
   color: black;
   font-weight: bold;
+  text-align: center;
 }
 
 .box{
@@ -79,6 +80,6 @@ h2{
   background-repeat: no-repeat;
   background-position: right;
   margin-right: 200px;
-  height: 500px;
+  height: 30%;
 }
 

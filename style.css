@@ -88,10 +88,6 @@
 .dropdown-content a:hover {
     background-color: #ddd;
 }
-
-.show {
-    display: block;
-}
 body{
   background-color: white;
 }

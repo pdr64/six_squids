@@ -44,49 +44,6 @@
     display: block;
     text-align: left;
   }
-  .header-right {
-    float: none;
-  }
-}
-.dropdown {
-    float: left;
-    overflow: hidden;
-}
-
-.dropdown .dropbtn {
-    cursor: pointer;   
-    border: none;
-    outline: none;
-    color: white;
-    background-color: dimgray;
-    margin: 0;
-    text-align: center;
-    padding: 12px;
-    text-decoration: none;
-    font-size: 18px;
-    line-height: 25px;
-    border-radius: 4px;
-}
-
-.dropdown:hover .dropbtn {
-    background-color: red;
-}
-
-.dropdown:hover .dropdown-content {
-  display: block;
-}
-
-.dropdown-content a {
-    float: none;
-    color: black;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-    text-align: left;
-}
-
-.dropdown-content a:hover {
-    background-color: #ddd;
 }
 body{
   background-color: white;

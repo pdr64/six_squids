@@ -1,6 +1,5 @@
 body{
  background-color: light-yellow;
- text-align: center;
 }
 html {
   box-sizing: border-box;
@@ -86,7 +85,8 @@ h2{
 .teamStuff{
   background-image: url("Spongebob_Title.png");
   background-repeat: no-repeat;
-  background-position: right top;
-  margin-right: 100px;
+  background-position: right;
+  margin-right: 200px;
+  height: auto;
 }
 

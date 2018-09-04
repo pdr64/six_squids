@@ -12,7 +12,7 @@
       <div class="header-right">
         <a class="active" href="#home">Home</a>
         <div class="dropdown">
-          <button class="dropbtn" onclick="myFunction()">Labs
+          <button class="dropbtn">Labs
             <i class="fa fa-caret-down"></i>
           </button>
           <div class="dropdown-content" id="myDropdown">
@@ -23,7 +23,7 @@
           </div>
         </div> 
         <div class="dropdown">
-          <button class="dropbtn" onclick="myFunction()">Project Status
+          <button class="dropbtn">Project Status
             <i class="fa fa-caret-down"></i>
           </button>
           <div class="dropdown-content" id="myDropdown">
@@ -52,23 +52,6 @@
       <h2>Labs</h2>
        <a target="_blank" href="https://pdr64.github.io/six_squids/lab1">Lab1</a>
     </div>
-    <script>
-    /* When the user clicks on the button, 
-    toggle between hiding and showing the dropdown content */
-    function myFunction() {
-        document.getElementById("myDropdown").classList.toggle("show");
-    }
-
-    // Close the dropdown if the user clicks outside of it
-    window.onclick = function(e) {
-      if (!e.target.matches('.dropbtn')) {
-        var myDropdown = document.getElementById("myDropdown");
-          if (myDropdown.classList.contains('show')) {
-            myDropdown.classList.remove('show');
-          }
-      }
-    }
-    </script>
   </body>
     
 </html>

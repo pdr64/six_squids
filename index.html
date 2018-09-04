@@ -1,54 +1,53 @@
 <!DOCTYPE html>
   <html lang="en">
   <head>
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="style.css">
     <title> ECE 3400 - Team 6</title>
   </head>
   <body>
+    <div class="container-fluid">
     <div class="header">
       <h1>ECE 3400 - Team 6 - The Good Noodles</h1>
-      <div class="header-right">
-        <a class="active" href="#home">Home</a>
-        <div class="dropdown">
-          <button class="dropbtn">Labs
-            <i class="fa fa-caret-down"></i>
-          </button>
-          <div class="dropdown-content" id="myDropdown">
-            <a href="lab1.html">Lab 1</a>
-            <a href="#">Lab 2</a>
-            <a href="#">Lab 3</a>
-            <a href="#">Lab 4</a>
-          </div>
-        </div> 
-        <div class="dropdown">
-          <button class="dropbtn">Project Status
-            <i class="fa fa-caret-down"></i>
-          </button>
-          <div class="dropdown-content" id="myDropdown">
-            <a href="#">Milestone 1</a>
-            <a href="#">Milestone 2</a>
-            <a href="#">Milestone 3</a>
-            <a href="#">Milestone 4</a>
-            <a href="#">Final Design</a>
-          </div>
-        </div>
-        <a href="#"> Team Info</a>
-      </div>
-    </div>
-    <div class="container">
-      <div class="box">
-       <h2>Team Members</h2>
-       <ul>
-         <li>Katie Bradford (keb278)</li>
-         <li>Ben Kocsis (bk285)</li>
-         <li>Caroline Azadze (cea95)</li>
-         <li>Pablo Ruiz (pdr64)</li>    
-       </ul>
-      </div>
-       <h2>Team Contract</h2>
-       <a target="_blank" href="https://github.com/pdr64/six_squids/blob/master/Lab1/Team6_Contract.pdf">Link to Team Contract</a>
+      <ul class="nav nav-pills nav-justified" role="tablist">
+        <li class="active"><a href="#">Home</a></li>
+        <li><a href="#">Team Info</a></li>
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Labs<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="#">Lab 1</a></li>
+            <li><a href="#">Lab 2</a></li>
+            <li><a href="#">Lab 3</a></li>
+            <li><a href="#">Lab 4</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+          Project Status <span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="#">Milestone 1</a></li>
+            <li><a href="#">Milestone 2</a></li>
+            <li><a href="#">Milestone 3</a></li> 
+            <li><a href="#">Milestone 4</a></li>
+            <li><a href="#">Final Result</a></li>
+          </ul>
+        </li>
+      </ul>
+        <h2>Team Members</h2>
+        <ul>
+          <li>Katie Bradford (keb278)</li>
+          <li>Ben Kocsis (bk285)</li>
+          <li>Caroline Azadze (cea95)</li>
+          <li>Pablo Ruiz (pdr64)</li>    
+        </ul>
+       </div>
+      <h2>Team Contract</h2>
+      <a target="_blank" href="https://github.com/pdr64/six_squids/blob/master/Lab1/Team6_Contract.pdf">Link to Team Contract</a>
       <h2>Labs</h2>
        <a target="_blank" href="https://pdr64.github.io/six_squids/lab1">Lab1</a>
     </div>

@@ -1,13 +1,14 @@
 body{
-  background-image: url("Spongebob_Title.png");
-  background-repeat: no-repeat;
-  background-position: right top;
-  margin-right: 100px;
-  background-attachment: fixed;
+ background-color: light-yellow;
+ text-align: center;
 }
 html{
   height:100%;
   width: 100%
+}
+h1{
+  font-size:35px;
+  font-weight: bold;
 }
 
 h2{
@@ -25,5 +26,11 @@ h2{
 }
 .glyphicon-star{
   color: yellow;
+}
+.teamStuff{
+  background-image: url("Spongebob_Title.png");
+  background-repeat: no-repeat;
+  background-position: right top;
+  margin-right: 100px;
 }
 

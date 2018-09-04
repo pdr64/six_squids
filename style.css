@@ -1,9 +1,6 @@
 body{
  background-color: light-yellow;
 }
-html {
-  box-sizing: border-box;
-}
 .column {
   float: left;
   width: 33.3%;
@@ -82,6 +79,6 @@ h2{
   background-repeat: no-repeat;
   background-position: right;
   margin-right: 200px;
-  height: auto;
+  height: 500px;
 }
 

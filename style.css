@@ -1,5 +1,4 @@
 .header {
-  overflow: hidden;
   padding: 20px 10px;
 }
 
@@ -32,11 +31,6 @@
   color: white;
 }
 
-/* Float the link section to the right */
-.header-right {
-  float: right;
-}
-
 /* Add media queries for responsiveness*/
 @media screen and (max-width: auto) {
   .header a {
@@ -47,12 +41,6 @@
 }
 body{
   background-color: white;
-}
-.container{
-  height: auto;
-  width: auto;
-  text-align: center;
-  padding: 20px
 }
 
 h2{

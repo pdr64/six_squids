@@ -1,0 +1,66 @@
+
+<!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <title> Lab1 </title>
+    <h1>Lab 1</h1>
+  </head>
+  <body>
+      <h2>Objective </h2>
+    
+      The goal of this lab was to familiarize ourselves with the Arduino Uno, the Arduino IDE, and the github repository. 
+      To do this, we created programs that tested the functionality of our arduino using LEDs and Parallax servos.
+      After testing our arduino, we assembled our robot and ran simple code on it to have it move autonomously.
+      
+      <h2>Material List</h2>
+       <ul>
+         <li>1 Arduino Uno</li>
+         <li>1 USB A/B cable</li>
+         <li>1 continuous rotation servo</li>
+         <li>1 LED (yellow)</li>   
+         <li>1 potentiometer</li>
+         <li>Several resistors 
+           <ul>
+             <li>330 Ohm</li>
+             <li>10K Ohm</li>
+           </ul>  
+          <li>1 solderless breadboard</li>
+         <li>1 chassis</li>
+         <li>2 wheels</li>
+         <li>assorted screws</li>
+         <li>ball bearings</li>
+       </ul>
+      <h2>Procedure</h2>
+    <h3>Blinking LEDs</h3>
+    To begin the lab, we opened up the blink sketch and examined it to understand how it works. 
+    We successfully blinked the internal LED with the following code:
+    <pre><code>
+        void setup() {
+          pinMode(LED_BUILTIN, OUTPUT);  //This initializes the LED_BUILTIN as an output
+        }
+
+        void loop() {
+          digitalWrite(LED_BUILTIN, HIGH);  //Turns the LED on 
+          delay(1000);  //Leaves the LED on for one second            
+          digitalWrite(LED_BUILTIN, LOW);  //Turns the LED off
+          delay(1000);  //Leaves the LED off for one second                   
+        }
+
+     </pre></code>
+    Next, we replaced the internal LED (LED_BUILTIN) with an external LED by mapping the output to a pin, pin 6. 
+    A picture of that can be seen below: we simply connected the LED to the Arduino's ground port and the LED's power
+    pin to an IO pin, and changed the code to replace LED_BUILTIN with 6
+     <!–– TODO: insert image ––>
+    
+    <h3>Reading and Writing Analog Values with Potentiometer</h3>
+    We then modified it to be dimmed and brightened using a potentiometer. 
+    By linking the potentiometer to an analog input, we were able to see the values for the resistance it was putting out.
+    We then took these numbers and scaled them to apply to PWM output to brighten and dim the LED.
+    Essentially, the duty cycle of the output corresponds to time on for the LED,
+    and because the time on and off is much faster than we can process, it appears to be a less bright LED when the duty cycle is lower and vice versa. 
+    <h3>Assembling and Testing Robot</h3>
+    
+  </body>
+    
+</html>

@@ -57,10 +57,14 @@ html {
 .button:hover {
   background-color: #555;
 }
+.banner{
+ backgroud-image:"bob.jpeg";
+ width:100%;
+}
+
 h1{
   font-size:35px;
   font-weight: bold;
- color: 
 }
 
 h2{

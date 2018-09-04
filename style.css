@@ -58,5 +58,6 @@ h2{
 }
 .glyphicon glyphicon-star{
   color: yellow;
+  border: solid black;
 }
 

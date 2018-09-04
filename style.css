@@ -56,7 +56,7 @@ h2{
   padding: 20px 100px;
   text-align: center;
 }
-.glyphicon-star{
+.glyphicon glyphicon-star{
   color: yellow;
 }
 

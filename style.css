@@ -3,7 +3,7 @@ body{
 }
 .column {
   float: left;
-  width: 33.3%;
+  width: 50%;
   margin-bottom: 16px;
   padding: 0 8px;
 }
@@ -42,7 +42,7 @@ body{
   background-color: #000;
   text-align: center;
   cursor: pointer;
-  width: 100%;
+  width: 40%;
 }
 
 .button:hover {
@@ -80,6 +80,7 @@ h2{
   background-repeat: no-repeat;
   background-position: right;
   margin-right: 200px;
-  height: 30%;
+  height: 40%;
+  text-align: center;
 }
 

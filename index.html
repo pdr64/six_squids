@@ -113,25 +113,69 @@
           </div>
         </div>
         <div class="labs">
-          <h2>Labs</h2>
-          <a target="_blank" href="https://pdr64.github.io/six_squids/lab1">Lab1</a>
-        </div>
-      </div>
+           <div class="row">
+            <div class="column">
+              <div class="card">
+                <a target="_blank" href="https://pdr64.github.io/six_squids/lab1">
+                  <img src="firstLab.png" class="img-circle" alt="arduino circuit" style="width:400px; height:300px;">
+                </a>
+                <div class="container">
+                  <h3>Lab 1</h3>
+                  <p class="title">Microcontroller</p>
+                </div>
+              </div>
+            </div>
+            <div class="column">
+              <div class="card">
+                <a target="_blank" href="#">
+                  <img src="seclab.png" class="img-circle" alt="Lab picture" style="width:400px; height:300px;">
+                </a>
+                <div class="container">
+                  <h3>Lab 2</h3>
+                  <p class="title">Analog Circuitry and FFTs</p>
+                </div>
+              </div>
+            </div>
+         </div>
+          <div class="row">
+            <div class="column">
+              <div class="card">
+                <a target="_blank" href="https://pdr64.github.io/six_squids/lab1">
+                  <img src="thirdLab.png" class="img-circle" alt="Lab pic" style="width:400px; height:300px;">
+                </a>
+                <div class="container">
+                  <h3>Lab 3</h3>
+                  <p class="title">Radio Communication and Map Drawing</p>
+                </div>
+              </div>
+            </div>
+            <div class="column">
+              <div class="card">
+                <a target="_blank" href="#">
+                  <img src="fourthLab.png" class="img-circle" alt="Lab picture" style="width:400px; height:300px;">
+                </a>
+                <div class="container">
+                  <h3>Lab 4</h3>
+                  <p class="title">FPGA and Vision</p>
+                </div>
+              </div>
+            </div>
+          </div>
     </div>
     <script>
-window.onscroll = function() {myFunction()};
+      window.onscroll = function() {myFunction()};
 
-var navbar = document.getElementById("navbar");
-var sticky = navbar.offsetTop;
+      var navbar = document.getElementById("navbar");
+      var sticky = navbar.offsetTop;
 
-function myFunction() {
-  if (window.pageYOffset >= sticky) {
-    navbar.classList.add("sticky")
-  } else {
-    navbar.classList.remove("sticky");
-  }
-}
-</script>
+      function myFunction() {
+        if (window.pageYOffset >= sticky) {
+          navbar.classList.add("sticky")
+        } else {
+          navbar.classList.remove("sticky");
+        }
+      }
+    </script>
   </body>
     
 </html>

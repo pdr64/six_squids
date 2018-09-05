@@ -17,39 +17,41 @@
      </div>
      <div id = "navbar">
        <ul class="nav nav-pills nav-justified" role="tablist">
-         <li class="active"><a href="#"><span class="glyphicon glyphicon-home"></span> Home</a></li>
-         <li><a href="#"><span class="glyphicon glyphicon-user"></span> Team Info</a></li>
-         <li class="dropdown">
-         <a class="dropdown-toggle" data-toggle="dropdown" href="#"><span class="glyphicon glyphicon-file"></span> Labs<span class="caret"></span></a>
-           <ul class="dropdown-menu" role="menu">
-             <li><a href="https://pdr64.github.io/six_squids/lab1">Lab 1</a></li>
-             <li><a href="#">Lab 2</a></li>
-             <li><a href="#">Lab 3</a></li>
-             <li><a href="#">Lab 4</a></li>
-           </ul>
-         </li>
-         <li class="dropdown">
-         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-           <span class="glyphicon glyphicon-flag"></span> Milestones <span class="caret"></span></a>
-           <ul class="dropdown-menu" role="menu">
-             <li><a href="#">Milestone 1</a></li>
-             <li><a href="#">Milestone 2</a></li>
-             <li><a href="#">Milestone 3</a></li> 
-             <li><a href="#">Milestone 4</a></li>
-             <li><a href="#">Final Result</a></li>
-           </ul>
-         </li>
+         <li class="active"><a href="#home"><span class="glyphicon glyphicon-home"></span> Home</a></li>
+         <li><a href="#team"><span class="glyphicon glyphicon-user"></span> Team Info</a></li>
+         <li><a href="#labs"><span class="glyphicon glyphicon-file"></span> Lab</a></li>
+         <li><a href="#"><span class="glyphicon glyphicon-flag"></span> Milestones</a></li>
        </ul>
       </div>
      <div class="contents">
-       <div class="box">
+       <div class="box" id="home">
          <h2>Good Noodles</h2>
-         <ul>
-           <li>Katie Bradford     <span class="glyphicon glyphicon-star"></span> <span class="glyphicon glyphicon-star-empty"></span> <span class="glyphicon glyphicon-star-empty"></span></li>
-           <li>Ben Kocsis         <span class="glyphicon glyphicon-star"></span> <span class="glyphicon glyphicon-star-empty"></span> <span class="glyphicon glyphicon-star-empty"></span></li>
-           <li>Caroline Azadze    <span class="glyphicon glyphicon-star"></span> <span class="glyphicon glyphicon-star-empty"></span> <span class="glyphicon glyphicon-star-empty"></span></li>
-           <li>Pablo Ruiz         <span class="glyphicon glyphicon-star"></span> <span class="glyphicon glyphicon-star-empty"></span> <span class="glyphicon glyphicon-star-empty"></span></li>    
-         </ul>
+         <table class="table table-borderless">
+            <thead>
+              <tr>
+                <th></th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Katie Bradford </td>
+                <td><span class="glyphicon glyphicon-star"></span> <span class="glyphicon glyphicon-star-empty"></span> <span class="glyphicon glyphicon-star-empty"></span></li></td>
+              </tr>
+              <tr>
+                <td>Ben Kocsis</td>
+                <td><span class="glyphicon glyphicon-star"></span> <span class="glyphicon glyphicon-star-empty"></span> <span class="glyphicon glyphicon-star-empty"></span></li></td>
+              </tr>
+              <tr>
+                <td>Caroline Azadze</td>
+                <td><span class="glyphicon glyphicon-star"></span> <span class="glyphicon glyphicon-star-empty"></span> <span class="glyphicon glyphicon-star-empty"></span></li></td>
+              </tr>
+              <tr>
+                <td>Pablo Ruiz</td>
+                <td><span class="glyphicon glyphicon-star"></span> <span class="glyphicon glyphicon-star-empty"></span> <span class="glyphicon glyphicon-star-empty"></span></li></td>
+              </tr>
+            </tbody>
+          </table>
         </div>
 
         <h2>Team Contract</h2>
@@ -57,7 +59,7 @@
           <a target="_blank" href="https://github.com/pdr64/six_squids/blob/master/Lab1/Team6_Contract.pdf">Link to Team Contract</a>
         </div>
 
-        <h2>Meet the Team</h2>
+        <h2 id="team">Meet the Team</h2>
         <div class="row">
           <div class="column">
             <div class="card">
@@ -112,12 +114,13 @@
             </div>
           </div>
         </div>
+        <h2 id="labs">Labs</h2>
         <div class="labs">
            <div class="row">
             <div class="column">
               <div class="card">
                 <a target="_blank" href="https://pdr64.github.io/six_squids/lab1">
-                  <img src="firstLab.png" class="img-circle" alt="arduino circuit" style="width:400px; height:300px;">
+                  <img src="firstLab.png.jpg" class="img-circle" alt="arduino circuit" style="width:400px; height:300px;">
                 </a>
                 <div class="container">
                   <h3>Lab 1</h3>

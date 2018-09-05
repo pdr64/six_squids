@@ -71,10 +71,16 @@ h2{
   margin: 30px;
   background-color: #474e5d; /* Dark Blue */
   color: #ffffff;
-  opacity: 0.7;
+  opacity: 0.6;
   padding: 20px 200px;
   text-align: center;
 }
+.nav-pill {
+ background-color: #474e5d; /* Dark Blue */
+ color: #ffffff;
+ opacity: 0.8;
+}
+
 .glyphicon-star{
   color: yellow;
 }

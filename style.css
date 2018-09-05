@@ -71,7 +71,6 @@ h2{
   margin: 30px;
   background-color: #474e5d; /* Dark Blue */
   color: #ffffff;
-  opacity: 0.6;
   padding: 20px 200px;
   text-align: center;
 }
@@ -88,7 +87,8 @@ h2{
   text-align: center;
 }
 #navbar {
-  background-color: #333;
+ background-color: #333;
+ color: white;
 }
 
 /* Page content */

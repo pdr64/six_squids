@@ -1,5 +1,5 @@
 body{
- background-color: light-yellow;
+ background-color: lightyellow;
 }
 .column {
   float: left;
@@ -51,17 +51,18 @@ div {
   background-color: #555;
 }
 .banner{
- backgroud-image:"bob.jpeg";
+ background-image:"bob.jpeg";
  width:100%;
 }
 
 h1{
-  font-size:35px;
+  font-size:40px;
   font-weight: bold;
 }
 
 h2{
   color: black;
+  font-size:30px;
   font-weight: bold;
   text-align: center;
 }
@@ -84,14 +85,6 @@ h2{
   margin-right: 200px;
   padding: 100px 200px;
   text-align: center;
-}
-#navbar a {
-  float: left;
-  display: block;
-  color: #f2f2f2;
-  text-align: center;
-  padding: 14px;
-  text-decoration: none;
 }
 
 /* Page content */

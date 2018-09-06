@@ -15,8 +15,12 @@ body{
   }
  @media screen and (max-width: 650px) {
   h1 {
-    font-size: 30px;
+    font-size: 20px;
   }
+  a{
+    font-size: 10px;
+  }
+   
 }
 
 .card {

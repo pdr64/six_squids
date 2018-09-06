@@ -13,6 +13,10 @@ body{
     width: 100%;
     display: block;
   }
+ @media screen and (max-width: 650px) {
+  h1 {
+    font-size: 30px;
+  }
 }
 
 .card {

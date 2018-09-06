@@ -13,16 +13,31 @@ body{
     width: 100%;
     display: block;
   }
- @media screen and (max-width: 650px) {
+ @media screen and (max-width: 600px) {
   h1 {
     font-size: 20px;
   }
-  a{
-    font-size: 10px;
-  }
-   
 }
-
+@media screen and (max-width: 800px) {
+  h1 {
+    font-size: 20px;
+  }
+}
+ @media only screen and (max-width:800px) {
+  /* For tablets: */
+  .banner {
+    width: 80%;
+    padding: 0;
+  }
+  .box {
+    width: 100%;
+  }
+}
+@media only screen and (max-width:500px) {
+  /* For mobile phones: */
+  .banner, .teamStuff, .box {
+    width: 100%;
+  }
 .card {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 }

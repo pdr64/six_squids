@@ -103,7 +103,7 @@ h2{
 .sticky + .content {
   padding-top: 60px;
 }
- @media screen and (max-width: 600px) {
+/*@media screen and (max-width: 600px) {
   h1 {
     font-size: 18px;
   }
@@ -114,4 +114,4 @@ h2{
   .banner, .teamStuff, .box {
     width: 100%;
   }
-}
+}*/

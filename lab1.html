@@ -2,16 +2,25 @@
 <!DOCTYPE html>
   <html lang="en">
   <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="style.css">
-    <title> Lab1 </title>
-    <h1>Lab 1</h1>
-  </head>
+    <title> Lab 1</title>
+</head>
   <body>
+    <div id= "header">
+      <h1> Lab 1</h1>
+    </div>
+    <br>
       <h2>Objective </h2>
     
-      The goal of this lab was to familiarize ourselves with the Arduino Uno, the Arduino IDE, and the github repository. 
+      <p>The goal of this lab was to familiarize ourselves with the Arduino Uno, the Arduino IDE, and the github repository. 
       To do this, we created programs that tested the functionality of our arduino using LEDs and Parallax servos.
-      After testing our arduino, we assembled our robot and ran simple code on it to have it move autonomously.
+      After testing our arduino, we assembled our robot and ran simple code on it to have it move autonomously.</p>
       
       <h2>Material List</h2>
        <ul>
@@ -33,8 +42,8 @@
        </ul>
       <h2>Procedure</h2>
     <h3>Blinking LEDs</h3>
-    To begin the lab, we opened up the blink sketch and examined it to understand how it works. 
-    We successfully blinked the internal LED with the following code:
+    <p>To begin the lab, we opened up the blink sketch and examined it to understand how it works. 
+      We successfully blinked the internal LED with the following code:</p>
     <pre><code>
         void setup() {
           pinMode(LED_BUILTIN, OUTPUT);  //This initializes the LED_BUILTIN as an output
@@ -48,18 +57,18 @@
         }
 
      </pre></code>
-    Next, we replaced the internal LED (LED_BUILTIN) with an external LED by mapping the output to a pin, pin 6. 
+    <p>Next, we replaced the internal LED (LED_BUILTIN) with an external LED by mapping the output to a pin 6. 
     A picture of that can be seen below: we simply connected the LED to the Arduino's ground port and the LED's power
-    pin to an IO pin, and changed the code to replace LED_BUILTIN with 6
+      pin to an IO pin, and changed the code to replace LED_BUILTIN with pin 6.</p>
      <!–– TODO: insert image ––>
     
     <h3>Reading and Writing Analog Values with Potentiometer</h3>
-    We then modified it to be dimmed and brightened using a potentiometer. 
+    <p>We then modified it to be dimmed and brightened using a potentiometer. 
     By linking the potentiometer to an analog input, we were able to see the values for the resistance it was putting out.
     We then took these numbers and scaled them to apply to PWM output to brighten and dim the LED.
     Essentially, the duty cycle of the output corresponds to time on for the LED,
     and because the time on and off is much faster than we can process, it appears to be a less bright LED when the duty cycle is lower and vice versa. 
-    A short video of this happening along with the code used can be found below!
+      A short video of this happening along with the code used can be found below!</p>
     <pre><code>
     int pin=3;
   
@@ -77,16 +86,16 @@
     </pre></code>
     <br>
     
-    <iframe width="420" height="345" src="https://youtu.be/bMFm6DoMfvM">
+    <iframe width="420" height="345" src="https://www.youtube.com/watch?v=bMFm6DoMfvM">
     </iframe>
     
    
     <br>
 
-    Next, we replaced the LED with a servo, and sped it up or slowed it down based on the analog input from the potentiometer, mapping the input to a 0-180 degree shift for the servo. 
+    <p>Next, we replaced the LED with a servo, and sped it up or slowed it down based on the analog input from the potentiometer, mapping the input to a 0-180 degree shift for the servo. 
     Unlike a typical servo where one can give it values between 0 and 180 corresponding to a position, the parallax servo assigns different speeds to these values.
     90 tells the servo to not spin while the ranges 91-180 and 0-89 correspond to different speeds in opposite directions. 
-    A short video of this happening is below!
+      A short video of this happening is below!</p>
     <br>
    
     <iframe width="420" height="345" src="https://youtu.be/PwtBw1om6sE">
@@ -95,8 +104,8 @@
     <br>
     
     <h3>Assembling and Testing Robot</h3>
-    Next, we assembled our robot using a chassis, two wheels along with their mounts, a ball bearing and its mount, and the arduino. 
-    By using the servo control we learned in the previous step, we set up the servo motion such that the robot would turn in a figure 8 motion. 
+    <p>Next, we assembled our robot using a chassis, two wheels along with their mounts, a ball bearing and its mount, and the arduino. 
+    By using the servo control we learned in the previous step, we set up the servo motion such that the robot would turn in a figure 8 motion.</p>
     <pre><code>
         #include <Servo.h>;
 
@@ -118,7 +127,7 @@
           }
        <pre><code>
     
-  A video of the robot running can be seen below!
+  <p>A video of the robot running can be seen below!</p>
   <br>
   
   <a href="https://youtu.be/-OgsQ5U1r9w">

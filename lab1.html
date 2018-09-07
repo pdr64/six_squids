@@ -45,7 +45,7 @@
     <h3>Blinking LEDs</h3>
     <p>To begin the lab, we opened up the blink sketch and examined it to understand how it works. 
       We successfully blinked the internal LED with the following code:</p>
-    <pre><code>
+    <code><pre>
         void setup() {
           pinMode(LED_BUILTIN, OUTPUT);  //This initializes the LED_BUILTIN as an output
         }
@@ -72,23 +72,23 @@
     and because the time on and off is much faster than we can process, it appears to be a less bright LED when the duty cycle is lower and vice versa. 
       A short video of this happening along with the code used can be found below!</p>
     <br>
-    <pre><code>
-    int pin=3;
-  
-    void setup() {
-    pinMode(A0, INPUT);
-    Serial.begin(9600);
-    pinMode(6, OUTPUT);
-    }
-    void loop() {
-    int value=analogRead(A0)/5.7;
-    Serial.println(value);
-    delay(20);
-    analogWrite(6,value);
-    }
+    <code><pre>
+      int pin=3;
+
+      void setup() {
+      pinMode(A0, INPUT);
+      Serial.begin(9600);
+      pinMode(6, OUTPUT);
+      }
+      void loop() {
+      int value=analogRead(A0)/5.7;
+      Serial.println(value);
+      delay(20);
+      analogWrite(6,value);
+      }
     </pre></code>
     <br>
-    <iframe width="560" height="315" src="https://www.youtube.com/embed/bMFm6DoMfvM" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    <center><iframe width="560" height="315" src="https://www.youtube.com/embed/bMFm6DoMfvM" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></center>
     <br>
 
     <p>Next, we replaced the LED with a servo, and sped it up or slowed it down based on the analog input from the potentiometer, mapping the input to a 0-180 degree shift for the servo. 
@@ -96,16 +96,13 @@
     90 tells the servo to not spin while the ranges 91-180 and 0-89 correspond to different speeds in opposite directions. 
       A short video of this happening is below!</p>
     <br>
-   
-    <iframe width="420" height="345" src="https://youtu.be/PwtBw1om6sE">
-    </iframe>
-      
+    <center><iframe width="560" height="315" src="https://www.youtube.com/embed/PwtBw1om6sE" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></center>
     <br>
     
     <h3>Assembling and Testing Robot</h3>
     <p>Next, we assembled our robot using a chassis, two wheels along with their mounts, a ball bearing and its mount, and the arduino. 
     By using the servo control we learned in the previous step, we set up the servo motion such that the robot would turn in a figure 8 motion.</p>
-    <pre><code>
+    <code><pre>
         #include <Servo.h>;
 
         Servo parallax1;
@@ -124,10 +121,10 @@
          parallax2.write(165);
          delay(4000);
           }
-       <pre><code>
+       </pre><code>
     
   <p>A video of the robot running can be seen below!</p>
   <br>
-  <iframe width="560" height="315" src="https://www.youtube.com/embed/-OgsQ5U1r9w" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+  <center><iframe width="560" height="315" src="https://www.youtube.com/embed/-OgsQ5U1r9w" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></center>
   <br>
 </html>

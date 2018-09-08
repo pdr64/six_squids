@@ -9,6 +9,10 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <title> Lab 1</title>
+    <style>
+      body{
+        padding: 0 80px;
+    </style>
 </head>
   <body>
     <div id= "header">
@@ -18,20 +22,22 @@
       <a href="https://pdr64.github.io/six_squids/"><button class="btn"><i class="fa fa-home"></i> Back to Home Page</button></a>
     </div>
     <br>
-      <h2>Objective </h2>
+    <br>
+    <center><h2>Objective </h2></center>
     
       <p>The goal of this lab was to familiarize ourselves with the Arduino Uno, the Arduino IDE, and the github repository. 
       To do this, we created programs that tested the functionality of our arduino using LEDs and Parallax servos.
-      After testing our arduino, we assembled our robot and ran simple code on it to have it move autonomously.</p>
-      
-      <h2>Material List</h2>
+      After testing our arduino, we assembled our robot and ran a simple code on it.</p>
+      <br>
+    <br>
+      <h2>Materials Used</h2>
        <ul>
          <li>1 Arduino Uno</li>
-         <li>1 USB A/B cable</li>
-         <li>1 continuous rotation servo</li>
-         <li>1 LED (yellow)</li>   
-         <li>1 potentiometer</li>
-         <li>Several resistors 
+         <li>1 USB A/B Cable</li>
+         <li>1 Continuous Rotation Servo</li>
+         <li>1 LEDs</li>   
+         <li>1 Potentiometer</li>
+         <li>Several Resistors 
            <ul>
              <li>330 Ohm</li>
              <li>10K Ohm</li>
@@ -42,7 +48,9 @@
          <li>assorted screws</li>
          <li>ball bearings</li>
        </ul>
-      <h2>Procedure</h2>
+    <br>
+    <br>
+    <center><h2>Procedure</h2></center>
     <br>
     <h3>Blinking LEDs</h3>
     <p>To begin the lab, we opened up the blink sketch and examined it to understand how it works. 
@@ -58,22 +66,35 @@
           digitalWrite(LED_BUILTIN, LOW);  //Turns the LED off
           delay(1000);  //Leaves the LED off for one second                   
         }
-
      </pre></code>
     <br>
+    <p>The video below shows the blinking built-in LED on the arduino motherboard.</p>
+    <center><iframe width="560" height="315" src="https://www.youtube.com/embed/RFs1LCb9lyw" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></center>
+    <br>
+    <br>
     <p>Next, we replaced the internal LED (LED_BUILTIN) with an external LED by mapping the output to a pin 6. 
-    A picture of that can be seen below: we simply connected the LED to the Arduino's ground port and the LED's power
-      pin to an IO pin, and changed the code to replace LED_BUILTIN with pin 6.</p>
-     <!–– TODO: insert image ––>
+       A picture of that can be seen below: we simply connected the LED to the Arduino's ground port and the LED's power 
+       pin to an IO pin, and changed the code to replace LED_BUILTIN with pin 6.</p><br>
+       <img src="LED Circuit.JPG" class="img-thumbnail" alt="LED circuit" width="250" height="300">
     <br>
-    <h3>Reading and Writing Analog Values with Potentiometer</h3>
-    <p>We then modified it to be dimmed and brightened using a potentiometer. 
-    By linking the potentiometer to an analog input, we were able to see the values for the resistance it was putting out.
-    We then took these numbers and scaled them to apply to PWM output to brighten and dim the LED.
-    Essentially, the duty cycle of the output corresponds to time on for the LED,
-    and because the time on and off is much faster than we can process, it appears to be a less bright LED when the duty cycle is lower and vice versa. 
-      A short video of this happening along with the code used can be found below!</p>
+    <p>Watch video below to see how it works.</p>
+    <center><iframe width="560" height="315" src="https://www.youtube.com/embed/Ye8W5MsTrYc" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></center>
     <br>
+    <center><h3>Reading and Writing Analog Values with Potentiometer</h3></center>
+    <h4>Connecting the Potentiometer</h4>
+    <img src="potentiometer.PNG" class="img-thumbnail" alt="Potentiometer" width="250" height="300">
+    <p>Potentiometer contains resistors so it can be used as a voltage divider which we did in this lab. We connected only two of the pins of the 
+    potentiometer including the wiper and put it is series with another resistor to serve as a known resistance value. Then we collected the voltage values
+    throught the potentiometer as we varied its resistance.</p><br>
+    <p>We used our code and potentiometer to vary the brightness of an LED.
+     We used a pulse-width modulator (PWM)to scale the potentiometer values, which enabled us to change the brightness of the LED.
+     Essentially, the duty cycle of the output corresponds to time on for the LED, and because the time on and off is much faster
+     than we can process, it appears to be a less bright LED when the duty cycle is lower and vice versa. 
+    </p>
+    <br>
+    <img src="Potentiometer Circuit.JPG" class="img-thumbnail" alt="Potentiometer circuit" width="250" height="300">
+    <br>
+    <p>Below is our brightness varying code.</p>
     <code><pre>
       int pin=3;
 
@@ -90,20 +111,21 @@
       }
     </pre></code>
     <br>
+    <p>Watch this short video to observe the results</p>
     <center><iframe width="560" height="315" src="https://www.youtube.com/embed/bMFm6DoMfvM" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></center>
     <br>
 
-    <p>Next, we replaced the LED with a servo, and sped it up or slowed it down based on the analog input from the potentiometer, mapping the input to a 0-180 degree shift for the servo. 
-    Unlike a typical servo where one can give it values between 0 and 180 corresponding to a position, the parallax servo assigns different speeds to these values.
-    90 tells the servo to not spin while the ranges 91-180 and 0-89 correspond to different speeds in opposite directions. 
-      A short video of this happening is below!</p>
+    <p>Next, we replaced the LED with a servo, and changed its speed using the potentiometer values. Unlike a typical servo where one can give values between
+      0 and 180 to correspond to a position, the parallax servo assigns different speeds based on the values it's given. For example, a value of 90
+      will stop the servo while the ranges 91-180 and 0-89 correspond to different speeds in opposite directions. 
+      Below is a short video to demonstrate!</p>
     <br>
     <center><iframe width="560" height="315" src="https://www.youtube.com/embed/PwtBw1om6sE" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></center>
     <br>
     
     <h3>Assembling and Testing Robot</h3>
-    <p>Next, we assembled our robot using a chassis, two wheels along with their mounts, a ball bearing and its mount, and the arduino. 
-    By using the servo control we learned in the previous step, we set up the servo motion such that the robot would turn in a figure 8 motion.</p>
+    <p>Next, we assembled our robot using a chassis, two wheels along with their mounts, a ball bearing, and an arduino. 
+    Using the servo control we learned in the previous step, we set up the servo motion such that the robot would turn in a figure 8 motion.</p>
     <code><pre>
         #include <Servo.h>;
 
@@ -125,7 +147,7 @@
           }
        </pre><code>
     
-  <p>A video of the robot running can be seen below!</p>
+  <p>See video below to observe!</p>
   <br>
   <center><iframe width="560" height="315" src="https://www.youtube.com/embed/-OgsQ5U1r9w" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></center>
   <br>
@@ -138,9 +160,10 @@
     <li>Clean the solder iron tip often, and when finished (tin it before storing the iron)</li>
     <li>Turn off the soldering station when you are finished</li>
    </ul>
-   <p> Watch video below to see our experience with soldering.</p>
+   <p>We learned how to solder. Watch video below to see our experience with soldering.</p>
    <br>
    <center><iframe width="560" height="315" src="https://www.youtube.com/embed/D_t3pmZwYEA" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></center>
    <br>
    <a href="#header"><button class="btn"><i class="fa fa-home"></i>Return to top</button></a>
+   </body
 </html>

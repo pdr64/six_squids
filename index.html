@@ -20,6 +20,13 @@
         padding: 100px 200px;
         text-align: center;
       }
+      .box{
+        margin: 30px;
+        background-color: black;
+        color: #ffffff;
+        padding: 20px 200px;
+        text-align: center;
+      }
       .column {
         float: left;
         width: 50%;
@@ -42,6 +49,29 @@
       }
       .container {
         padding: 16px 10px;
+      }
+      #navbar {
+       background-color: #333;
+       color: white;
+       }
+      .title {
+        color: grey;
+      }
+
+      .button {
+        border: none;
+        outline: 0;
+        display: inline-block;
+        padding: 8px;
+        color: white;
+        background-color: #000;
+        text-align: center;
+        cursor: pointer;
+        width: 50%;
+      }
+
+      .button:hover {
+        background-color: #555;
       }
 
       /* The sticky class is added to the navbar with JS when it reaches its scroll position */
@@ -116,7 +146,7 @@
                 <p class="title">ECE - Junior</p>
                 <p>Some text that describes me lorem ipsum ipsum lorem.</p>
                 <p>keb278@cornell.edu</p>
-                <p><button class="button">Contact</button></p>
+                <p><a href="mailto:keb278@cornell.edu"<button class="button">Contact</button></a></p>
               </div>
             </div>
           </div>
@@ -129,7 +159,7 @@
                 <p class="title">ECE - Senior</p>
                 <p>Ben Kocsis is a Senior studying Electrical and Computer Engineering. In addition to his studies, he is a member of the Naval ROTC unit on campus. He hopes to be a Nuclear Reactors Officer when he graduates.</p>
                 <p>bk285@cornell.edu</p>
-                <p><button class="button">Contact</button></p>
+                <p><a href="mailto:bk285@cornell.edu"<button class="button">Contact</button></a></p>
               </div>
             </div>
           </div>
@@ -143,7 +173,7 @@
                 <p class="title">ECE - Junior</p>
                 <p>Some text that describes me lorem ipsum ipsum lorem.</p>
                 <p>cea95@cornell.edu</p>
-                <p><button class="button">Contact</button></p>
+                <p><a href="mailto:cea95@cornell.edu"<button class="button">Contact</button></a></p>
               </div>
             </div>
           </div>
@@ -156,7 +186,7 @@
                 <p class="title">ECE - Junior</p>
                 <p>Some text that describes me lorem ipsum ipsum lorem.</p>
                 <p>pdr64@cornell.edu</p>
-                <p><button class="button">Contact</button></p>
+                <p><a href="mailto:pdr64@cornell.edu"<button class="button">Contact</button></a></p>
               </div>
             </div>
           </div>
@@ -167,7 +197,7 @@
             <div class="column">
               <div class="card">
                 <a href="https://pdr64.github.io/six_squids/lab1">
-                  <img src="firstLab.png.jpg" class="img-circle" alt="arduino circuit" style="width:400px; height:300px;">
+                  <img src="firstLab.png.jpg" alt="arduino circuit" style="width:400px; height:300px;">
                 </a>
                 <div class="container">
                   <h3>Lab 1</h3>
@@ -178,7 +208,7 @@
             <div class="column">
               <div class="card">
                 <a href="#">
-                  <img src="seclab.png" class="img-circle" alt="Lab picture" style="width:400px; height:300px;">
+                  <img src="seclab.png" alt="Lab picture" style="width:400px; height:300px;">
                 </a>
                 <div class="container">
                   <h3>Lab 2</h3>
@@ -191,7 +221,7 @@
             <div class="column">
               <div class="card">
                 <a href="#">
-                  <img src="thirdLab.png" class="img-circle" alt="Lab pic" style="width:400px; height:300px;">
+                  <img src="thirdLab.png" alt="Lab pic" style="width:400px; height:300px;">
                 </a>
                 <div class="container">
                   <h3>Lab 3</h3>
@@ -202,7 +232,7 @@
             <div class="column">
               <div class="card">
                 <a href="#">
-                  <img src="fourthLab.png" class="img-circle" alt="Lab picture" style="width:400px; height:300px;">
+                  <img src="fourthLab.png" alt="Lab picture" style="width:400px; height:300px;">
                 </a>
                 <div class="container">
                   <h3>Lab 4</h3>
@@ -226,10 +256,11 @@
     </script>
 <br>
 <p>Please click on the dabbing Squidward to get to our GitHub repository. </p> <br>
-<a href="https://github.com/pdr64/six_squids" data-toggle="tooltip" data-placement="bottom" title="Click Me">
+<a href="https://github.com/pdr64/six_squids" data-toggle="tooltip" data-placement="right" title="Click Me">
   <img src="https://orig00.deviantart.net/ec3c/f/2017/163/7/d/squidward_dab_ii__full_body__by_josael281999-dbbu8ke.png" alt="HTML tutorial" style="width:150px;height:150px;border:0;">
 </a>
 <br>
+<br><br>
 <script>
 $(document).ready(function(){
     $('[data-toggle="tooltip"]').tooltip();   

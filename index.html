@@ -39,7 +39,7 @@
       }
       .column {
         float: left;
-        width: 25%;
+        width: 50%;
         margin-bottom: 16px;
         padding: 0 8px;
       }
@@ -111,11 +111,11 @@
          <li><a href="#milestone" data-toggle="tab"><span class="glyphicon glyphicon-flag"></span> Milestones</a></li>
        </ul>
       </div>
-     <div class="contents">
+     <div class="contents tab-contents">
        <br>
        <br>
        <br>
-       <div class="box" id="home">
+       <div class="box tab-pane active" id="home">
          <h2>Good Noodles</h2>
          <table class="table table-dark">
             <thead>
@@ -157,7 +157,8 @@
         <br>
         <br>
         <br>
-        <center><h2 id="team">Meet the Team</h2><center>
+        <div class="tab-pane" id="team">
+        <center><h2>Meet the Team</h2><center>
         <br>
         <div class="row">
           <div class="column">
@@ -218,10 +219,12 @@
             </div>
           </div>
         </div>
+</div>
         <br>
         <br>
         <br>
         <br>
+<div class="tab-pane" id="labs">
         <center><h2 id="labs">Labs</h2></center>
         <div class="labs">
            <div class="row">
@@ -273,10 +276,12 @@
             </div>
           </div>
     </div>
+</div>
     <br>
     <br>
     <br>
     <br>
+<div class="tab-pane" id="milestone">
    <center><h2 id="milestone">Milestones</h2></center>
         <div class="labs">
            <div class="row">
@@ -324,6 +329,7 @@
               </div>
             </div>
     </div>
+ </div>
     <br>
     <br>
     <br>

@@ -12,6 +12,15 @@
       .glyphicon-star{
         color: yellow;
       }
+      .glyphicon-star-red{
+        color: red;
+      }
+      .glyphicon-star-blue{
+        color: blue;
+      }
+      .glyphicon-star-green{
+        color: green;
+      }
       .teamStuff{
         background-image: url("Spongebob_Title.png");
         background-repeat: no-repeat;
@@ -94,16 +103,19 @@
      </div>
      <div id = "navbar">
        <ul class="nav nav-pills nav-justified" role="tablist">
-         <li class="active"><a href="#home"><span class="glyphicon glyphicon-home"></span> Home</a></li>
-         <li><a href="#team"><span class="glyphicon glyphicon-user"></span> Team Info</a></li>
-         <li><a href="#labs"><span class="glyphicon glyphicon-file"></span> Lab</a></li>
-         <li><a href="#"><span class="glyphicon glyphicon-flag"></span> Milestones</a></li>
+         <li class="active" data-toggle="tab"><a href="#home"><span class="glyphicon glyphicon-home"></span> Home</a></li>
+         <li><a href="#team" data-toggle="tab"><span class="glyphicon glyphicon-user"></span> Team Info</a></li>
+         <li><a href="#labs" data-toggle="tab"><span class="glyphicon glyphicon-file"></span> Lab</a></li>
+         <li><a href="#milestone" data-toggle="tab"><span class="glyphicon glyphicon-flag"></span> Milestones</a></li>
        </ul>
       </div>
      <div class="contents">
+       <br>
+       <br>
+       <br>
        <div class="box" id="home">
          <h2>Good Noodles</h2>
-         <table class="table table-dark">
+         <table class="table table-dark table-striped">
             <thead>
               <tr>
                 <th></th>
@@ -113,30 +125,38 @@
             <tbody>
               <tr>
                 <td>Katie Bradford </td>
-                <td><span class="glyphicon glyphicon-star"></span> <span class="glyphicon glyphicon-star-empty"></span> <span class="glyphicon glyphicon-star-empty"></span></li></td>
+                <td><span class="glyphicon glyphicon-star"></span> <span class="glyphicon glyphicon-star"></span> <span class="glyphicon glyphicon-star-empty"></span> <span class="glyphicon glyphicon-star-empty"></span></li></td>
               </tr>
               <tr>
                 <td>Ben Kocsis</td>
-                <td><span class="glyphicon glyphicon-star"></span> <span class="glyphicon glyphicon-star-empty"></span> <span class="glyphicon glyphicon-star-empty"></span></li></td>
+                <td><span class="glyphicon glyphicon-star"></span> <span class="glyphicon glyphicon-star"></span> <span class="glyphicon glyphicon-star-empty"></span> <span class="glyphicon glyphicon-star-empty"></span></li></td>
               </tr>
               <tr>
                 <td>Caroline Azadze</td>
-                <td><span class="glyphicon glyphicon-star"></span> <span class="glyphicon glyphicon-star-empty"></span> <span class="glyphicon glyphicon-star-empty"></span></li></td>
+                <td><span class="glyphicon glyphicon-star"></span> <span class="glyphicon glyphicon-star"></span> <span class="glyphicon glyphicon-star-empty"></span> <span class="glyphicon glyphicon-star-empty"></span></li></td>
               </tr>
               <tr>
                 <td>Pablo Ruiz</td>
-                <td><span class="glyphicon glyphicon-star"></span> <span class="glyphicon glyphicon-star-empty"></span> <span class="glyphicon glyphicon-star-empty"></span></li></td>
+                <td><span class="glyphicon glyphicon-star"></span> <span class="glyphicon glyphicon-star"></span> <span class="glyphicon glyphicon-star-empty"></span> <span class="glyphicon glyphicon-star-empty"></span></li></td>
               </tr>
             </tbody>
           </table>
         </div>
-
-        <h2>Team Contract</h2>
+      <br>
+      <br>
+      <br>
+      <br>
+      <center><h2>Team Contract</h2></center>
+      <br>
         <div class="teamStuff">
           <a target="_blank" href="https://github.com/pdr64/six_squids/blob/master/Lab1/Team6_Contract.pdf">Link to Team Contract</a>
         </div>
-
+        <br>
+        <br>
+        <br>
+        <br>
         <h2 id="team">Meet the Team</h2>
+        <br>
         <div class="row">
           <div class="column">
             <div class="card">
@@ -191,13 +211,17 @@
             </div>
           </div>
         </div>
-        <h2 id="labs">Labs</h2>
+        <br>
+        <br>
+        <br>
+        <br>
+        <center><h2 id="labs">Labs</h2></center>
         <div class="labs">
            <div class="row">
             <div class="column">
               <div class="card">
                 <a href="https://pdr64.github.io/six_squids/lab1">
-                  <img src="firstLab.png.jpg" alt="arduino circuit" style="width:400px; height:300px;">
+                  <img src="firstLab.png.jpg" alt="arduino circuit" style="width:250px; height:200px;">
                 </a>
                 <div class="container">
                   <h3>Lab 1</h3>
@@ -208,7 +232,7 @@
             <div class="column">
               <div class="card">
                 <a href="#">
-                  <img src="seclab.png" alt="Lab picture" style="width:400px; height:300px;">
+                  <img src="seclab.png" alt="Lab picture" style="width:250px; height:200px;">
                 </a>
                 <div class="container">
                   <h3>Lab 2</h3>
@@ -221,7 +245,7 @@
             <div class="column">
               <div class="card">
                 <a href="#">
-                  <img src="thirdLab.png" alt="Lab pic" style="width:400px; height:300px;">
+                  <img src="thirdLab.png" alt="Lab pic" style="width:250px; height:200px;">
                 </a>
                 <div class="container">
                   <h3>Lab 3</h3>
@@ -232,7 +256,7 @@
             <div class="column">
               <div class="card">
                 <a href="#">
-                  <img src="fourthLab.png" alt="Lab picture" style="width:400px; height:300px;">
+                  <img src="fourthLab.png" alt="Lab picture" style="width:250px; height:200px;">
                 </a>
                 <div class="container">
                   <h3>Lab 4</h3>
@@ -242,6 +266,61 @@
             </div>
           </div>
     </div>
+    <br>
+    <br>
+    <br>
+    <br>
+   <center><h2 id="milestone">Milestones</h2></center>
+        <div class="labs">
+           <div class="row">
+            <div class="column">
+              <div class="card">
+                <a href="#">
+                  <span class="glyphicon glyphicon-star-red" style="width:250px; height:200px;>
+                </a>
+                <div class="container">
+                <h3>Milestone 1</h3>
+                </div>
+              </div>
+            </div>
+            <div class="column">
+              <div class="card">
+                <a href="#">
+                  <span class="glyphicon glyphicon-star-blue" style="width:250px; height:200px;>
+                </a>
+                <div class="container">
+                  <h3>Milestone 2</h3>
+                 
+                </div>
+              </div>
+            </div>
+            <div class="column">
+              <div class="card">
+                <a href="#">
+                  <span class="glyphicon glyphicon-star" style="width:250px; height:200px;>
+                </a>
+                <div class="container">
+                  <h3>Milestone 3</h3>
+                  
+                </div>
+              </div>
+            </div>
+            <div class="column">
+              <div class="card">
+                <a href="#">
+                  <span class="glyphicon glyphicon-star-green" style="width:250px; height:200px;>
+                </a>
+                <div class="container">
+                  <h3>Milestone 4</h3>
+                  
+                </div>
+              </div>
+            </div>
+    </div>
+    <br>
+    <br>
+    <br>
+    <br>
     <script>
       window.onscroll = function() {myFunction()};
       var navbar = document.getElementById("navbar");
@@ -257,7 +336,7 @@
 <br>
 <p>Please click on the dabbing Squidward to get to our GitHub repository. </p> <br>
 <a href="https://github.com/pdr64/six_squids" data-toggle="tooltip" data-placement="right" title="Click Me">
-  <img src="https://orig00.deviantart.net/ec3c/f/2017/163/7/d/squidward_dab_ii__full_body__by_josael281999-dbbu8ke.png" alt="HTML tutorial" style="width:150px;height:150px;border:0;">
+  <img src="https://orig00.deviantart.net/ec3c/f/2017/163/7/d/squidward_dab_ii__full_body__by_josael281999-dbbu8ke.png" alt="HTML tutorial" style="width:80px;height:90px;border:0;">
 </a>
 <br>
 <br><br>

@@ -30,7 +30,7 @@
       After testing our arduino, we assembled our robot and ran a simple code on it.</p>
       <br>
     <br>
-      <h2>Materials Used</h2>
+    <center><h2>Materials Used</h2></center>
        <ul>
          <li>1 Arduino Uno</li>
          <li>1 USB A/B Cable</li>
@@ -75,14 +75,14 @@
     <p>Next, we replaced the internal LED (LED_BUILTIN) with an external LED by mapping the output to a pin 6. 
        A picture of that can be seen below: we simply connected the LED to the Arduino's ground port and the LED's power 
        pin to an IO pin, and changed the code to replace LED_BUILTIN with pin 6.</p><br>
-       <img src="LED Circuit.JPG" class="img-thumbnail" alt="LED circuit" width="250" height="300">
+       <center><img src="LED Circuit.JPG" class="img-rounded" alt="LED circuit" width="250" height="300"></center>
     <br>
-    <p>Watch video below to see how it works.</p>
+    <center><p>Watch video below to see how it works.</p></center>
     <center><iframe width="560" height="315" src="https://www.youtube.com/embed/Ye8W5MsTrYc" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></center>
     <br>
     <center><h3>Reading and Writing Analog Values with Potentiometer</h3></center>
     <h4>Connecting the Potentiometer</h4>
-    <img src="potentiometer.PNG" class="img-thumbnail" alt="Potentiometer" width="250" height="300">
+    <center><img src="potentiometer.PNG" class="img-rounded" alt="Potentiometer" width="250" height="300"></center>
     <p>Potentiometer contains resistors so it can be used as a voltage divider which we did in this lab. We connected only two of the pins of the 
     potentiometer including the wiper and put it is series with another resistor to serve as a known resistance value. Then we collected the voltage values
     throught the potentiometer as we varied its resistance.</p><br>
@@ -92,7 +92,7 @@
      than we can process, it appears to be a less bright LED when the duty cycle is lower and vice versa. 
     </p>
     <br>
-    <img src="Potentiometer Circuit.JPG" class="img-thumbnail" alt="Potentiometer circuit" width="250" height="300">
+    <center><img src="Potentiometer Circuit.JPG" class="img-rounded" alt="Potentiometer circuit" width="250" height="300"></center>
     <br>
     <p>Below is our brightness varying code.</p>
     <code><pre>
@@ -145,17 +145,19 @@
          parallax2.write(165);
          delay(4000);
           }
-       </pre><code>
+    </pre></code>
+    <br>
     
   <p>See video below to observe!</p>
   <br>
   <center><iframe width="560" height="315" src="https://www.youtube.com/embed/-OgsQ5U1r9w" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></center>
   <br>
-  <h2>Soldering</h2>
+  <h3>Soldering</h3>
   <p>When soldering:</p>
   <ul>
     <li>Wear goggles when soldering</li>
     <li>Tie your hair if it can get in the way of your work</li>
+    <li>Breath out while you solder</li>
     <li>Wash your hands after soldering</li>
     <li>Clean the solder iron tip often, and when finished (tin it before storing the iron)</li>
     <li>Turn off the soldering station when you are finished</li>
@@ -165,5 +167,5 @@
    <center><iframe width="560" height="315" src="https://www.youtube.com/embed/D_t3pmZwYEA" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></center>
    <br>
    <a href="#header"><button class="btn"><i class="fa fa-home"></i>Return to top</button></a>
-   </body
+   </body>
 </html>

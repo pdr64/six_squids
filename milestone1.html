@@ -31,6 +31,38 @@
       otherwise adjusting accordingly. Once we had this down, we made our robot follow a figure 8 by implementing a state machine, having the robot 
       turn left or right at junctions depending on its state along the path. Gary did a great job; see below!
     </p>
+    <br>
+    <p>
+      STRAIGHT LINE HERE
+    </p>
+    <br>
+    
+    <p>
+      Now we will discuss how we were able to implememt the 'Figure 8' maneuver. We implemented a finite state machine to do this, where each state is 
+      the current leg of the figure 8 that our robot is in. We then simply set up for each leg whether the next turn will be left or right upon reaching an 
+      intersection. The relevant code is shown below!
+      <code><pre>
+      follow_line();
+} else {
+ if(state==1 || state == 6 || state==7 || state==8){
+    Serial.println(String("turning left ")+state );
+    Serial.println(analogRead(leftSen)+String("  ")+analogRead(centSen)+String("  ")+analogRead(rightSen));
+    turn_left();
+    
+    if(state==8){
+      state=1;
+      } else{
+        state++;
+      }
+ } else if (state==2 || state ==3 || state==4 || state==5){
+    Serial.println(String("turning right ")+state);
+    Serial.println(analogRead(leftSen)+String("  ")+analogRead(centSen)+String("  ")+analogRead(rightSen));
+    turn_right();
+    state++;
+      </pre></code>
+      As you can see from the code, we simply need two 'if' statements, wherein we assign a left or right turn following the current state.
+      The current state increments after each turn so this process can continue. At the end, state 8 (the last leg of the figure 8) will move to state
+      1 and then can restart the process indefinitely.
       <br>
     
     </body>

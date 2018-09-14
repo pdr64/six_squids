@@ -39,20 +39,21 @@
 <code><pre>
 int thresh=150;
 // correct for veer right
-while(analogRead(centSen)thresh && analogRead(rightSen)thresh && analogRead(leftSen)thresh){
+while(analogRead(centSen)&gt;thresh && analogRead(rightSen)&gt;thresh && analogRead(leftSen)&lt;thresh){
   parallax1.write(94);
   parallax2.write(75);     
 }
 //correct for veer left
-while(analogRead(centSen)thresh && analogRead(rightSen)thresh && analogRead(leftSen)thresh){
+while(analogRead(centSen)&gt;thresh && analogRead(rightSen)&lt;thresh && analogRead(leftSen)&gt;thresh){
   parallax1.write(115);
   parallax2.write(94);
 }
 // go straight
-while(analogRead(centSen)thresh && analogRead(leftSen)thresh && analogRead(rightSen)thresh){
+while(analogRead(centSen)&lt;thresh && analogRead(leftSen)&gt;thresh && analogRead(rightSen)&gt;thresh){
   parallax1.write(100);
   parallax2.write(90);
 }  
+
 </code></pre>
     </p>
     <br>

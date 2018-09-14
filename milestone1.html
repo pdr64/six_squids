@@ -33,7 +33,27 @@
     </p>
     <br>
     <p>
-      STRAIGHT LINE HERE
+      In order to implement a straight line, we first attached three line sensors to our robot and began reading the outputs. Based on the value 
+      for a white line, we wrote code that told the robot that if it sensed that the center sensor was off the white line and that the right sensor 
+      was now on the white line, to veer right back onto the line and visa versa for the other direction.
+
+int thresh=150;
+// correct for veer right
+while(analogRead(centSen)>thresh && analogRead(rightSen)>thresh && analogRead(leftSen)<thresh){
+  parallax1.write(94);
+  parallax2.write(75);     
+}
+//correct for veer left
+while(analogRead(centSen)>thresh && analogRead(rightSen)<thresh && analogRead(leftSen)>thresh){
+  parallax1.write(115);
+  parallax2.write(94);
+}
+// go straight
+while(analogRead(centSen)<thresh && analogRead(leftSen)>thresh && analogRead(rightSen)>thresh){
+  parallax1.write(100);
+  parallax2.write(90);
+}  
+
     </p>
     <br>
     

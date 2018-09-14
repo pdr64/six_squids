@@ -44,7 +44,7 @@ while(analogRead(centSen)>thresh && analogRead(rightSen)>thresh && analogRead(le
   parallax2.write(75);     
 }
 // correct for veer left
-while(analogRead(centSen)>thresh && analogRead(rightSen)<thresh && analogRead(leftSen)>thresh){
+while(analogRead(centSen)thresh && analogRead(rightSen)thresh && analogRead(leftSen)thresh){
   parallax1.write(115);
   parallax2.write(94);
 }

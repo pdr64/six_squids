@@ -25,8 +25,8 @@
     <center><h2>Objective </h2></center>
     
     <p>
-      The goal of this milestone was to get our robot transverse a line autonomously! We used a basic IR sensor on a grid consisting of white tape
-      on a mixture of black and grey background. The observed the values reported back from the sensor which helped us to set the threshold for the color we want.
+      The goal of this milestone was to get our robot to traverse a line autonomously! We used a basic IR sensor on a grid consisting of white tape
+      and a mixture of black and grey background. We observed the values reported back from the sensor which helped us to set the threshold for the color we wanted.
       Once we had this down, we made our robot follow a figure 8 by implementing a state machine, having the robot 
       turn left or right at junctions depending on its state along the path. Gary did a great job!
     </p>
@@ -34,8 +34,8 @@
     <br>
     <center><h2>Determining the Threshold</h2></center>
     <p>To find our threshold for the white line path, we connected one of the IR sensors to a circuit and displayed the values on the Arduino IDE console. We were able to see how the
-      sensor worked by increasing and decreasing the height to the surface and reading values of different colors. We saw that at higher levels, the sensor was reading high numbers because
-      there were too many colors. It was therefore ideal to put the sensors at the lowest level as possible. Threshold came out to be 150. So for any number below that threshold, Gary sees
+      sensor worked by increasing and decreasing the height to the surface and reading values off different colors. We saw that at higher levels, the sensor was reading high numbers because
+      there were too many colors. It was therefore ideal to put the sensors at the lowest height as possible. Threshold came out to be 150. So for any number below that threshold, Gary sees
       that as white.</p>
     <br>
     <center><iframe width="560" height="315" src="https://www.youtube.com/embed/sPYnBPQ-dxA" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></center>
@@ -46,7 +46,7 @@
       <center><img src="sensorRobot.png.jpg" class="img-rounded" alt="Robot with IR sensors" width="400" height="300"></center>
       <br>
       <br>
-      Based on the value for a white line, we wrote a code to program our robot so that it is able to correct itself and follow the white path.
+      Based on the value for a white line, we wrote a code to program Gary so that it is able to correct itself and follow the white path.
       Below shows how we did this.</p>
     <br>
     <code><pre>
@@ -72,7 +72,7 @@
     <p>This is video of how Gary follows a line. Go Gary!!</p>
     <center><iframe width="560" height="315" src="https://www.youtube.com/embed/e5FzcKetXG0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></center>
     
-    <center><h2> "Figure 8" Maneuver</h2></center>
+    <center><h2> "Figure 8" Maneuvering</h2></center>
     <p>
       We implemented a finite state machine to do this, where each state is the current leg of the figure 8 that our robot is in.
       We then simply set up for each leg whether the next turn will be left or right upon reaching an intersection. 
@@ -94,8 +94,8 @@
     </pre></code>
     <br>
     <br>
-    <p>As you can see from the code, we simply need two 'if' statements, wherein we assign a left or right turn following the current state.
-      The current state increments after each turn so this process can continue. At the end, state 8 (the last leg of the figure 8) will be updated to state
+    <p>As you can see from the code, we simply needed two 'if' statements, wherein we assign a left or right turn following the current state.
+      The current state increments after each turn so this process can continue. At the end, state 8 (the last leg of the figure 8) will move on to state
       1 to restart the process indefinitely. 
       Below is a ~crazy~ video of our robot, Gary, doing some "sick" figure 8s!
     </p>

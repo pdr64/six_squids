@@ -25,67 +25,82 @@
     <center><h2>Objective </h2></center>
     
     <p>
-      The goal of this lab was to get our robot moving autonomously! First we used a basic line sensor on a grid consisting of white tape
-      on a black background, finding the values the line sensor reported back and using them to recognize the difference between the lines and 
-      the surface. We used this information to have our robot follow a line, ensuring that the middle sensor saw white and the outer two saw black,
-      otherwise adjusting accordingly. Once we had this down, we made our robot follow a figure 8 by implementing a state machine, having the robot 
-      turn left or right at junctions depending on its state along the path. Gary did a great job; see below!
+      The goal of this milestone was to get our robot transverse a line autonomously! We used a basic IR sensor on a grid consisting of white tape
+      on a mixture of black and grey background. The observed the values reported back from the sensor which helped us to set the threshold for the color we want.
+      Once we had this down, we made our robot follow a figure 8 by implementing a state machine, having the robot 
+      turn left or right at junctions depending on its state along the path. Gary did a great job!
     </p>
     <br>
-    <p>
-      In order to implement a straight line, we first attached three line sensors to our robot and began reading the outputs. Based on the value 
-      for a white line, we wrote code that told the robot that if it sensed that the center sensor was off the white line and that the right sensor 
-      was now on the white line, to veer right back onto the line and visa versa for the other direction.
-<code><pre>
-int thresh=150;
-// correct for veer right
-while(analogRead(centSen)&gt;thresh && analogRead(rightSen)&gt;thresh && analogRead(leftSen)&lt;thresh){
-  parallax1.write(94);
-  parallax2.write(75);     
-}
-//correct for veer left
-while(analogRead(centSen)&gt;thresh && analogRead(rightSen)&lt;thresh && analogRead(leftSen)&gt;thresh){
-  parallax1.write(115);
-  parallax2.write(94);
-}
-// go straight
-while(analogRead(centSen)&lt;thresh && analogRead(leftSen)&gt;thresh && analogRead(rightSen)&gt;thresh){
-  parallax1.write(100);
-  parallax2.write(90);
-}  
-
-</code></pre>
-    </p>
     <br>
-    
+    <center><h2>Determining the Threshold</h2></center>
+    <p>To find our threshold for the white line path, we connected one of the IR sensors to a circuit and displayed the values on the Arduino IDE console. We were able to see how the
+      sensor worked by increasing and decreasing the height to the surface and reading values of different colors. We saw that at higher levels, the sensor was reading high numbers because
+      there were too many colors. It was therefore ideal to put the sensors at the lowest level as possible. Threshold came out to be 150. So for any number below that threshold, Gary sees
+      that as white.</p>
+    <br>
+    <center><iframe width="560" height="315" src="https://www.youtube.com/embed/sPYnBPQ-dxA" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></center>
+    <br>
+    <center><h2>Implementing Line following </h2></center>
     <p>
-      Now we will discuss how we were able to implememt the 'Figure 8' maneuver. We implemented a finite state machine to do this, where each state is 
-      the current leg of the figure 8 that our robot is in. We then simply set up for each leg whether the next turn will be left or right upon reaching an 
-      intersection. The relevant code is shown below!
-      <code><pre>
-      follow_line();
-} else {
- if(state==1 || state == 6 || state==7 || state==8){
-    Serial.println(String("turning left ")+state );
-    Serial.println(analogRead(leftSen)+String("  ")+analogRead(centSen)+String("  ")+analogRead(rightSen));
-    turn_left();
-    
-    if(state==8){
-      state=1;
-      } else{
-        state++;
-      }
- } else if (state==2 || state ==3 || state==4 || state==5){
-    Serial.println(String("turning right ")+state);
-    Serial.println(analogRead(leftSen)+String("  ")+analogRead(centSen)+String("  ")+analogRead(rightSen));
-    turn_right();
-    state++;
-      </pre></code>
-      As you can see from the code, we simply need two 'if' statements, wherein we assign a left or right turn following the current state.
-      The current state increments after each turn so this process can continue. At the end, state 8 (the last leg of the figure 8) will move to state
-      1 and then can restart the process indefinitely. Below is a ~crazy~ video of our robot, Gary, doing some sick figure 8s!
-      VIDEO HERE!!!!!!!!!!!!!!!!!!
+      In order to implement a straight line, we first attached three line sensors to our robot.
+      <center><img src="sensorRobot.png" class="img-rounded" alt="Robot with IR sensors" width="400" height="300"></center>
       <br>
+      <br>
+      Based on the value for a white line, we wrote a code to program our robot so that it is able to correct itself and follow the white path.
+      Below shows how we did this.</p>
+    <br>
+    <code><pre>
+      int thresh=150;  //sets our threshold
+      // correct for veer right
+      while(analogRead(centSen)&gt;thresh && analogRead(rightSen)&gt;thresh && analogRead(leftSen)&lt;thresh){
+        parallax1.write(94);
+        parallax2.write(75);     
+      }
+      //correct for veer left
+      while(analogRead(centSen)&gt;thresh && analogRead(rightSen)&lt;thresh && analogRead(leftSen)&gt;thresh){
+        parallax1.write(115);
+        parallax2.write(94);
+      }
+      // go straight
+      while(analogRead(centSen)&lt;thresh && analogRead(leftSen)&gt;thresh && analogRead(rightSen)&gt;thresh){
+        parallax1.write(100);
+        parallax2.write(90);
+      }  
+    </code></pre>
+    <br>
+    <br>
+    <p>This is video of how Gary follows a line. Go Gary!!</p>
+    <center><iframe width="560" height="315" src="https://www.youtube.com/embed/e5FzcKetXG0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></center>
+    
+    <center><h2> "Figure 8" Maneuver</h2></center>
+    <p>
+      We implemented a finite state machine to do this, where each state is the current leg of the figure 8 that our robot is in.
+      We then simply set up for each leg whether the next turn will be left or right upon reaching an intersection. 
+      The relevant code is shown below!
+    </p>
+    <code><pre>
+     follow_line();
+     if(state==1 || state == 6 || state==7 || state==8){
+        turn_left();
+
+        if(state==8){
+          state=1;
+          } else{
+            state++;
+          }
+     } else if (state==2 || state ==3 || state==4 || state==5){
+        turn_right();
+        state++;
+    </pre></code>
+    <br>
+    <br>
+    <p>As you can see from the code, we simply need two 'if' statements, wherein we assign a left or right turn following the current state.
+      The current state increments after each turn so this process can continue. At the end, state 8 (the last leg of the figure 8) will be updated to state
+      1 to restart the process indefinitely. 
+      Below is a ~crazy~ video of our robot, Gary, doing some "sick" figure 8s!
+    </p>
+    <center><iframe width="560" height="315" src="https://www.youtube.com/embed/sjUKxDI2cns" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></center>
+    <br>
     
     </body>
     </html>

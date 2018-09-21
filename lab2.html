@@ -55,6 +55,13 @@
     <br>
     <center><h2>Procedure</h2></center>
     <br>
+    <h3>Optical Team - Detecting IR Hats</h3>
+    First, the optical team attempted to detect IR emitters on "hats" given to us by the TAs. The emit IR light at 6kHz, which is not 
+    visible to humans but can be read by our IR sensor (OP598). The IR sensor was hooked up as seen below 
+    
+    We used the Arduino library Open Music Labs’ FFT to analyze all the input 
+    from the sensor, and tried to detect a peak at the desired frequency. We were able to see a peak in the correct "bucket" after saving 
+    and analyzing the output from the given script from this library, seen below. 
    
    <a href="#header"><button class="btn"><i class="fa fa-arrow-up"></i>Return to top</button></a>
    </body>

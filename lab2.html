@@ -16,7 +16,7 @@
 </head>
   <body>
     <div id= "header">
-      <center><h1> Lab 1 - Microcontrollers</h1></center>
+      <center><h1> Lab 2 - Frequency Analysis</h1></center>
     </div>
     <div id = "navbar">
       <a href="https://pdr64.github.io/six_squids/"><button class="btn"><i class="fa fa-home"></i> Back to Home Page</button></a>
@@ -31,11 +31,10 @@
     </p>
       <br>
     <br>
-    <center><h2>Materials Used</h2></center>
+    <center><h2>Materials Used - Optical Team</h2></center>
        <ul>
          <li>1 Arduino Uno</li>
          <li>1 USB A/B Cable</li>
-         <li>1 Continuous Rotation Servo</li>
          <li>1 LEDs</li>   
          <li>1 Potentiometer</li>
          <li>Several Resistors 
@@ -43,17 +42,16 @@
              <li>330 Ohm</li>
              <li>10K Ohm</li>
            </ul>  
-          <li>1 solderless breadboard</li>
-         <li>1 chassis</li>
-         <li>2 wheels</li>
-         <li>assorted screws</li>
-         <li>ball bearings</li>
+          <li>1 solderless breadboard</li>       
        </ul>
     <br>
+    <center><h2>Materials Used - Audio Team</h2></center>
+      <li>1 Arduino Uno</li>
+      <li>1 USB A/B Cable</li>
     <br>
     <center><h2>Procedure</h2></center>
     <br>
-    <h3>Blinking LEDs</h3>
+    <h3>Audio Team</h3>
     <p>To begin the lab, we opened up the blink sketch and examined it to understand how it works. 
       We successfully blinked the internal LED with the following code:</p>
     <code><pre>
@@ -124,36 +122,7 @@
     <center><iframe width="560" height="315" src="https://www.youtube.com/embed/PwtBw1om6sE" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></center>
     <br>
     
-    <h3>Assembling and Testing Robot</h3>
-    <p>Next, we assembled our robot using a chassis, two wheels along with their mounts, a ball bearing, and an arduino. 
-    Using the servo control we learned in the previous step, we set up the servo motion such that the robot would turn in a figure 8 motion.</p>
-    <code><pre>
-        #include <Servo.h>;
-
-        Servo parallax1;
-        Servo parallax2;
-
-        void setup() {
-          parallax1.attach(6);
-          parallax2.attach(5);
-          }
-
-        void loop() {
-         parallax1.write(35);
-         parallax2.write(94);
-         delay(4000);
-         parallax1.write(95);
-         parallax2.write(165);
-         delay(4000);
-          }
-    </pre></code>
-    <br>
-    
-  <p>See video below to observe!</p>
-  <br>
-  <center><iframe width="560" height="315" src="https://www.youtube.com/embed/-OgsQ5U1r9w" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></center>
-  <br>
-
+   
    <a href="#header"><button class="btn"><i class="fa fa-arrow-up"></i>Return to top</button></a>
    </body>
 </html>

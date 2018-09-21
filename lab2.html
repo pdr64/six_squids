@@ -12,61 +12,64 @@
     <style>
       body{
         padding: 0 80px;
+      }
     </style>
 </head>
-  <body>
-    <div id= "header">
-      <center><h1> Lab 2 - Frequency Analysis</h1></center>
-    </div>
-    <div id = "navbar">
-      <a href="https://pdr64.github.io/six_squids/"><button class="btn"><i class="fa fa-home"></i> Back to Home Page</button></a>
-    </div>
-    <br>
-    <br>
-    <center><h2>Objective </h2></center>
-    
-      <p>The goal of this lab was to start testing different signal processing, both audio and optical. The audio team worked on processing
-        certain frequencies and ignoring others (like voice and music) whereas the optical team worked on detecting other robots' IR emitters and 
-        ignoring the decoy frequencies. 
-    </p>
-      <br>
-    <br>
-    <center><h2>Materials Used - Optical Team</h2></center>
-       <ul>
-         <li>1 Arduino Uno</li>
-         <li>1 USB A/B Cable</li>
-         <li>1 LEDs</li>   
-         <li>1 Potentiometer</li>
-         <li>Several Resistors 
-           <ul>
-             <li>330 Ohm</li>
-             <li>10K Ohm</li>
-           </ul>  
-          <li>1 solderless breadboard</li>       
-       </ul>
-    <br>
-    <center><h2>Materials Used - Audio Team</h2></center>
-      <li>1 Arduino Uno</li>
-      <li>1 USB A/B Cable</li>
-      <li>1 IR hat from TAs</li>
-      <li>1 IR sensor  (OP598)</li>
-       <li>1 decoy</li>
-      <li>Resistors and capacitors for bandpass filter</li>
-    <br>
-    <center><h2>Procedure</h2></center>
-    <br>
-    <h3>Optical Team - Detecting IR Hats</h3>
+<body>
+  <div id= "header">
+    <center><h1> Lab 2 - Frequency Analysis</h1></center>
+  </div>
+  <div id = "navbar">
+    <a href="https://pdr64.github.io/six_squids/"><button class="btn"><i class="fa fa-home"></i> Back to Home Page</button></a>
+  </div>
+  <br>
+  <br>
+  <center><h2>Objective </h2></center>
+  <p>The goal of this lab was to start testing different signal processing, both audio and optical. The audio team worked on processing
+     certain frequencies and ignoring others (like voice and music) whereas the optical team worked on detecting other robots' IR emitters and 
+     ignoring the decoy frequencies. 
+  </p>
+  <br>
+  <br>
+  <center><h2>Materials Used - Optical Team</h2></center>
+  <ul>
+    <li>1 Arduino Uno</li>
+    <li>1 USB A/B Cable</li>
+    <li>1 LEDs</li>   
+    <li>1 Potentiometer</li>
+    <li>Several Resistors 
+        <ul>
+        <li>330 Ohm</li>
+        <li>10K Ohm</li>
+      </ul> </li> 
+     <li>1 solderless breadboard</li>       
+     </ul>
+  <br>
+  <center><h2>Materials Used - Audio Team</h2></center>
+  <ul><li>1 Arduino Uno</li>
+     <li>1 USB A/B Cable</li>
+     <li>1 IR hat from TAs</li>
+     <li>1 IR sensor  (OP598)</li>
+     <li>1 decoy</li>
+     <li>Resistors and capacitors for bandpass filter</li>
+  </ul>
+  <br>
+  <center><h2>Procedure</h2></center>
+  <br>
+  <h3>Optical Team - Detecting IR Hats</h3>
+  <p>
     First, the optical team attempted to detect IR emitters on "hats" given to us by the TAs. The emit IR light at 6kHz, which is not 
-    visible to humans but can be read by our IR sensor (OP598). The IR sensor was hooked up as seen below (taken from the 3400 site)
-    <center><img src="IR sensor (OP598).png" class="img-rounded" alt="circuit_diagram" width="400" height="300"></center>
-    We used the Arduino library Open Music Labs’ FFT to analyze all the input 
+    visible to humans but can be read by our IR sensor (OP598). The IR sensor was hooked up as seen below (taken from the 3400 site)</p>
+  <br>
+  <center><img src="IR sensor (OP598).png" class="img-rounded" alt="circuit_diagram" width="400" height="300"></center><br>
+  <p>We used the Arduino library Open Music Labs’ FFT to analyze all the input 
     from the sensor, and tried to detect a peak at the desired frequency. First we made sure we could see the peak on the oscilliscope,
-    as seen below.
-    <br>
-    <center><iframe width="560" height="315" src="https://www.youtube.com/embed/XtczPIGM19o" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></center>
+    as seen below.</p>
+  <br>
+  <center><iframe width="560" height="315" src="https://www.youtube.com/embed/XtczPIGM19o" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></center>
 
 
    
-   <a href="#header"><button class="btn"><i class="fa fa-arrow-up"></i>Return to top</button></a>
-   </body>
+  <a href="#header"><button class="btn"><i class="fa fa-arrow-up"></i>Return to top</button></a>
+  </body>
 </html>

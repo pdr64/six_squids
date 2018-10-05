@@ -26,7 +26,7 @@
   <br>
   <center><h2>Objective </h2></center>
   <p>The goal of this lab was to start testing different signal processing, both audio and optical. The audio team worked on processing
-     certain frequencies and ignoring others (like voice and music) whereas the optical team worked on detecting other robots' IR emitters and 
+     certain frequencies and ignoring background noise like talking and music whereas the optical team worked on detecting other robots' IR emitters and 
      ignoring the decoy frequencies. 
   </p>
   <br>
@@ -59,8 +59,7 @@
   <br>
   <center><h2>Procedure</h2></center>
   <br>
-  <p> For both of our implementation to get the FFT library to work with our circuit, we had little chance making our amplifier circuits to work.
-  We both resorted to Team Alpha's approach.</p>
+  <p> For both of our implementations, we had little chance making our amplifier circuits to work. We therefore resorted to <a target ="_blank" href="https://cei-lab.github.io/ECE3400-2017-teamAlpha/lab2.html"Team Alpha's approach</a>.</p>
   <h3>Optical Team - Detecting IR Hats</h3>
   <p>
     First, the optical team attempted to detect IR emitters on "hats" given to us by the TAs. The emit IR light at 6kHz, which is not 
@@ -91,17 +90,26 @@
   <center><iframe width="560" height="315" src="https://www.youtube.com/embed/haXOV5CjExo" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></center>
   <br>
   <br>
-  <h3>Acoutic Team - Detecting 660Hz Sound frequency</h3>
-  <p>We began with the circuit provided for the lab but realised that we needed to amplify our waveforms because they had been attenuated.
+  <h3>Acoutic Team - Detecting 660Hz Sound Frequency</h3>
+  <p>We began with the circuit provided for the lab (see <i>fig. 4</i>) but realised that we needed to amplify our waveforms because they had been attenuated(see <i>fig. 5</i>).
     We began the task independently trying to build a circuit to detect our 660Hz sound wave. We worked hard switching between numerous designs of
     band-pass filters to amplifiers but nothing seemed to work for us. We decided to resort to Team Alpha's approach. We used the circuit from <i>fig. 2</i> above. 
-    The values of our components are however a bit different from the ones used by Team Alpha but the results were pretty similar. 
+    with slightly different values for the components. Our results, however, were very similar to Team Alpha's. 
   </p>
-  <p>Initially, we weere using the free running fft arduino code where our bin was bin #5. We there for made some specification to our code to sense when the wave in bin #5 was the highest.
+  <center><p><b>Fig. 4:</b> Initial circuit built to test microphone. Image taken from 3400 website's Lab 2 instructions.</p></center>
+  <br>
+  <center><p><b>Fig. 4:</b> Initial circuit built to test microphone. Image taken from 3400 website's Lab 2 instructions.</p></center>
+  <br>
+  <p>Initially, we were using the free running mode of the example fft arduino code (fft_adc_serial.ino), where our desired frequency was identified in bin #5.</p>
+  <center><p><b>Fig. 6:</b>Image of FFT of signal. 660Hz frequency is located in bin 5</p></center>
+  <br>
+  <p>
+    We therefore made some specification to our code to sense when the wave in bin #5 was the highest.
     This was how we could tell when an incoming frequency was 660Hz. The video below shows a test performed on the detection of 660Hz. 
   </p>
   <center></center>
   <br>
+  
   <h3> Merging the Two Functionalities</h3>
   <p>Merging the two sub groups was not too difficult because both teams used the same example code. To implement both functionalities, we created two new 
     functions, fft_audio and fft_visual. Each function copied the functional part from the FFT and adapted it to work with the specific component. From there, 

@@ -65,12 +65,13 @@
     visible to humans but can be read by our IR sensor (OP598). The IR sensor was hooked up as seen below (taken from the 3400 site)</p>
   <br>
   <center><img src="IRsensor.png" class="img-rounded" alt="Circuit Diagram" width="400" height="300"></center><br>
-  <p>We used the Arduino library Open Music Labs’ FFT to analyze all the input 
-    from the sensor, and tried to detect a peak at the desired frequency. First we made sure we could see the peak on the oscilliscope,
+  <p>We used the Arduino library Open Music Labs’ FFT to analyze all of the input 
+    from the sensor and tried to detect a peak at the desired frequency. First we made sure we could see the peak on the oscilliscope,
     as seen below.</p>
   <br>
-  <center><iframe width="560" height="315" src="https://www.youtube.com/embed/XtczPIGM19o" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></center>
-
+  <center><iframe width="560" height="315" src="www.youtube.com/embed/lExaU_y7V5U" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></center>
+  <br>
+  <p>As you can see, we have a peak at around 6 kHz (the cursor was a little far to the right and read 6.9 kHz, but trust us the peak was at 6 kHz). </p>
   <p>
   Next we implemented an op amp based on Team Alpha's solution from last year as recommended by the TAs after we could 
   not get our personally designed op-amp circuit working. 
@@ -91,7 +92,7 @@
   <br>
   <h3>Acoutic Team - Detecting 660Hz Sound frequency</h3>
   <p>We began with the circuit provided for the lab but realised that we needed to amplify our waveforms because they had been attenuated.
-    We began the task independently trying to build a circuit to detect our 660Hz sound wave. We worked hard switching between numerous designs of
+    We began the task independently trying to build a magnificient circuit to detect our 660Hz sound wave. We worked hard switching between numerous designs of
     band-pass filters to amplifiers but nothing seemed to work for us. We decided to resort to Team Alpha's approach. The values of our components are however
     a bit different from the one used by Team Alpha. 
   </p>

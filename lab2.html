@@ -99,10 +99,11 @@
   </p>
   <center><p><b>Fig. 4:</b> Initial circuit built to test microphone. Image taken from 3400 website's Lab 2 instructions.</p></center>
   <br>
-  <center><p><b>Fig. 4:</b> Initial circuit built to test microphone. Image taken from 3400 website's Lab 2 instructions.</p></center>
-  <br>
   <p>Initially, we were using the free running mode of the example fft arduino code (fft_adc_serial.ino), where our desired frequency was identified in bin #5.</p>
-  <center><p><b>Fig. 6:</b>Image of FFT of signal. 660Hz frequency is located in bin 5</p></center>
+  <center><p><b>Fig. 5:</b>Image of FFT of signal. 660Hz frequency is located in bin 5.</p></center>
+  <br>
+  <p>After adding the amplification, this was what we observed.</p>
+  <center><p><b>Fig. 6:</b>Amplified version of <i>fig. 5</i>.</p></center>
   <br>
   <p>
     We therefore made some specification to our code to sense when the wave in bin #5 was the highest.
@@ -110,7 +111,6 @@
   </p>
   <center></center>
   <br>
-  
   <h3> Merging the Two Functionalities</h3>
   <p>Merging the two sub groups was not too difficult because both teams used the same example code. To implement both functionalities, we created two new 
     functions, fft_audio and fft_visual. Each function copied the functional part from the FFT and adapted it to work with the specific component. From there, 

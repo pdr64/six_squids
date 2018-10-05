@@ -93,7 +93,7 @@
   <br>
   <h3>Acoutic Team - Detecting 660Hz Sound frequency</h3>
   <p>We began with the circuit provided for the lab but realised that we needed to amplify our waveforms because they had been attenuated.
-    We began the task independently trying to build a magnificient circuit to detect our 660Hz sound wave. We worked hard switching between numerous designs of
+    We began the task independently trying to build a circuit to detect our 660Hz sound wave. We worked hard switching between numerous designs of
     band-pass filters to amplifiers but nothing seemed to work for us. We decided to resort to Team Alpha's approach. We used the circuit from <i>fig. 2</i> above. 
     The values of our components are however a bit different from the ones used by Team Alpha but the results were pretty similar. 
   </p>
@@ -103,7 +103,11 @@
   <center></center>
   <br>
   <h3> Merging the Two Functionalities</h3>
-  
+  <p>Merging the two sub groups was not too difficult because both teams used the same example code. To implement both functionalities, we created two new 
+    functions, fft_audio and fft_visual. Each function copied the functional part from the FFT and adapted it to work with the specific component. From there, 
+    inside loop, we alternated between calling fft_audio and fft_visual. This allowed both functions to work together at the same time. For the final competition, 
+    though, we will only need fft_audio for the very beginning so we will likely use an if statement to address this.
+  </p>
   <a href="#header"><button class="btn"><i class="fa fa-arrow-up"></i>Return to top</button></a>
   </body>
 </html>

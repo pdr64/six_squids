@@ -66,7 +66,7 @@
     First, the optical team attempted to detect IR emitters on "hats" given to us by the TAs. The emit IR light at 6kHz, which is not 
     visible to humans but can be read by our IR sensor (OP598). The IR sensor was hooked up as seen below.</p>
   <br>
-  <center><img src="IRsensor.png" class="img-rounded" alt="Circuit Diagram" width="500" height="45 0"><br><p><b>Fig.1</b>:Image taken from 3400 website</p></center><br>
+  <center><img src="IRsensor.png" class="img-rounded" alt="Circuit Diagram" width="500" height="450"><br><p><b>Fig.1:</b> Image taken from 3400 website</p></center><br>
   <p>We used the Arduino library Open Music Labs’ FFT to analyze all the input 
     from the sensor, and tried to detect a peak at the desired frequency. First we made sure we could see the peak on the oscilliscope,
     as seen below.</p>
@@ -77,13 +77,13 @@
     Next we implemented an amplifying circuit based on Team Alpha's solution from last year as recommended by the TAs after we could 
     not get our personally designed op-amp circuit working.We used a similar circuit to the one below except we used a photo transistor in place of the microphone and did not used the capacitor on the
     right.</p>   
-  <center><img src="team_alpha_amp.png" class="img-rounded" alt="Amplifier Circuit" width="600" height="300"><p><b>Fig.2</b>Image taken from Team Alpha's Website</p></center><br>
+  <center><img src="team_alpha_amp.png" class="img-rounded" alt="Amplifier Circuit" width="600" height="300"><p><b>Fig.2:</b> Image taken from Team Alpha's Website</p></center><br>
   <br>
   <p>
    After this we returned to the FFT library, where we were successfully able to identify the 6kHz bucket in the 42nd group, 
    which the decoy hat had no affect on due to the spacing of the buckets. Below you can see our FFT analysis, where the 42nd bucket is clearly high in the presense of the hat and low without it. 
   </p>
-  <center><img src="IR_Sensing.PNG" class="img-rounded" alt="IR sensing FFT" width="300" height="500"></center><br>
+  <center><img src="IR_Sensing.PNG" class="img-rounded" alt="IR sensing FFT" width="300" height="500"><p><b>Fig.3:</b> FFT of IR sensor</p></center><br>
    
   <p>
     Therefore, the visual task was complete. See below for a video of Gary responding to the robot hat and not to the decoy! 
@@ -97,6 +97,10 @@
     band-pass filters to amplifiers but nothing seemed to work for us. We decided to resort to Team Alpha's approach. We used the circuit from <i>fig. 2</i> above. 
     The values of our components are however a bit different from the ones used by Team Alpha but the results were pretty similar. 
   </p>
+  <p>Initially, we weere using the free running fft arduino code where our bin was bin #5. We there for made some specification to our code to sense when the wave in bin #5 was the highest.
+    This was how we could tell when an incoming frequency was 660Hz. The video below shows a test performed on the detection of 660Hz. 
+  </p>
+  <center></center>
   <br>
   <h3> Merging the Two Functionalities</h3>
   

@@ -59,7 +59,7 @@
   <br>
   <center><h2>Procedure</h2></center>
   <br>
-  <p><b>Note:</b> For both of our implementations, we had little luck making our amplifier circuits to work. We therefore resorted to <a target ="_blank" href="https://cei-lab.github.io/ECE3400-2017-teamAlpha/lab2.html">Team Alpha's approach</a>.
+  <p><b>Note:</b> For both of our implementations, we had little chance making our amplifier circuits to work. We therefore resorted to <a target ="_blank" href="https://cei-lab.github.io/ECE3400-2017-teamAlpha/lab2.html">Team Alpha's approach</a>.
   </p>
   <h3>Optical Team - Detecting IR Hats</h3>
   <p>
@@ -75,7 +75,8 @@
 
   <p>
     Next we implemented an amplifying circuit based on Team Alpha's solution from last year as recommended by the TAs after we could 
-    not get our personally designed op-amp circuit working.We used a similar circuit to the one below except we used a photo transistor.</p>   
+    not get our personally designed op-amp circuit working.We used a similar circuit to the one below except we used a photo transistor in place of the microphone and did not used the capacitor on the
+    right.</p>   
   <center><img src="team_alpha_amp.png" class="img-rounded" alt="Amplifier Circuit" width="600" height="300"><p><b>Fig.2:</b> Image taken from Team Alpha's Website</p></center>
   <br>
   <p>
@@ -116,7 +117,22 @@
   <p>We combined the two functions. To implement them together, we modified our arduino code. Inside the loop, we alternated between the two functions we created.
     This allowed both sound and IR sensing to work together. Below is a snippet of our code with the modifications.
   </p>
-  <center></center>
+  <center><code><pre>
+    void loop() {
+     while(1) { // reduces jitter
+      fft_audio ();
+      fft_visual();    
+     }
+    }
+
+    void fft_audio() {
+     ...//code here
+    }
+
+    void fft_visual() {
+    ... //code here
+    }
+  </pre></code></center>
   <p>
     The video below is the demonstration of the two functions working together. The green light is for sound and the red light is for IR sensing.
   </p>

@@ -59,7 +59,7 @@
   <br>
   <center><h2>Procedure</h2></center>
   <br>
-  <p> For both of our implementations, we had little chance making our amplifier circuits to work. We therefore resorted to <a target ="_blank" href="https://cei-lab.github.io/ECE3400-2017-teamAlpha/lab2.html">Team Alpha's approach</a>.
+  <p><b>Note:</b> For both of our implementations, we had little chance making our amplifier circuits to work. We therefore resorted to <a target ="_blank" href="https://cei-lab.github.io/ECE3400-2017-teamAlpha/lab2.html">Team Alpha's approach</a>.
   </p>
   <h3>Optical Team - Detecting IR Hats</h3>
   <p>
@@ -71,13 +71,13 @@
     from the sensor, and tried to detect a peak at the desired frequency. First we made sure we could see the peak on the oscilliscope,
     as seen below.</p>
   <br>
-  <center><iframe width="560" height="450" src="https://www.youtube.com/embed/XtczPIGM19o" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></center>
+  <center><iframe width="560" height="315" src="https://www.youtube.com/embed/XtczPIGM19o" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></center>
 
   <p>
     Next we implemented an amplifying circuit based on Team Alpha's solution from last year as recommended by the TAs after we could 
     not get our personally designed op-amp circuit working.We used a similar circuit to the one below except we used a photo transistor in place of the microphone and did not used the capacitor on the
     right.</p>   
-  <center><img src="team_alpha_amp.png" class="img-rounded" alt="Amplifier Circuit" width="600" height="300"><p><b>Fig.2:</b> Image taken from Team Alpha's Website</p></center><br>
+  <center><img src="team_alpha_amp.png" class="img-rounded" alt="Amplifier Circuit" width="600" height="300"><p><b>Fig.2:</b> Image taken from Team Alpha's Website</p></center>
   <br>
   <p>
    After this we returned to the FFT library, where we were successfully able to identify the 6kHz bucket in the 42nd group, 
@@ -97,26 +97,32 @@
     band-pass filters to amplifiers but nothing seemed to work for us. We decided to resort to Team Alpha's approach. We used the circuit from <i>fig. 2</i> above. 
     with slightly different values for the components. Our results, however, were very similar to Team Alpha's. 
   </p>
-  <center><p><b>Fig. 4:</b> Initial circuit built to test microphone. Image taken from 3400 website's Lab 2 instructions.</p></center>
+  <center><img src="microphone_simple.PNG" class="img-rounded" alt="simple microphone circuit" width="600" height="300"><br><p><b>Fig. 4:</b> Initial circuit built to test microphone. Image taken from 3400 website's Lab 2 instructions.</p></center>
   <br>
   <p>Initially, we were using the free running mode of the example fft arduino code (fft_adc_serial.ino), where our desired frequency was identified in bin #5.</p>
-  <center><p><b>Fig. 5:</b>Image of FFT of signal. 660Hz frequency is located in bin 5.</p></center>
+  <center><img src="lab2_simple.PNG" class="img-rounded" alt="graph 1" width="600" height="300"><br><p><b>Fig. 5:</b>Image of FFT of signal. 660Hz frequency is located in bin 5.</p></center>
   <br>
   <p>After adding the amplification, this was what we observed.</p>
-  <center><p><b>Fig. 6:</b>Amplified version of <i>fig. 5</i>.</p></center>
+  <center><img src="lab2_amplified.PNG" class="img-rounded" alt="Amplified graph" width="600" height="300"><br><p><b>Fig. 6:</b>Amplified version of <i>fig. 5</i>.</p></center>
   <br>
+  <p>We used the oscilloscope to varify that the circuit was really working and the video below shows that when the 660Hz signal was played, the marked signal rises.</p>
+  <center><iframe width="560" height="315" src="https://www.youtube.com/embed/yiNgYGF8eoM" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></center>
   <p>
     We therefore made some specification to our code to sense when the wave in bin #5 was the highest.
     This was how we could tell when an incoming frequency was 660Hz. The video below shows a test performed on the detection of 660Hz. 
   </p>
-  <center></center>
+  <center><iframe width="560" height="315" src="https://www.youtube.com/embed/rrHG1bqYzEI" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></center>
   <br>
   <h3> Merging the Two Functionalities</h3>
-  <p>Merging the two sub groups was not too difficult because both teams used the same example code. To implement both functionalities, we created two new 
-    functions, fft_audio and fft_visual. Each function copied the functional part from the FFT and adapted it to work with the specific component. From there, 
-    inside loop, we alternated between calling fft_audio and fft_visual. This allowed both functions to work together at the same time. For the final competition, 
-    though, we will only need fft_audio for the very beginning so we will likely use an if statement to address this.
+  <p>We combined the two functions. To implement them together, we modified our arduino code. Inside the loop, we alternated between the two functions we created.
+    This allowed both sound and IR sensing to work together. Below is a snippet of our code with the modifications.
   </p>
+  <center></center>
+  <p>
+    The video below is the demonstration of the two functions working together. The green light is for sound and the red light is for IR sensing.
+  </p>
+  <center><iframe width="560" height="315" src="https://www.youtube.com/embed/UWrEcSxXUek" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></center>
+  <br>
   <a href="#header"><button class="btn"><i class="fa fa-arrow-up"></i>Return to top</button></a>
   </body>
 </html>

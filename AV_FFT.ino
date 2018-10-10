@@ -11,7 +11,7 @@ port at 115.2kb.
 #define FFT_N 256 // set to 256 point fft
 
 #include <FFT.h> // include the library
-
+int isRobo = 0;
 void setup() {
   Serial.begin(115200); // use the serial portM
   //TIMSK0 = 0; // turn off timer0 for lower jitter
@@ -19,9 +19,10 @@ void setup() {
 //  ADMUX = A0; // use adc0
  // DIDR0 = 0x01; // turn off the digital input for adc0
   pinMode(7, OUTPUT);
-  pinMode(4, OUTPUT);
+  pinMode(2, OUTPUT);
   pinMode(A0, INPUT);
   pinMode(A1, INPUT);
+  
   
   
 }
@@ -29,7 +30,7 @@ void setup() {
 void loop() {
   while(1) { // reduces jitter
 
-    fft_audio ();
+   // fft_audio ();
     fft_visual();    
   }
 }
@@ -79,7 +80,7 @@ void fft_visual() {
       int k = (j << 8) | m; // form into an int
       k -= 0x0200; // form into a signed int
       k <<= 6; // form into a 16b signed int */
-      fft_input[i] = analogRead(A1); // put real data into even bins
+      fft_input[i] = analogRead(A0); // put real data into even bins
       fft_input[i+1] = 0; // set odd bins to 0
     }
     fft_window(); // window the data for better frequency response
@@ -87,20 +88,26 @@ void fft_visual() {
     fft_run(); // process the data in the fft
     fft_mag_log(); // take the output of the fft
     sei();
-    if(fft_log_out[76]>20) 
+    if(fft_log_out[76]>30) 
       {
-        digitalWrite(4, HIGH);  
+        digitalWrite(2, HIGH);  
         Serial.println("Visual LED on");
+        Serial.println(fft_log_out[76]); 
+        isRobo =10;
       }
     else 
-      {
-        digitalWrite(4, LOW); 
+      if (isRobo !=0){
+        isRobo --;
+      }
+      else{ 
+        digitalWrite(2, LOW); 
         Serial.println(fft_log_out[76]); 
       }
-    Serial.println("start visual");
+    //Serial.println("start visual");
     for (byte i = 0 ; i < FFT_N/2 ; i++) { 
       //Serial.println(fft_log_out[i]); // send out the data
       
     }
 }
+
 

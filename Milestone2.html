@@ -1,1 +1,107 @@
-
+<!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title> Milestone 1</title>
+    <style>
+      body{
+        padding: 0 80px;
+    </style>
+</head>
+  <body>
+    <div id= "header">
+      <center><h1>Milestone 2</h1></center>
+    </div>
+    <div id = "navbar">
+      <a href="https://pdr64.github.io/six_squids/"><button class="btn"><i class="fa fa-home"></i> Back to Home Page</button></a>
+    </div>
+    <br>
+    <br>
+    <center><h2>Objective </h2></center>
+    
+    <p>
+      The goal of this milestone was to give Gary the ability to follow a set of arbitrary walls through right-hand wall following. While doing this, we needed to ensure
+      that Gary could detect the presence of other robots as well, so we used our IR detection materials from Lab 2. We added IR sensors on Gary's sides that
+      detect the proximity of the walls. With some code, we could tell Gary to maintain a constant distance to the wall on the right side while following a line. 
+      With all of this put together, we enabled Gary to circle a wall and stop when in close proximity to another robot!
+    </p>
+    <br>
+    <br>
+    <center><h2>Figuring out IR Wall Sensors</h2></center>
+    <p>STUFF HERE
+    </p>
+    <br>
+    <center><iframe width="560" height="315" src="VIDEO HERE" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></center>
+    <br>
+    <center><h2>Implementing Wall Following</h2></center>
+    <p>
+      In order to implement right-hand wall folliwng, we first attached three IR sensors to our robot on the front and both sides.
+      
+      <center><img src="PICTURE HERE" class="img-rounded" alt="Robot with IR sensors" width="400" height="300"></center>
+      <br>
+      <br>
+      Though we only needed two sensors for the sake of this Milestone, we will need 3 for our next lab so we added the last one anyway.
+      Based on the return value of the right-side IR sensor, we could determine whether a wall was present or not. Gary could then follow a line
+      until there was no wall detected on his right side, which means it is time to turn right. The process repeats indefinitely.
+   
+      Below is the code that shows how we did this.</p>
+    <br>
+    <code><pre>
+      int thresh=150;  //sets our threshold
+      // correct for veer right
+      while(analogRead(centSen)&gt;thresh && analogRead(rightSen)&gt;thresh && analogRead(leftSen)&lt;thresh){
+        parallax1.write(94);
+        parallax2.write(75);     
+      }
+      //correct for veer left
+      while(analogRead(centSen)&gt;thresh && analogRead(rightSen)&lt;thresh && analogRead(leftSen)&gt;thresh){
+        parallax1.write(115);
+        parallax2.write(94);
+      }
+      // go straight
+      while(analogRead(centSen)&lt;thresh && analogRead(leftSen)&gt;thresh && analogRead(rightSen)&gt;thresh){
+        parallax1.write(100);
+        parallax2.write(90);
+      }  
+    </code></pre>
+    <br>
+    <br>
+    <p>This is video of how Gary follows a line. Go Gary!!</p>
+    <center><iframe width="560" height="315" src="https://www.youtube.com/embed/e5FzcKetXG0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></center>
+    
+    <center><h2> "Figure 8" Maneuvering</h2></center>
+    <p>
+      We implemented a finite state machine to do this, where each state is the current leg of the figure 8 that our robot is in.
+      We then simply set up for each leg whether the next turn will be left or right upon reaching an intersection. 
+      The relevant code is shown below!
+    </p>
+    <code><pre>
+     follow_line();
+     if(state==1 || state == 6 || state==7 || state==8){
+        turn_left();
+        if(state==8){
+          state=1;
+          } else{
+            state++;
+          }
+     } else if (state==2 || state ==3 || state==4 || state==5){
+        turn_right();
+        state++;
+    </pre></code>
+    <br>
+    <br>
+    <p>As you can see from the code, we simply needed two 'if' statements, wherein we assign a left or right turn following the current state.
+      The current state increments after each turn so this process can continue. At the end, state 8 (the last leg of the figure 8) will move on to state
+      1 to restart the process indefinitely. 
+      Below is a ~crazy~ video of our robot, Gary, doing some "sick" figure 8s!
+    </p>
+    <center><iframe width="560" height="315" src="https://www.youtube.com/embed/sjUKxDI2cns" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></center>
+    <br>
+    
+    </body>
+    </html>

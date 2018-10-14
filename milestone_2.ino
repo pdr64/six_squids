@@ -107,6 +107,7 @@ void follow_line(){
     parallax1.write(180);
     parallax2.write(60); 
   }
+  //at intersection
   while(analogRead(centSen)<thresh && analogRead(leftSen)<thresh && analogRead(rightSen)<thresh)
   {
     uint16_t rWall = analogRead(rightWall);

@@ -1,0 +1,222 @@
+#define LOG_OUT 1// use the log output func  tion
+#define FFT_N 256// set to 256point fft
+#include <FFT.h>
+#include <Servo.h>
+
+
+Servo parallax1;
+Servo parallax2;
+
+int rightSen = A2;
+int centSen = A3;
+int leftSen = A4;
+
+int ir = 8;
+int wall = 12;
+
+int pin_out_s0W = 4;
+int pin_out_s1W = 7;
+int sensor = A1;
+
+int thresh= 500;
+int wallThresh = 400;
+
+void setup() {
+parallax1.attach(6);
+parallax2.attach(5);
+
+pinMode(rightSen, INPUT);
+pinMode(centSen, INPUT);
+pinMode(leftSen, INPUT);
+pinMode(pin_out_s0W, OUTPUT);
+pinMode(pin_out_s1W, OUTPUT);
+pinMode(ir, OUTPUT);
+pinMode(wall, OUTPUT);
+
+Serial.begin(9600);
+}
+
+void loop() {
+  
+  follow_line();
+  check_IR();
+}
+    
+void check_IR(){
+  int timeOn = TIMSK0;
+  int freeOff = ADCSRA; 
+  int admux = ADMUX; 
+  int didro = DIDR0;
+  TIMSK0 = 0; // turn off timer0 for lower jitter
+  ADCSRA = 0xe5; // set the adc to free running mode
+  ADMUX = 0x40; // use adc0
+  DIDR0 = 0x01; // turn off the digital input for adc0
+  cli();  // UDRE interrupt slows this way down on arduino1.0
+  for (int i = 0 ; i < 512 ; i += 2) { // save 256 samples
+    while(!(ADCSRA & 0x10)); // wait for adc to be ready
+    ADCSRA = 0xf5; // restart adc
+    byte m = ADCL; // fetch adc data
+    byte j = ADCH;
+    int k = (j << 8) | m; // form into an int
+    k -= 0x0200; // form into a signed int
+    k <<= 6; // form into a 16b signed int
+    fft_input[i] = k; // put real data into even bins
+    fft_input[i+1] = 0; // set odd bins to 0
+  }
+  fft_window(); // window the data for better frequency response
+  fft_reorder(); // reorder the data before doing the fft
+  fft_run(); // process the data in the fft
+  fft_mag_log(); // take the output of the fft
+  sei();
+  if(fft_log_out[42]>120)
+  {
+    digitalWrite(ir, HIGH);
+    robot_stop();
+    delay(5000);
+  }
+  else
+  {
+    digitalWrite(ir, LOW);
+  }
+  TIMSK0 = timeOn; // turn On timer0 for lower jitter
+  ADCSRA = freeOff; // set the adc free running mode off
+  ADMUX = admux; 
+  DIDR0 = didro; // turn on the digital input for adc0
+}
+  
+void set_select(int y, int z)
+{
+      digitalWrite(pin_out_s0W,z);
+      digitalWrite(pin_out_s1W,y);
+}
+
+//turn left
+void turn_left(){
+  parallax1.write(0);
+  parallax2.write(0);
+  delay(800);
+}
+
+//turn around
+void turn_around(){
+  parallax1.write(0);
+  parallax2.write(0);
+  delay(200);
+}
+
+//turn right
+void turn_right(){
+  parallax1.write(180);
+  parallax2.write(180);
+  delay(800);
+}
+
+//stop
+void robot_stop(){
+  parallax1.write(90);
+  parallax2.write(90);
+}
+
+bool frontw()
+{
+  set_select(0,1);
+  int val = analogRead(sensor);
+  if(val>wallThresh)
+  {
+    return true;
+  }
+  else 
+  {
+    return false;
+  }
+  
+  
+}
+bool leftw()
+{
+  set_select(0,0);
+  int val = analogRead(sensor);
+  if(val>wallThresh)
+  {
+    return true;
+  }
+  else 
+  {
+    return false;
+  }
+}
+bool rightw()
+{
+  set_select(1,0);
+  int val = analogRead(sensor);
+  if(val>wallThresh)
+  {
+    return true;
+  }
+  else 
+  {
+    return false;
+  }
+}
+//follow line
+void follow_line(){
+  int left = analogRead(leftSen);
+  int right =analogRead(rightSen);
+  int center =analogRead(centSen);
+
+  // go straight
+  if(center<thresh && right>thresh && left>thresh){
+    Serial.println("straight");
+    parallax1.write(100);
+    parallax2.write(80); 
+  }
+  // correct for veer right
+  else if(center>thresh && right<thresh && left>thresh){
+    Serial.println(" veer right");
+    parallax1.write(91);
+    parallax2.write(86);   
+  }
+  //correct for veer left
+  else if(center>thresh && right>thresh && left<thresh){
+    Serial.println("veer left");
+    parallax1.write(94);
+    parallax2.write(89);
+  }
+ 
+  //at intersection
+  else if(center<thresh && right<thresh && left<thresh){
+    cli();
+    if(frontw())
+    { 
+      digitalWrite(wall, HIGH);
+      if(rightw() && !leftw())
+      {
+        turn_left();
+        Serial.println("turning left");
+      }
+      else if (leftw() && !rightw())
+      {
+        turn_right();
+        Serial.println("turning right");
+      }
+      else if(leftw() && rightw())
+      {
+        turn_around();
+        Serial.println("turning around");
+      }
+      else if(!leftw() && !rightw())
+      {
+        turn_left();
+        Serial.println("only front wall");
+      }
+      digitalWrite(wall, LOW);
+    } 
+    sei();
+    parallax1.write(100);
+    parallax2.write(80);
+  }
+  else if(center>thresh && right>thresh && left>thresh){
+    parallax1.write(94);
+    parallax2.write(89);
+  }
+}

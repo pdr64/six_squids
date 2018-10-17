@@ -9,7 +9,6 @@
 //#include "nRF24L01.h"
 //#include "RF24.h"
 //#include "prinf.h"
-
 RF24 radio(9,10);
 const uint64_t pipes[2] = { 0x000000000CLL, 0x000000000DLL };
 typedef enum { role_ping_out = 1, role_pong_back } role_e;
@@ -26,26 +25,26 @@ Servo parallax1;
 Servo parallax2;
 
 int rightSen = A2;
-int centSen = A3;
-int leftSen = A4;
+int centSen  = A3;
+int leftSen  = A4;
 
-int ir = 8;
+int ir   = 8;
 int wall = 12;
-int seen_robot=0;
+int seen_robot = 0;
+int heard = 0;
 
 int pin_out_s0W = 4;
 int pin_out_s1W = 7;
 int pin_out_s2W = 3;
 int sensor = A1;
 
-int thresh= 500;
+int thresh = 500;
 int wallThresh = 150;
 
 int isReady = 0; 
 
 void setup() {
-parallax1.attach(6);
-parallax2.attach(5);
+
 
 pinMode(rightSen, INPUT);
 pinMode(centSen, INPUT);
@@ -61,6 +60,9 @@ set_select(0,1,1);
 while(isReady == 0){
   check_audio();
 }
+Serial.println(isReady);
+parallax1.attach(6);
+parallax2.attach(5);
 ////////////////////
 /*
 printf_begin();
@@ -94,15 +96,15 @@ void loop() {
 }
 
 void check_audio(){
-  parallax1.detach();
-  parallax2.detach();
+  //parallax1.detach();
+  //parallax2.detach();
   byte timeOn = TIMSK0;
   byte freeOff = ADCSRA; 
   byte admux = ADMUX; 
   byte didro = DIDR0;
   TIMSK0 = 0; // turn off timer0 for lower jitter
   ADCSRA = 0xe5; // set the adc to free running mode
-  ADMUX = 0x42; // use adc0
+  ADMUX = 0x41; // use adc0
   DIDR0 = 0x01; // turn off the digital input for adc0
   cli();  // UDRE interrupt slows this way down on arduino1.0
   for (int i = 0 ; i < 512 ; i += 2) { // save 256 samples
@@ -122,7 +124,22 @@ void check_audio(){
   fft_mag_log(); // take the output of the fft
   sei();
   Serial.println(fft_log_out[5]);
-  if (fft_log_out[5] > 120) isReady = 1;
+  if(fft_log_out[5]>150)
+  {
+    heard++;
+  }
+  else
+  {
+    heard=0;
+  }
+  if(heard>8)
+  {
+    isReady=1;
+  }
+  TIMSK0 = timeOn; // turn On timer0 for lower jitter
+  ADCSRA = freeOff; // set the adc free running mode off
+  ADMUX = admux; 
+  DIDR0 = didro; // turn on the digital input for adc0
 }
     
 void check_IR(){
@@ -182,8 +199,8 @@ void check_IR(){
   
 void set_select(int x, int y, int z)
 {
-      digitalWrite(pin_out_s0W,z);
-      digitalWrite(pin_out_s1W,y);
+      digitalWrite(pin_out_s0W, z);
+      digitalWrite(pin_out_s1W, y);
       digitalWrite(pin_out_s2W, x);
 }
 
@@ -287,9 +304,9 @@ bool rightw()
 }
 //follow line
 void follow_line(){
-  int left = analogRead(leftSen);
-  int right =analogRead(rightSen);
-  int center =analogRead(centSen);
+  int left   = analogRead(leftSen);
+  int right  = analogRead(rightSen);
+  int center = analogRead(centSen);
   // go straight
   if(center<thresh && right>thresh && left>thresh){
     //Serial.println("straight");
@@ -363,28 +380,22 @@ void follow_line(){
 /*
 int radioWrite(int dataArray()){
   radio.stopListening(); // First, stop listening so we can talk.
-
     printf("Now sending %d, %d, %d, %d, %d, %d...", dataArray[0], dataArray[1], dataArray[2], dataArray[3], dataArray[4], dataArray[5]);
-
     int number[6] = {dataArray[0],dataArray[1],dataArray[2], dataArray[3],dataArray[4], dataArray[5]};
   
     bool ok = radio.write( &number, 6 * sizeof(int) );
-
     if (ok)
       printf("ok...");
     else
       printf("failed.\n\r");
-
     // Now, continue listening
     radio.startListening();
-
     // Wait here until we get a response, or timeout (250ms)
     unsigned long started_waiting_at = millis();
     bool timeout = false;
     while ( ! radio.available() && ! timeout )
       if (millis() - started_waiting_at > 200 )
         timeout = true;
-
     // Describe the results
     if ( timeout )
     {
@@ -395,11 +406,9 @@ int radioWrite(int dataArray()){
       // Grab the response, compare, and send to debugging spew
       unsigned long got_time;
       radio.read( &got_time, sizeof(unsigned long) );
-
       // Spew it
       printf("Got response %lu, round-trip delay: %lu\n\r",got_time,millis()-got_time);
     }
-
     // Try again 1s later
     delay(1000);
 }

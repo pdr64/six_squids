@@ -28,13 +28,17 @@
     <p>
       The goal of this milestone was to give Gary the ability to follow a set of arbitrary walls through right-hand wall following. While doing this, we needed to ensure
       that Gary could detect the presence of other robots as well, so we used our IR detection materials from Lab 2. We added IR sensors on Gary's sides that
-      detect the proximity of the walls. With some code, we could tell Gary to maintain a constant distance to the wall on the right side while following a line. 
-      With all of this put together, we enabled Gary to circle a wall and stop when in close proximity to another robot!
+      detect the proximity of the walls. With some code, we could tell Gary to check at every intersection whether or not there was a wall in front of him that he needed to avoid. 
+      With all of this put together, we enabled Gary to circle a wall while following a line and stop when in close proximity to another robot!
     </p>
     <br>
     <br>
     <center><h2>Figuring out IR Wall Sensors</h2></center>
-    <p>STUFF HERE
+    <p>
+      Using long range IR sensors, we were able to avoid walls. To start, we simply hooked up the analog input of the wall sensor
+      to the Arduino to find a reasonable threshold value at which point we would determine there was in fact a wall in front of Gary. 
+      Next, we integrated the wall sensors onto our robot, temporarily zip tying them to both sides of the robot and to the front at 
+      a height appropriate for the walls. 
     </p>
     <br>
     <center><iframe width="560" height="315" src="VIDEO HERE" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></center>

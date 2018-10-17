@@ -24,7 +24,6 @@
     <br>
     <br>
     <center><h2>Objective </h2></center>
-    
     <p>
       The goal of this milestone was to give Gary the ability to follow a set of arbitrary walls through right-hand wall following. While doing this, we needed to ensure
       that Gary could detect the presence of other robots as well, so we used our IR detection materials from Lab 2. We added IR sensors on Gary's sides that
@@ -41,19 +40,18 @@
       a height appropriate for the walls. 
     </p>
     <br>
-    <center><iframe width="560" height="315" src="VIDEO HERE" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></center>
+    <center><iframe width="560" height="315" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></center>
     <br>
     <center><h2>Implementing Wall Following</h2></center>
     <p>
       In order to implement right-hand wall folliwng, we first attached three IR sensors to our robot on the front and both sides.
-      
-      <center><img src="PICTURE HERE" class="img-rounded" alt="Robot with IR sensors" width="400" height="300"></center>
+    </p> 
+      <center><img src="" class="img-rounded" alt="Robot with IR sensors" width="400" height="300"></center>
       <br>
       <br>
-      Though we only needed two sensors for the sake of this Milestone, we will need 3 for our next lab so we added the last one anyway.
+      <p>Though we only needed two sensors for the sake of this milestone, we will need 3 for our next lab so we added the last one anyway.
       Based on the return value of the right-side IR sensor, we could determine whether a wall was present or not. Gary could then follow a line
-      until there was no wall detected on his right side, which means it is time to turn right. The process repeats indefinitely.
-   
+      until there was no wall detected on his right side, which means it is time to turn right. The process repeats indefinitely.<br>
       Below is the code that shows how we did this. Basically, at every intersection there was a wall check to see if we should turn</p>
     <br>
     <code><pre>
@@ -84,7 +82,7 @@
       digitalWrite(wall, LOW);
     } 
   }
-    </code></pre>
+    </pre></code>
     <br>
     <br>
     <p>

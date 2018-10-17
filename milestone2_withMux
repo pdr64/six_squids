@@ -33,26 +33,25 @@ pinMode(pin_out_s0W, OUTPUT);
 pinMode(pin_out_s1W, OUTPUT);
 pinMode(ir, OUTPUT);
 pinMode(wall, OUTPUT);
+//pinMode(A0, INPUT);
 
 Serial.begin(9600);
 }
 
 void loop() {
   follow_line();
-  
-  
 }
     
 void check_IR(){
-  //parallax1.detach();
-  //parallax2.detach();
+  parallax1.detach();
+  parallax2.detach();
   byte timeOn = TIMSK0;
   byte freeOff = ADCSRA; 
   byte admux = ADMUX; 
   byte didro = DIDR0;
   TIMSK0 = 0; // turn off timer0 for lower jitter
   ADCSRA = 0xe5; // set the adc to free running mode
-  ADMUX = 0x40; // use adc0
+  ADMUX = 0x45; // use adc0
   DIDR0 = 0x01; // turn off the digital input for adc0
   cli();  // UDRE interrupt slows this way down on arduino1.0
   for (int i = 0 ; i < 512 ; i += 2) { // save 256 samples
@@ -72,7 +71,7 @@ void check_IR(){
   fft_mag_log(); // take the output of the fft
   sei();
   Serial.println(fft_log_out[42]);
-  if(fft_log_out[42]>120)
+  if(fft_log_out[42]>100)
   {
     seen_robot++;
   }
@@ -81,19 +80,21 @@ void check_IR(){
     seen_robot=0;
   }
   digitalWrite(ir, LOW);
-  if(seen_robot>10)
+  if(seen_robot>2)
   {
     digitalWrite(ir, HIGH);
     robot_stop();
-    delay(5000);
+    while(1);
   }
+//  else{
+//    follow_line();
+//  }
   TIMSK0 = timeOn; // turn On timer0 for lower jitter
   ADCSRA = freeOff; // set the adc free running mode off
   ADMUX = admux; 
   DIDR0 = didro; // turn on the digital input for adc0
-  //parallax1.attach(6);
-  //parallax2.attach(5);
-
+  parallax1.attach(6);
+  parallax2.attach(5);
 }
   
 void set_select(int y, int z)
@@ -109,7 +110,7 @@ void turn_left(){
   delay(200);
   parallax1.write(0);
   parallax2.write(0);
-  delay(50);
+  delay(200);
   while(analogRead(centSen)>thresh)
   {
     parallax1.write(0);
@@ -139,7 +140,7 @@ void turn_right(){
   delay(200);
   parallax1.write(180);
   parallax2.write(180);
-  delay(50);
+  delay(200);
   while(analogRead(centSen)>thresh)
   {
     parallax1.write(180);
@@ -205,7 +206,6 @@ void follow_line(){
   int left = analogRead(leftSen);
   int right =analogRead(rightSen);
   int center =analogRead(centSen);
-
   // go straight
   if(center<thresh && right>thresh && left>thresh){
     //Serial.println("straight");
@@ -246,7 +246,7 @@ void follow_line(){
         turn_around();
         Serial.println("turning around");
       }
-      else if(!leftw() && !rightw())
+      else
       {
         turn_left();
         Serial.println("only front wall");
@@ -256,6 +256,9 @@ void follow_line(){
     else{
       parallax1.write(100);
       parallax2.write(80);
+    }
+    for (size_t i = 0; i < 3; i++) {
+      check_IR();
     }
   }
 }

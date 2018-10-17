@@ -40,25 +40,22 @@
       a height appropriate for the walls. 
     </p>
     <br>
-    <center><iframe width="560" height="315" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></center>
+    <center><img src="" class="img-rounded" alt="Robot with wall sensors" width="400" height="300"></center>
     <br>
     <center><h2>Implementing Wall Following</h2></center>
     <p>
-      In order to implement right-hand wall folliwng, we first attached three IR sensors to our robot on the front and both sides.
-    </p> 
-      <center><img src="" class="img-rounded" alt="Robot with IR sensors" width="400" height="300"></center>
-      <br>
-      <br>
-      <p>Though we only needed two sensors for the sake of this milestone, we will need 3 for our next lab so we added the last one anyway.
-      Based on the return value of the right-side IR sensor, we could determine whether a wall was present or not. Gary could then follow a line
-      until there was no wall detected on his right side, which means it is time to turn right. The process repeats indefinitely.<br>
-      Below is the code that shows how we did this. Basically, at every intersection there was a wall check to see if we should turn</p>
+      In order to implement right-hand wall following, we attached IR sensors to our robot on the front and the right side since we only needed 
+      two sensors for the sake of this milestone. We had a bit difficulty navigating a maze that required Gary to see a left wall so we decided to add another
+      wall sensor on the left side.
+      Our logic was simple. At an intersection, Gary checks to see a front wall. If the front wall exists, then Gary will go ahead and check his sides.
+      Gary will then turn in the direction that is free of wall. Gary then continues to follow the line. The process repeats indefinitely.<br>
+      Below is a snippet of our code that shows how we implemented this.</p>
     <br>
     <code><pre>
       else if(center&ltthresh && right&ltthresh && left&ltthresh){ //checks if we are at an intersection
       if(frontw()) //checks if there is a wall in front of the robot
       { 
-        digitalWrite(wall, HIGH); //toggles indicating LED
+        digitalWrite(wall, HIGH); //turns of indicating LED
         if(rightw() && !leftw()) //checks which way we should turn
         {
           turn_left();
@@ -79,16 +76,20 @@
           turn_left();
           Serial.println("only front wall");
         }
-        digitalWrite(wall, LOW);
+        digitalWrite(wall, LOW);  //LED turns off
       } 
       </pre></code>
       <br>
+    <p> Below is a short video showing Gary detecting walls in front and on the sides and making a u-turn to avoid crashing into the wall. This video shows
+      how Gary can detect walls on all sides with IR sensors.</p>
+    <center><iframe width="560" height="315" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></center>
       <br>
       <p>
         We already had line following and IR sensing implemented from previous labs, so all we had to do was schedule the 3 processes. 
-        Essentially, we would follow lines until we reached an intersection, when we would check for walls. IR sensing was scheduled along 
-        with line following.
+        Essentially, we would follow lines until we reached an intersection, when we would check for walls and also check for other robots.This implementation
+        was a way for us to avoid pulsation in the robot caused by the FFT function. When another robot is detected, Gary stops in its path to avoid colliding into the other 
+        robot. We decided to stop Gary for now but in the future, Gary might turn around or move to the right to pass by the robot. We have not determined the final action for Gary yet.
         In this video you can see Gary following lines, avoiding walls, and sensing other robots! </p>
-      <center><iframe width="560" height="315" src="https://www.youtube.com/embed/e5FzcKetXG0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></center>
+      <center><iframe width="560" height="315" src="https://www.youtube.com/embed/g4ktiWJ39AU" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></center>
     </body>
     </html>

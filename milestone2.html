@@ -87,37 +87,13 @@
     </code></pre>
     <br>
     <br>
-    <p>This is video of how Gary follows a line. Go Gary!!</p>
-    <center><iframe width="560" height="315" src="https://www.youtube.com/embed/e5FzcKetXG0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></center>
-    
-    <center><h2> "Figure 8" Maneuvering</h2></center>
     <p>
-      We implemented a finite state machine to do this, where each state is the current leg of the figure 8 that our robot is in.
-      We then simply set up for each leg whether the next turn will be left or right upon reaching an intersection. 
-      The relevant code is shown below!
-    </p>
-    <code><pre>
-     follow_line();
-     if(state==1 || state == 6 || state==7 || state==8){
-        turn_left();
-        if(state==8){
-          state=1;
-          } else{
-            state++;
-          }
-     } else if (state==2 || state ==3 || state==4 || state==5){
-        turn_right();
-        state++;
-    </pre></code>
-    <br>
-    <br>
-    <p>As you can see from the code, we simply needed two 'if' statements, wherein we assign a left or right turn following the current state.
-      The current state increments after each turn so this process can continue. At the end, state 8 (the last leg of the figure 8) will move on to state
-      1 to restart the process indefinitely. 
-      Below is a ~crazy~ video of our robot, Gary, doing some "sick" figure 8s!
-    </p>
-    <center><iframe width="560" height="315" src="https://www.youtube.com/embed/sjUKxDI2cns" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></center>
-    <br>
+      We already had line following and IR sensing implemented from previous labs, so all we had to do was schedule the 3 processes. 
+      Essentially, we would follow lines until we reached an intersection, when we would check for walls. IR sensing was scheduled along 
+      with line following.
+      In this video you can see Gary following lines, avoiding walls, and sensing other robots! </p>
+    <center><iframe width="560" height="315" src="https://www.youtube.com/embed/e5FzcKetXG0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></center>
+
     
     </body>
     </html>

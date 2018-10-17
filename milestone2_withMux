@@ -13,13 +13,14 @@ int leftSen = A4;
 
 int ir = 8;
 int wall = 12;
+int seen_robot=0;
 
 int pin_out_s0W = 4;
 int pin_out_s1W = 7;
 int sensor = A1;
 
 int thresh= 500;
-int wallThresh = 400;
+int wallThresh = 150;
 
 void setup() {
 parallax1.attach(6);
@@ -37,16 +38,18 @@ Serial.begin(9600);
 }
 
 void loop() {
-  
   follow_line();
-  check_IR();
+  
+  
 }
     
 void check_IR(){
-  int timeOn = TIMSK0;
-  int freeOff = ADCSRA; 
-  int admux = ADMUX; 
-  int didro = DIDR0;
+  //parallax1.detach();
+  //parallax2.detach();
+  byte timeOn = TIMSK0;
+  byte freeOff = ADCSRA; 
+  byte admux = ADMUX; 
+  byte didro = DIDR0;
   TIMSK0 = 0; // turn off timer0 for lower jitter
   ADCSRA = 0xe5; // set the adc to free running mode
   ADMUX = 0x40; // use adc0
@@ -68,20 +71,29 @@ void check_IR(){
   fft_run(); // process the data in the fft
   fft_mag_log(); // take the output of the fft
   sei();
+  Serial.println(fft_log_out[42]);
   if(fft_log_out[42]>120)
+  {
+    seen_robot++;
+  }
+  else
+  {
+    seen_robot=0;
+  }
+  digitalWrite(ir, LOW);
+  if(seen_robot>10)
   {
     digitalWrite(ir, HIGH);
     robot_stop();
     delay(5000);
   }
-  else
-  {
-    digitalWrite(ir, LOW);
-  }
   TIMSK0 = timeOn; // turn On timer0 for lower jitter
   ADCSRA = freeOff; // set the adc free running mode off
   ADMUX = admux; 
   DIDR0 = didro; // turn on the digital input for adc0
+  //parallax1.attach(6);
+  //parallax2.attach(5);
+
 }
   
 void set_select(int y, int z)
@@ -92,23 +104,47 @@ void set_select(int y, int z)
 
 //turn left
 void turn_left(){
+  parallax1.write(100);
+  parallax2.write(80);
+  delay(200);
   parallax1.write(0);
   parallax2.write(0);
-  delay(800);
+  delay(50);
+  while(analogRead(centSen)>thresh)
+  {
+    parallax1.write(0);
+    parallax2.write(0);
+  }
 }
 
 //turn around
 void turn_around(){
+  parallax1.write(100);
+  parallax2.write(80);
+  delay(100);
   parallax1.write(0);
   parallax2.write(0);
-  delay(200);
+  delay(1000);
+  while(analogRead(centSen)>thresh)
+  {
+    parallax1.write(0);
+    parallax2.write(0);
+  }
 }
 
 //turn right
 void turn_right(){
+  parallax1.write(100);
+  parallax2.write(80);
+  delay(200);
   parallax1.write(180);
   parallax2.write(180);
-  delay(800);
+  delay(50);
+  while(analogRead(centSen)>thresh)
+  {
+    parallax1.write(180);
+    parallax2.write(180);
+  }
 }
 
 //stop
@@ -121,6 +157,8 @@ bool frontw()
 {
   set_select(0,1);
   int val = analogRead(sensor);
+  //Serial.println(" front:");
+  //Serial.println(val);
   if(val>wallThresh)
   {
     return true;
@@ -136,6 +174,8 @@ bool leftw()
 {
   set_select(0,0);
   int val = analogRead(sensor);
+  //Serial.println(" left:");
+  //Serial.println(val);
   if(val>wallThresh)
   {
     return true;
@@ -149,6 +189,8 @@ bool rightw()
 {
   set_select(1,0);
   int val = analogRead(sensor);
+  //Serial.println(" right:");
+  //Serial.println(val);
   if(val>wallThresh)
   {
     return true;
@@ -166,26 +208,26 @@ void follow_line(){
 
   // go straight
   if(center<thresh && right>thresh && left>thresh){
-    Serial.println("straight");
+    //Serial.println("straight");
     parallax1.write(100);
     parallax2.write(80); 
   }
   // correct for veer right
-  else if(center>thresh && right<thresh && left>thresh){
-    Serial.println(" veer right");
-    parallax1.write(91);
-    parallax2.write(86);   
+  else if(right<thresh && left>thresh){
+    //Serial.println(" veer right");
+    parallax1.write(96);
+    parallax2.write(89); 
   }
   //correct for veer left
-  else if(center>thresh && right>thresh && left<thresh){
-    Serial.println("veer left");
-    parallax1.write(94);
-    parallax2.write(89);
+  else if(right>thresh && left<thresh){
+    //Serial.println("veer left");
+    parallax1.write(91);
+    parallax2.write(86); 
+    
   }
  
   //at intersection
   else if(center<thresh && right<thresh && left<thresh){
-    cli();
     if(frontw())
     { 
       digitalWrite(wall, HIGH);
@@ -211,12 +253,9 @@ void follow_line(){
       }
       digitalWrite(wall, LOW);
     } 
-    sei();
-    parallax1.write(100);
-    parallax2.write(80);
-  }
-  else if(center>thresh && right>thresh && left>thresh){
-    parallax1.write(94);
-    parallax2.write(89);
+    else{
+      parallax1.write(100);
+      parallax2.write(80);
+    }
   }
 }

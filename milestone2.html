@@ -55,43 +55,40 @@
       Below is the code that shows how we did this. Basically, at every intersection there was a wall check to see if we should turn</p>
     <br>
     <code><pre>
-    else if(center<thresh && right<thresh && left<thresh){ //checks if we are at an intersection
-    if(frontw()) //checks if there is a wall in front of the robot
-    { 
-      digitalWrite(wall, HIGH); //toggles indicating LED
-      if(rightw() && !leftw()) //checks which way we should turn
-      {
-        turn_left();
-        Serial.println("turning left");
-      }
-      else if (leftw() && !rightw())
-      {
-        turn_right();
-        Serial.println("turning right");
-      }
-      else if(leftw() && rightw())
-      {
-        turn_around();
-        Serial.println("turning around");
-      }
-      else
-      {
-        turn_left();
-        Serial.println("only front wall");
-      }
-      digitalWrite(wall, LOW);
-    } 
-  }
-    </pre></code>
-    <br>
-    <br>
-    <p>
-      We already had line following and IR sensing implemented from previous labs, so all we had to do was schedule the 3 processes. 
-      Essentially, we would follow lines until we reached an intersection, when we would check for walls. IR sensing was scheduled along 
-      with line following.
-      In this video you can see Gary following lines, avoiding walls, and sensing other robots! </p>
-    <center><iframe width="560" height="315" src="https://www.youtube.com/embed/e5FzcKetXG0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></center>
-
-    
+      else if(center<thresh && right<thresh && left<thresh){ //checks if we are at an intersection
+      if(frontw()) //checks if there is a wall in front of the robot
+      { 
+        digitalWrite(wall, HIGH); //toggles indicating LED
+        if(rightw() && !leftw()) //checks which way we should turn
+        {
+          turn_left();
+          Serial.println("turning left");
+        }
+        else if (leftw() && !rightw())
+        {
+          turn_right();
+          Serial.println("turning right");
+        }
+        else if(leftw() && rightw())
+        {
+          turn_around();
+          Serial.println("turning around");
+        }
+        else
+        {
+          turn_left();
+          Serial.println("only front wall");
+        }
+        digitalWrite(wall, LOW);
+      } 
+      </pre></code>
+      <br>
+      <br>
+      <p>
+        We already had line following and IR sensing implemented from previous labs, so all we had to do was schedule the 3 processes. 
+        Essentially, we would follow lines until we reached an intersection, when we would check for walls. IR sensing was scheduled along 
+        with line following.
+        In this video you can see Gary following lines, avoiding walls, and sensing other robots! </p>
+      <center><iframe width="560" height="315" src="https://www.youtube.com/embed/e5FzcKetXG0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></center>
     </body>
     </html>

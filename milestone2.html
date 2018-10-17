@@ -7,7 +7,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <title> Milestone 1</title>
+    <title> Milestone 2</title>
     <style>
       body{
         padding: 0 80px;
@@ -54,25 +54,36 @@
       Based on the return value of the right-side IR sensor, we could determine whether a wall was present or not. Gary could then follow a line
       until there was no wall detected on his right side, which means it is time to turn right. The process repeats indefinitely.
    
-      Below is the code that shows how we did this.</p>
+      Below is the code that shows how we did this. Basically, at every intersection there was a wall check to see if we should turn</p>
     <br>
     <code><pre>
-      int thresh=150;  //sets our threshold
-      // correct for veer right
-      while(analogRead(centSen)&gt;thresh && analogRead(rightSen)&gt;thresh && analogRead(leftSen)&lt;thresh){
-        parallax1.write(94);
-        parallax2.write(75);     
+else if(center<thresh && right<thresh && left<thresh){ //checks if we are at an intersection
+    if(frontw()) //checks if there is a wall in front of the robot
+    { 
+      digitalWrite(wall, HIGH); //toggles indicating LED
+      if(rightw() && !leftw()) //checks which way we should turn
+      {
+        turn_left();
+        Serial.println("turning left");
       }
-      //correct for veer left
-      while(analogRead(centSen)&gt;thresh && analogRead(rightSen)&lt;thresh && analogRead(leftSen)&gt;thresh){
-        parallax1.write(115);
-        parallax2.write(94);
+      else if (leftw() && !rightw())
+      {
+        turn_right();
+        Serial.println("turning right");
       }
-      // go straight
-      while(analogRead(centSen)&lt;thresh && analogRead(leftSen)&gt;thresh && analogRead(rightSen)&gt;thresh){
-        parallax1.write(100);
-        parallax2.write(90);
-      }  
+      else if(leftw() && rightw())
+      {
+        turn_around();
+        Serial.println("turning around");
+      }
+      else
+      {
+        turn_left();
+        Serial.println("only front wall");
+      }
+      digitalWrite(wall, LOW);
+    } 
+  }
     </code></pre>
     <br>
     <br>

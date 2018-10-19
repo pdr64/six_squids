@@ -96,6 +96,7 @@ radio.printDetails();
 
 void loop() {
   follow_line();
+  radioWrite(dataArray);
 }
 
 void check_audio(){
@@ -322,30 +323,30 @@ void follow_line(){
     //for ( int i = 0; i < size_array; i++ ) {
       
     //}
-    //for ( int i = 2; i < 6; i++){
-      //dataArray[i] = 0;
-    //}
+    for ( int i = 2; i < 6; i++){
+      dataArray[i] = 0;
+    }
     if(frontw())
     { 
       //travel++;
       digitalWrite(wall, HIGH);
-      //dataArray[2] = 1; //north = true
+      dataArray[2] = 1; //north = true
       if(rightw() && !leftw())
       {
-        //dataArray[3] = 1; //east = true
+        dataArray[3] = 1; //east = true
         turn_left();
         Serial.println("turning left");
       }
       else if (leftw() && !rightw())
       {
-        //dataArray[5] = 1; //west = true
+        dataArray[5] = 1; //west = true
         turn_right();
         Serial.println("turning right");
       }
       else if(leftw() && rightw())
       {
-        //dataArray[3] = 1; //east = true
-        //dataArray[5] = 1; //west = true
+        dataArray[3] = 1; //east = true
+        dataArray[5] = 1; //west = true
         turn_around();
         Serial.println("turning around");
       }
@@ -354,7 +355,7 @@ void follow_line(){
         turn_left();
         Serial.println("only front wall");
       }
-      //radioWrite(dataArray);
+      radioWrite(dataArray);
       digitalWrite(wall, LOW);
     } 
     else{
@@ -366,17 +367,17 @@ void follow_line(){
     }
   }
 }
-/*
-int radioWrite(int dataArray()){
+
+int radioWrite(int dataArray[]){
   radio.stopListening(); // First, stop listening so we can talk.
-    printf("Now sending %d, %d, %d, %d, %d, %d...", dataArray[0], dataArray[1], dataArray[2], dataArray[3], dataArray[4], dataArray[5]);
+    //Serial.println(dataArray[0]  dataArray[1], dataArray[2], dataArray[3], dataArray[4], dataArray[5]);
     int number[6] = {dataArray[0],dataArray[1],dataArray[2], dataArray[3],dataArray[4], dataArray[5]};
   
     bool ok = radio.write( &number, 6 * sizeof(int) );
-    if (ok)
-      printf("ok...");
-    else
-      printf("failed.\n\r");
+    if (ok){}
+      //Serial.println("ok...");
+    else{}
+      //Serial.println("failed.\n\r");
     // Now, continue listening
     radio.startListening();
     // Wait here until we get a response, or timeout (250ms)
@@ -388,7 +389,7 @@ int radioWrite(int dataArray()){
     // Describe the results
     if ( timeout )
     {
-      printf("Failed, response timed out.\n\r");
+      //Serial.println("Failed, response timed out.\n\r");
     }
     else
     {
@@ -396,9 +397,8 @@ int radioWrite(int dataArray()){
       unsigned long got_time;
       radio.read( &got_time, sizeof(unsigned long) );
       // Spew it
-      printf("Got response %lu, round-trip delay: %lu\n\r",got_time,millis()-got_time);
+     // Serial.println("Got response %lu, round-trip delay: %lu\n\r",got_time,millis()-got_time);
     }
     // Try again 1s later
     delay(1000);
 }
-*/

@@ -4,10 +4,10 @@
 #include <Servo.h>
 
 /////////////////////
-/*
-//#include <SPI.h>
-//#include "nRF24L01.h"
-//#include "RF24.h"
+
+#include <SPI.h>
+#include "nRF24L01.h"
+#include "RF24.h"
 //#include "prinf.h"
 RF24 radio(9,10);
 const uint64_t pipes[2] = { 0x000000000CLL, 0x000000000DLL };
@@ -17,7 +17,7 @@ role_e role = role_pong_back;
 int dataArray[] = {0, 0, 0, 0, 0, 0}; 
 int size_array  = 6;
 int travel      = 0;
-*/
+
 /////////////////////
 
 
@@ -64,30 +64,21 @@ Serial.println(isReady);
 parallax1.attach(6);
 parallax2.attach(5);
 ////////////////////
-/*
-printf_begin();
-printf("\n\rRF24/examples/GettingStarted/\n\r");
-printf("ROLE: %s\n\r",role_friendly_name[role]);
-printf("*** PRESS 'T' to begin transmitting to the other node\n\r");
+
 radio.begin();
 radio.setRetries(15,15);
 radio.setAutoAck(true);
 radio.setChannel(0x50);
 radio.setPALevel(RF24_PA_MIN);
 radio.setDataRate(RF24_250KBPS);
-if ( role == role_ping_out )
-  {
-    radio.openWritingPipe(pipes[0]);
-    radio.openReadingPipe(1,pipes[1]);
-  }
-  else
-  {
-    radio.openWritingPipe(pipes[1]);
-    radio.openReadingPipe(1,pipes[0]);
-  }
+
+role = role_ping_out;
+  radio.openWritingPipe(pipes[0]);
+  radio.openReadingPipe(1,pipes[1]);
+
 radio.startListening();
 radio.printDetails();
-*/
+
 //////////////////////
 }
 
@@ -96,8 +87,6 @@ void loop() {
 }
 
 void check_audio(){
-  //parallax1.detach();
-  //parallax2.detach();
   byte timeOn = TIMSK0;
   byte freeOff = ADCSRA; 
   byte admux = ADMUX; 
@@ -124,18 +113,11 @@ void check_audio(){
   fft_mag_log(); // take the output of the fft
   sei();
   Serial.println(fft_log_out[5]);
-  if(fft_log_out[5]>150)
-  {
-    heard++;
-  }
-  else
-  {
-    heard=0;
-  }
-  if(heard>8)
-  {
-    isReady=1;
-  }
+  if(fft_log_out[5]>150) heard++;
+
+  else heard=0;
+
+  if(heard>8) isReady=1;
   TIMSK0 = timeOn; // turn On timer0 for lower jitter
   ADCSRA = freeOff; // set the adc free running mode off
   ADMUX = admux; 

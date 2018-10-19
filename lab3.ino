@@ -18,8 +18,20 @@ int dataArray[] = {0, 0, 0, 0, 0, 0};
 int size_array  = 6;
 int travel      = 0;
 
-/////////////////////
-
+int prevSquare[] = {0, 0};
+int totalSquares[9][3] = {
+//x, y, isVisited
+{0, 0 ,0},
+{0, 1, 0},
+{0, 2, 0},
+{1, 0, 0},
+{1, 1, 0},
+{1, 2, 0},
+{2, 0, 0},
+{2, 1, 0},
+{2, 2, 0}
+};
+///////////////////
 
 Servo parallax1;
 Servo parallax2;
@@ -275,14 +287,9 @@ bool rightw()
   int val = analogRead(sensor);
   //Serial.println(" right:");
   //Serial.println(val);
-  if(val>wallThresh)
-  {
-    return true;
-  }
-  else 
-  {
-    return false;
-  }
+  if(val>wallThresh)  return true;
+
+  else return false;
 }
 //follow line
 void follow_line(){

@@ -50,7 +50,11 @@
       as described in the lab report, and changed the code to the given "Getting Started" code from the github. 
       We also changed our address to send and recieve based on our lab group and day, so we had C and D as our 
       identifiers. 
+      The only thing we really had to change here was the identifiers as seen below.
       </p>
+        <code><pre>
+       const uint64_t pipes[2] = { 0x000000000CLL, 0x000000000DLL };
+    </pre></code>
       <p>
       Once we had these set up, we started transmitting. At first we had an issue where we weren't able to send a 
         signal back, but we eventually realized that the knock-off Arduinos just weren't powerful enough for the 

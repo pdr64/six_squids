@@ -196,36 +196,41 @@ void set_select(int x, int y, int z)
 
 //turn left
 void turn_left(){
+  Serial.println("turning left"); 
   parallax1.write(95);
   parallax2.write(85);
   delay(600);
   parallax1.write(85);
   parallax2.write(85);
-  delay(100);
+  delay(300);
   while(analogRead(centSen)>thresh)
   {
     parallax1.write(85);
     parallax2.write(85);
   }
+  Serial.println("done turning"); 
 }
 
 //turn around
 void turn_around(){
+  Serial.println("turning around"); 
   parallax1.write(95);
   parallax2.write(85);
   delay(600);
-  parallax1.write(85);
-  parallax2.write(85);
-  delay(10);
+  parallax1.write(0);
+  parallax2.write(0);
+  delay(800);
   while(analogRead(centSen)>thresh)
   {
     parallax1.write(85);
     parallax2.write(85);
   }
+  Serial.println("done turning"); 
 }
 
 //turn right
 void turn_right(){
+  Serial.println("turning right"); 
   parallax1.write(95);
   parallax2.write(85);
   delay(600);
@@ -237,6 +242,7 @@ void turn_right(){
     parallax1.write(95);
     parallax2.write(95);
   }
+  Serial.println("done turning"); 
 }
 
 //stop
@@ -309,9 +315,9 @@ void follow_line(){
       dataArray[i] = 0;
     }
 
-      Serial.println("Right sensor: " + String(rightw())); 
-      Serial.println("Left sensor: " + String(leftw())); 
-      Serial.println("Center sensor: " + String(frontw())); 
+//      Serial.println("Right sensor: " + String(rightw())); 
+//      Serial.println("Left sensor: " + String(leftw())); 
+//      Serial.println("Center sensor: " + String(frontw())); 
     if(frontw())
     { 
       //travel++;
@@ -352,25 +358,24 @@ void follow_line(){
     for (size_t i = 0; i < 3; i++) {
       check_IR();
     }
-    //radioWrite(dataArray);
+    parallax1.write(92);
+    parallax2.write(88); 
+    radioWrite(dataArray);
   }
 }
-
 int radioWrite(int dataArray[]){
   radio.stopListening(); // First, stop listening so we can talk.
     //Serial.println(dataArray[0]  dataArray[1], dataArray[2], dataArray[3], dataArray[4], dataArray[5]);
     int number[6] = {dataArray[0],dataArray[1],dataArray[2], dataArray[3],dataArray[4], dataArray[5]};
   
     bool ok = radio.write( &number, 6 * sizeof(int) );
-    Serial.println("sent the data");
     if (ok){}
       //Serial.println("ok...");
     else{}
       //Serial.println("failed.\n\r");
     // Now, continue listening
     radio.startListening();
-    // Wait here until we get a response, or timeout (250ms)
-    unsigned long started_waiting_at = millis();
+    unsigned long started_waiting_at = millis();// Wait here until we get a response, or timeout (250ms)
     bool timeout = false;
     while ( ! radio.available() && ! timeout )
       if (millis() - started_waiting_at > 200 )
@@ -379,11 +384,11 @@ int radioWrite(int dataArray[]){
     if ( timeout ){}//Serial.println("Failed, response timed out.\n\r");
     else
     {
-      // Grab the response, compare, and send to debugging spew
       unsigned long got_time;
-      radio.read( &got_time, sizeof(unsigned long) );
-      // Spew it
+      radio.read( &got_time, sizeof(unsigned long) );// Grab the response, compare, and send to debugging spew
     }
+
+    Serial.println("Sent Data");
     // Try again 1s later
-    delay(1000);
+   // delay(1000);
 }

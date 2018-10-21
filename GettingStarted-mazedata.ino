@@ -41,20 +41,13 @@ role_e role = role_pong_back;
 
 void setup(void)
 {
-  //
-  // Print preamble
-  //
 
-  
+  Serial.println("reset");
   Serial.begin(57600);
   printf_begin();
   printf("\n\rRF24/examples/GettingStarted/\n\r");
   printf("ROLE: %s\n\r",role_friendly_name[role]);
   printf("* PRESS 'T' to begin transmitting to the other node\n\r");
-
-  //
-  // Setup and configure rf radio
-  //
 
   radio.begin();
 
@@ -69,14 +62,6 @@ void setup(void)
   //RF24_250KBPS for 250kbs, RF24_1MBPS for 1Mbps, or RF24_2MBPS for 2Mbps
   radio.setDataRate(RF24_250KBPS);
 
-  // optionally, reduce the payload size.  seems to
-  // improve reliability
-  //radio.setPayloadSize(8);
-
-  //
-  // Open pipes to other nodes for communication
-  //
-
   // This simple sketch opens two pipes for these two nodes to communicate
   // back and forth.
   // Open 'our' pipe for writing
@@ -86,17 +71,7 @@ void setup(void)
   radio.openWritingPipe(pipes[1]);
   radio.openReadingPipe(1,pipes[0]);
   
-
-  //
-  // Start listening
-  //
-
   radio.startListening();
-
-  //
-  // Dump the configuration of the rf unit for debugging
-  //
-
   radio.printDetails();
 }
 
@@ -126,30 +101,30 @@ int radioRead(){
         // Spew it
         printf("Got payload %d, %d, %d, %d, %d, %d...",receive[0], receive[1], receive[2], receive[3], receive[4], receive[5]);
 
-        String coords = receive[0] + "," + receive[1];
+        String coords = String(receive[0]) + "," + String(receive[1]);
         int tmp = 0;
-        for ( size_t i = 0; i < 6; i++ ) {
-          if ( receive[i] == 5 ){
-            tmp += 1;
-          }
-          if ( tmp == 6 ){
-            coords = "reset";
-          }
-        }
+//        for ( size_t i = 0; i < 6; i++ ) {
+//          if ( receive[i] == 5 ){
+//            tmp += 1;
+//          }
+//          if ( tmp == 6 ){
+//            coords = "reset";
+//          }
+//        }
 
         if ( receive[2] == 1 ){
           coords += ",north=true";
         }
         if ( receive[3] == 1 ){
-          coords += ",east==true";
+          coords += ",east=true";
         }
         if ( receive[4] == 1 ){
-          coords += ",south==true";
+          coords += ",south=true";
         }
         if ( receive[5] == 1 ){
-          coords += ",west==true";
+          coords += ",west=true";
         }
-
+        //Serial.println("");
         Serial.println(coords);
                
         // Delay just a little bit to let the other unit

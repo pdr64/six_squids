@@ -14,11 +14,10 @@ const uint64_t pipes[2] = { 0x000000000CLL, 0x000000000DLL };
 typedef enum { role_ping_out = 1, role_pong_back } role_e;
 const char* role_friendly_name[] = { "invalid", "Ping out", "Pong back" };
 role_e role = role_pong_back;
-int dataArray[] = {0, 0, 0, 0, 0, 0}; 
+int dataArray[] = {2, 2, 0, 1, 1, 1}; 
 int travel      = 0;
 byte dir_facing = 0; 
 // 0 = north, 1 = east, 2 = south, 3 = west
-
 
 int prevSquare[] = {0, 0};
 int totalSquares[9][3] = {
@@ -98,6 +97,8 @@ role = role_ping_out;
 radio.startListening();
 radio.printDetails();
 //////////////////////
+
+radioWrite(dataArray);
 }
 
 void loop() {
@@ -201,10 +202,8 @@ void set_select(int x, int y, int z)
 //turn left
 void turn_left(){
   //adjust dir_facing 
-  if (dir_facing == 0) dir_facing = 3;
-  else dir_facing--;
   
-  Serial.println("turning left"); 
+
   //go forward a bit to turn properly
   parallax1.write(95);
   parallax2.write(85);
@@ -219,18 +218,14 @@ void turn_left(){
     parallax1.write(85);
     parallax2.write(85);
   }
-  Serial.println("done turning"); 
+
 }
 
 //turn around
 void turn_around(){
   //adjust dir_facing 
-  if (dir_facing == 0) dir_facing = 2;
-  else if (dir_facing == 2) dir_facing = 0;
-  else if (dir_facing == 1) dir_facing = 3;
-  else if (dir_facing == 3) dir_facing = 1;
-  
-  Serial.println("turning around"); 
+
+
   parallax1.write(95);
   parallax2.write(85);
   delay(600);
@@ -242,16 +237,13 @@ void turn_around(){
     parallax1.write(85);
     parallax2.write(85);
   }
-  Serial.println("done turning"); 
 }
 
 //turn right
 void turn_right(){
   //adjust dir_facing 
-  if (dir_facing == 3) dir_facing = 0;
-  else dir_facing++;
   
-  Serial.println("turning right"); 
+  
   parallax1.write(95);
   parallax2.write(85);
   delay(600);
@@ -263,7 +255,6 @@ void turn_right(){
     parallax1.write(95);
     parallax2.write(95);
   }
-  Serial.println("done turning"); 
 }
 
 //stop
@@ -326,36 +317,53 @@ void follow_line(){
     for ( int i = 2; i < 6; i++){
       dataArray[i] = 0;
     }
-
     if(frontw()){ 
-      //travel++;
+      if (dir_facing == 0) dataArray[0] --;
+      else if (dir_facing == 1) dataArray [1] ++; 
+      else if (dir_facing == 2) dataArray [0] ++; 
+      else if (dir_facing == 3) dataArray [1] --; 
       digitalWrite(wall, HIGH);
       if(dir_facing == 0) dataArray[2] = 1; //north
       else if (dir_facing == 1) dataArray[3] =1; 
       else if (dir_facing == 2) dataArray[4] =1; 
       else if (dir_facing == 3) dataArray[5] =1; 
-      
-      //[2] = 1; //north = true
      
       if(rightw() && !leftw()){
-        //dataArray[3] = 1; //east = true
-        turn_left();
-       if(dir_facing == 0) dataArray[3] = 1; 
-       else if (dir_facing == 1) dataArray[4] =1; 
-       else if (dir_facing == 2) dataArray[5] =1; 
-       else if (dir_facing == 3) dataArray[2] =1; 
-
+       turn_left();
+       if(dir_facing == 0) {
+        dataArray[3] = 1; 
+       }
+       else if (dir_facing == 1) {
+        dataArray[4] =1; 
+       }
+       else if (dir_facing == 2) {
+        dataArray[5] =1;
+       }
+       else if (dir_facing == 3) {
+        dataArray[2] =1;
+       }
+       if (dir_facing == 0) dir_facing = 3;
+       else dir_facing --;
       }
+      
       else if (leftw() && !rightw())
-      {
-        dataArray[5] = 1; //west = true
+      {  
         turn_right();
-        if(dir_facing == 0) dataArray[5] = 1; //north
-        else if (dir_facing == 1) dataArray[2] =1; 
-        else if (dir_facing == 2) dataArray[3] =1; 
-        else if (dir_facing == 3) dataArray[4] =1; 
+        if(dir_facing == 0) {
+          dataArray[5] = 1; 
+        }
+        else if (dir_facing == 1) {
+          dataArray[2] =1; 
+        }
+        else if (dir_facing == 2) {
+          dataArray[3] =1; 
+        }
+        else if (dir_facing == 3) {
+          dataArray[4] =1; 
+        }
+        if (dir_facing == 3) dir_facing = 0;
+        else dir_facing ++; 
         
-        //Serial.println("turning right");
       }
       else if(leftw() && rightw())
       {
@@ -379,16 +387,18 @@ void follow_line(){
           dataArray[2] =1;
           dataArray[4] =1;
         }
+          if (dir_facing == 0) dir_facing = 2;
+          else if (dir_facing == 2) dir_facing = 0;
+          else if (dir_facing == 1) dir_facing = 3;
+          else if (dir_facing == 3) dir_facing = 1;
       }
       else
       {
         turn_left();
-        //Serial.println("only front wall");
       }
-      //radioWrite(dataArray);
       digitalWrite(wall, LOW);
     } 
-    else{
+    else{ //go straight 
       parallax1.write(100);
       parallax2.write(80);
     }
@@ -397,8 +407,10 @@ void follow_line(){
     }
     parallax1.write(92);
     parallax2.write(88); 
+    Serial.println(dataArray[0]); 
+    Serial.println(dataArray[1]);
+    Serial.println("write");
     radioWrite(dataArray);
-    Serial.println(dir_facing);
   }
 }
 int radioWrite(int dataArray[]){
@@ -425,8 +437,4 @@ int radioWrite(int dataArray[]){
       unsigned long got_time;
       radio.read( &got_time, sizeof(unsigned long) );// Grab the response, compare, and send to debugging spew
     }
-
-    Serial.println("Sent Data");
-    // Try again 1s later
-   // delay(1000);
 }

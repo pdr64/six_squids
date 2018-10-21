@@ -64,7 +64,10 @@
     <h4>Sending Our Own Information</h4>
     <p>
       After we confirmed that we could send and recieve packets, we decided to change the packets we were 
-      sending to fit with the maze information we wanted to send. 
+      sending to fit with the maze information we wanted to send. We decided to encode the information as 6 bytes, which 
+      could in the future be encoded slightly more efficiently, but was plenty efficient for the sake of this lab. 
+      The bytes were : 0 = x coordinate, 1 = y coordinate, 2 = wall north, 3 = wall east, 4 = wall south, 5 = wall west
+      
       </p>
     <h4>Putting it all together</h4>
      <p>

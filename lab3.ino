@@ -48,11 +48,11 @@ int heard = 0;
 int pin_out_s0W = 4;
 int pin_out_s1W = 7;
 int pin_out_s2W = 3;
-int sensor = A1;
+int sensor = A5;
 
 int thresh = 500;
-int wallThresh = 150;
-
+int frontwallThresh = 150;
+int sidewallThresh  = 200;
 int isReady = 0; 
 
 void setup() {
@@ -96,7 +96,7 @@ radio.printDetails();
 
 void loop() {
   follow_line();
-  radioWrite(dataArray);
+  //radioWrite(dataArray);
 }
 
 void check_audio(){
@@ -106,7 +106,7 @@ void check_audio(){
   byte didro = DIDR0;
   TIMSK0 = 0; // turn off timer0 for lower jitter
   ADCSRA = 0xe5; // set the adc to free running mode
-  ADMUX = 0x41; // use adc0
+  ADMUX = 0x45; // use adc1
   DIDR0 = 0x01; // turn off the digital input for adc0
   cli();  // UDRE interrupt slows this way down on arduino1.0
   for (int i = 0 ; i < 512 ; i += 2) { // save 256 samples
@@ -165,7 +165,8 @@ void check_IR(){
   fft_run(); // process the data in the fft
   fft_mag_log(); // take the output of the fft
   sei();
-  Serial.println(fft_log_out[42]);
+//  Serial.println("IR:");
+//  Serial.println(fft_log_out[42]);
   if(fft_log_out[42]>100)
   {
     seen_robot++;
@@ -201,46 +202,46 @@ void set_select(int x, int y, int z)
 
 //turn left
 void turn_left(){
-  parallax1.write(100);
-  parallax2.write(80);
-  delay(200);
-  parallax1.write(0);
-  parallax2.write(0);
-  delay(200);
+  parallax1.write(95);
+  parallax2.write(85);
+  delay(600);
+  parallax1.write(85);
+  parallax2.write(85);
+  delay(100);
   while(analogRead(centSen)>thresh)
   {
-    parallax1.write(0);
-    parallax2.write(0);
+    parallax1.write(85);
+    parallax2.write(85);
   }
 }
 
 //turn around
 void turn_around(){
-  parallax1.write(100);
-  parallax2.write(80);
-  delay(100);
-  parallax1.write(0);
-  parallax2.write(0);
-  delay(1000);
+  parallax1.write(95);
+  parallax2.write(85);
+  delay(600);
+  parallax1.write(85);
+  parallax2.write(85);
+  delay(10);
   while(analogRead(centSen)>thresh)
   {
-    parallax1.write(0);
-    parallax2.write(0);
+    parallax1.write(85);
+    parallax2.write(85);
   }
 }
 
 //turn right
 void turn_right(){
-  parallax1.write(100);
-  parallax2.write(80);
-  delay(200);
-  parallax1.write(180);
-  parallax2.write(180);
-  delay(200);
+  parallax1.write(95);
+  parallax2.write(85);
+  delay(600);
+  parallax1.write(95);
+  parallax2.write(95);
+  delay(100);
   while(analogRead(centSen)>thresh)
   {
-    parallax1.write(180);
-    parallax2.write(180);
+    parallax1.write(95);
+    parallax2.write(95);
   }
 }
 
@@ -256,7 +257,7 @@ bool frontw()
   int val = analogRead(sensor);
   //Serial.println(" front:");
   //Serial.println(val);
-  if(val>wallThresh)
+  if(val>frontwallThresh)
   {
     return true;
   }
@@ -273,7 +274,7 @@ bool leftw()
   int val = analogRead(sensor);
   //Serial.println(" left:");
   //Serial.println(val);
-  if(val>wallThresh)
+  if(val>sidewallThresh)
   {
     return true;
   }
@@ -288,7 +289,7 @@ bool rightw()
   int val = analogRead(sensor);
   //Serial.println(" right:");
   //Serial.println(val);
-  if(val>wallThresh)  return true;
+  if(val>sidewallThresh)  return true;
 
   else return false;
 }
@@ -300,8 +301,8 @@ void follow_line(){
   // go straight
   if(center<thresh && right>thresh && left>thresh){
     //Serial.println("straight");
-    parallax1.write(100);
-    parallax2.write(80); 
+    parallax1.write(92);
+    parallax2.write(88); 
   }
   // correct for veer right
   else if(right<thresh && left>thresh){
@@ -326,36 +327,41 @@ void follow_line(){
     for ( int i = 2; i < 6; i++){
       dataArray[i] = 0;
     }
+
+      Serial.println("Right sensor: " + String(rightw())); 
+      Serial.println("Left sensor: " + String(leftw())); 
+      Serial.println("Center sensor: " + String(frontw())); 
     if(frontw())
     { 
       //travel++;
       digitalWrite(wall, HIGH);
       dataArray[2] = 1; //north = true
+     
       if(rightw() && !leftw())
       {
         dataArray[3] = 1; //east = true
         turn_left();
-        Serial.println("turning left");
+        //Serial.println("turning left");
       }
       else if (leftw() && !rightw())
       {
         dataArray[5] = 1; //west = true
         turn_right();
-        Serial.println("turning right");
+        //Serial.println("turning right");
       }
       else if(leftw() && rightw())
       {
         dataArray[3] = 1; //east = true
         dataArray[5] = 1; //west = true
         turn_around();
-        Serial.println("turning around");
+        //Serial.println("turning around");
       }
       else
       {
         turn_left();
-        Serial.println("only front wall");
+        //Serial.println("only front wall");
       }
-      radioWrite(dataArray);
+      //radioWrite(dataArray);
       digitalWrite(wall, LOW);
     } 
     else{
@@ -365,6 +371,7 @@ void follow_line(){
     for (size_t i = 0; i < 3; i++) {
       check_IR();
     }
+    //radioWrite(dataArray);
   }
 }
 
@@ -374,6 +381,7 @@ int radioWrite(int dataArray[]){
     int number[6] = {dataArray[0],dataArray[1],dataArray[2], dataArray[3],dataArray[4], dataArray[5]};
   
     bool ok = radio.write( &number, 6 * sizeof(int) );
+    Serial.println("sent the data");
     if (ok){}
       //Serial.println("ok...");
     else{}

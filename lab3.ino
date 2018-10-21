@@ -251,16 +251,8 @@ bool frontw()
   int val = analogRead(sensor);
   //Serial.println(" front:");
   //Serial.println(val);
-  if(val>frontwallThresh)
-  {
-    return true;
-  }
-  else 
-  {
-    return false;
-  }
-  
-  
+  if(val>frontwallThresh)return true;
+  else return false;
 }
 bool leftw()
 {
@@ -268,15 +260,10 @@ bool leftw()
   int val = analogRead(sensor);
   //Serial.println(" left:");
   //Serial.println(val);
-  if(val>sidewallThresh)
-  {
-    return true;
-  }
-  else 
-  {
-    return false;
-  }
+  if(val>sidewallThresh) return true;
+  else return false;
 }
+
 bool rightw()
 {
   set_select(0,1,0);
@@ -284,9 +271,9 @@ bool rightw()
   //Serial.println(" right:");
   //Serial.println(val);
   if(val>sidewallThresh)  return true;
-
   else return false;
 }
+
 //follow line
 void follow_line(){
   int left   = analogRead(leftSen);
@@ -389,17 +376,13 @@ int radioWrite(int dataArray[]){
       if (millis() - started_waiting_at > 200 )
         timeout = true;
     // Describe the results
-    if ( timeout )
-    {
-      //Serial.println("Failed, response timed out.\n\r");
-    }
+    if ( timeout ){}//Serial.println("Failed, response timed out.\n\r");
     else
     {
       // Grab the response, compare, and send to debugging spew
       unsigned long got_time;
       radio.read( &got_time, sizeof(unsigned long) );
       // Spew it
-     // Serial.println("Got response %lu, round-trip delay: %lu\n\r",got_time,millis()-got_time);
     }
     // Try again 1s later
     delay(1000);

@@ -71,7 +71,15 @@
       </p>
     <h4>Putting it all together</h4>
      <p>
-     
+     To see the information about the robot (line following, wall following, starting on a tone, avoiding IR) see our Milestone 2 
+       page on our website. 
+      </p>
+    <p>
+      After we had our radios working and knew how we wanted to encode the info as shown above, we integrated the radio sending into 
+      our wall/line following algorithm. Whenever the robot reached an intersection, we would check which direction it was moving in, 
+      update the location (x, y) of the robot accordingly, and according to the walls sensed we would send that information back to 
+      the bay station using the radios we had set up earlier.
+      The information was read in by the base station robot and converted into language the GUI could read, IE north=true and the like. 
       </p>
     <center><iframe width="560" height="315" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></center>
     <br>

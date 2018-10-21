@@ -44,6 +44,7 @@ int ir   = 8;
 int wall = 12;
 int seen_robot = 0;
 int heard = 0;
+int roboStart = 2; 
 
 int pin_out_s0W = 4;
 int pin_out_s1W = 7;
@@ -66,11 +67,13 @@ pinMode(pin_out_s1W, OUTPUT);
 pinMode(pin_out_s2W, OUTPUT);
 pinMode(ir, OUTPUT);
 pinMode(wall, OUTPUT);
+pinMode(roboStart, INPUT);
 //pinMode(A0, INPUT);
 Serial.begin(9600);
 set_select(0,1,1);
 while(isReady == 0){
   check_audio();
+  if(digitalRead(roboStart) == LOW) isReady =1; 
 }
 Serial.println(isReady);
 parallax1.attach(6);
@@ -125,11 +128,9 @@ void check_audio(){
   fft_run(); // process the data in the fft
   fft_mag_log(); // take the output of the fft
   sei();
-  Serial.println(fft_log_out[5]);
+  //Serial.println(fft_log_out[5]);
   if(fft_log_out[5]>150) heard++;
-
   else heard=0;
-
   if(heard>8) isReady=1;
   TIMSK0 = timeOn; // turn On timer0 for lower jitter
   ADCSRA = freeOff; // set the adc free running mode off
@@ -167,14 +168,9 @@ void check_IR(){
   sei();
 //  Serial.println("IR:");
 //  Serial.println(fft_log_out[42]);
-  if(fft_log_out[42]>100)
-  {
-    seen_robot++;
-  }
-  else
-  {
-    seen_robot=0;
-  }
+  if(fft_log_out[42]>100) seen_robot++;
+  else seen_robot=0;
+
   digitalWrite(ir, LOW);
   if(seen_robot>2)
   {
@@ -182,9 +178,7 @@ void check_IR(){
     robot_stop();
     while(1);
   }
-//  else{
-//    follow_line();
-//  }
+
   TIMSK0 = timeOn; // turn On timer0 for lower jitter
   ADCSRA = freeOff; // set the adc free running mode off
   ADMUX = admux; 

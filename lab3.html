@@ -52,36 +52,33 @@
       identifiers. 
       The only thing we really had to change here was the identifiers as seen below.
       </p>
-        <code><pre>
-       const uint64_t pipes[2] = { 0x000000000CLL, 0x000000000DLL };
+    <code><pre>
+     const uint64_t pipes[2] = { 0x000000000CLL, 0x000000000DLL};
     </pre></code>
-      <p>
+    <p>
       Once we had these set up, we started transmitting. At first we had an issue where we weren't able to send a 
-        signal back, but we eventually realized that the knock-off Arduinos just weren't powerful enough for the 
-        radios, so we hooked up the external power supply and we got them communicating with each other! See the 
-        screencap below (@pablo)
-      </p>
+      signal back, but we eventually realized that the knock-off Arduinos just weren't powerful enough for the 
+      radios, so we hooked up the external power supply and we got them communicating with each other! See the 
+      screencap below (@pablo)
+    </p>
     <h4>Sending Our Own Information</h4>
     <p>
       After we confirmed that we could send and recieve packets, we decided to change the packets we were 
       sending to fit with the maze information we wanted to send. We decided to encode the information as 6 bytes, which 
       could in the future be encoded slightly more efficiently, but was plenty efficient for the sake of this lab. 
       The bytes were : 0 = x coordinate, 1 = y coordinate, 2 = wall north, 3 = wall east, 4 = wall south, 5 = wall west
-      
-      </p>
+    </p>
     <h4>Putting it all together</h4>
      <p>
-     To see the information about the robot (line following, wall following, starting on a tone, avoiding IR) see our Milestone 2 
-       page on our website. 
-      </p>
-    <p>
+      To see the information about the robot (line following, wall following, avoiding IR) see our Milestone 2 page on our website. 
+     <br>
       After we had our radios working and knew how we wanted to encode the info as shown above, we integrated the radio sending into 
       our wall/line following algorithm. Whenever the robot reached an intersection, we would check which direction it was moving in, 
       update the location (x, y) of the robot accordingly, and according to the walls sensed we would send that information back to 
       the bay station using the radios we had set up earlier.
       The information was read in by the base station robot and converted into language the GUI could read, IE north=true and the like.
       See below for our code and a video of our robot completing all necessary tasks! 
-      </p>
+    </p>
     <center><iframe width="560" height="315" src="https://www.youtube.com/embed/rBHv2DTKs2A" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></center>
     <br>
     <br>

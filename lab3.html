@@ -23,27 +23,24 @@
     <br>
     <br>
     <center><h2>Objective </h2></center>
-    
-      <p>The objective of this lab was to communicate with a base station from our robot. We have one arduino 
-    with the robot transmitting its current location and information about that location, 
-    and one arduino communicating with the TA's GUI to show what the robot is thinking.</p>
-      <br>
+    <p>The objective of this lab was to communicate with a base station from our robot. We have one arduino 
+      with the robot transmitting its current location and information about that location, 
+      and one arduino communicating with the TA's GUI to show what the robot is thinking.</p>
+    <br>
     <br>
     <center><h2>Materials Used</h2></center>
-       <ul>
-         <li>2 Nordic nRF24L01+ transceivers</li>
-         <li>2 Arduino Unos</li>
-         <li>2 radio breakout boards with headers</li>
-         <li>Materials from Milestone 2</li>
-       </ul>
+    <ul>
+     <li>2 Nordic nRF24L01+ transceivers</li>
+     <li>2 Arduino Unos</li>
+     <li>2 radio breakout boards with headers</li>
+     <li>Materials from Milestone 2</li>
+    </ul>
     <br>
-    
-   <center><h2>Teams</h2></center>
-    Pablo and Katie worked on radio transmission, while Ben and Caroline worked on line following and 
-    wall detection, although we all contributed to most parts of the lab. 
+    <center><h2>Sub Teams</h2></center>
+    <p>Pablo and Katie worked on radio transmission, while Ben and Caroline worked on line following and 
+      wall detection, although we all contributed to most parts of the lab. </p>
     <br>
     <center><h2>Procedure</h2></center>
-    
     <h4>Getting the Radios Working</h4>
     <p>
       The first thing we did was get the radios working with the default messages. We wired up the radios 
@@ -51,7 +48,7 @@
       We also changed our address to send and recieve based on our lab group and day, so we had C and D as our 
       identifiers. 
       The only thing we really had to change here was the identifiers as seen below.
-      </p>
+    </p>
     <code><pre>
      const uint64_t pipes[2] = { 0x000000000CLL, 0x000000000DLL};
     </pre></code>
@@ -83,5 +80,5 @@
     <br>
     <br>
    <a href="#header"><button class="btn"><i class="fa fa-arrow-up"></i>Return to top</button></a>
-   </body>
+ </body>
 </html>

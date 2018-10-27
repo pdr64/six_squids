@@ -67,8 +67,98 @@
       sending to fit with the maze information we wanted to send. We decided to encode the information as 6 bytes, which 
       could in the future be encoded slightly more efficiently, but was plenty efficient for the sake of this lab. 
       The bytes were : 0 = x coordinate, 1 = y coordinate, 2 = wall north, 3 = wall east, 4 = wall south, 5 = wall west
+      We have included a code snippet to show how we identified the direction of our robot. 
     </p>
     <br>
+    <code> <pre>
+    //at intersection, if there is a front wall (which means Gary will be making a turn)
+    if(frontw()){ 
+      if (dir_facing == 0) dataArray[0] --; // If robot is facing north
+      else if (dir_facing == 1) dataArray [1] ++; // If robot is facing east
+      else if (dir_facing == 2) dataArray [0] ++; // If robot is facing south
+      else if (dir_facing == 3) dataArray [1] --; // If robot is facing west
+      digitalWrite(wall, HIGH);
+      if(dir_facing == 0) dataArray[2] = 1; // North=true
+      else if (dir_facing == 1) dataArray[3] =1; // East=true
+      else if (dir_facing == 2) dataArray[4] =1; // South=true
+      else if (dir_facing == 3) dataArray[5] =1; // West=true
+     // if there is a right wall but no left wall
+      if(rightw() && !leftw()){
+       turn_left();
+       //update direction Gary is going
+       if(dir_facing == 0) {
+        dataArray[3] = 1; // If robot faces north, East=true
+       }
+       else if (dir_facing == 1) {
+        dataArray[4] =1; // If robot faces east, South=true
+       }
+       else if (dir_facing == 2) {
+        dataArray[5] =1; // If robot faces south, West=true
+       }
+       else if (dir_facing == 3) {
+        dataArray[2] =1; // If robot faces west, North=true
+       }
+       if (dir_facing == 0) dir_facing = 3;
+       else dir_facing --; // Update dir_facing for left turning robot
+      }
+      //if there is a left wall but no right wall
+      else if (leftw() && !rightw())
+      {  
+        turn_right();
+        //update direction Gary is going
+        if(dir_facing == 0) {
+          dataArray[5] = 1; // If robot faces north, West=true
+        }
+        else if (dir_facing == 1) {
+          dataArray[2] =1; // If robot faces east, North=true
+        }
+        else if (dir_facing == 2) {
+          dataArray[3] =1; // If robot faces south, East=true
+        }
+        else if (dir_facing == 3) {
+          dataArray[4] =1; // If robot faces west, South=true
+        }
+        if (dir_facing == 3) dir_facing = 0;
+        else dir_facing ++; // Update dir_facing for right turning robot
+        
+      }
+      // if there are both left and right walls
+      else if(leftw() && rightw())
+      {
+        dataArray[3] = 1; //east = true
+        dataArray[5] = 1; //west = true
+        turn_around();
+        // Update Gary's direction
+        if(dir_facing == 0){
+          dataArray[3] = 1; // If robot faces north, East=true
+          dataArray[5] = 1; // If robot faces north, West=true
+        }
+        else if (dir_facing == 1) {
+          dataArray[4] =1; // If robot faces east, South=true
+          dataArray[2] =1; // If robot faces east, North=true
+        }
+        else if (dir_facing == 2) {
+          dataArray[5] =1; // If robot faces south, West=true
+          dataArray[3] =1; // If robot faces south, East=true
+        }
+        else if (dir_facing == 3) {
+          dataArray[2] =1; // If robot faces west, North=true
+          dataArray[4] =1; // If robot faces west, South=true
+        }
+          // Update dir_facing for robot turning around
+          if (dir_facing == 0) dir_facing = 2;
+          else if (dir_facing == 2) dir_facing = 0;
+          else if (dir_facing == 1) dir_facing = 3;
+          else if (dir_facing == 3) dir_facing = 1; 
+      }
+      else
+      {
+        turn_left();
+      }
+      digitalWrite(wall, LOW);
+    } 
+ }
+</pre></code>
     <br>
     <h4>Putting it all together</h4>
      <p>
@@ -78,6 +168,19 @@
       our wall/line following algorithm. Whenever the robot reached an intersection, we would check which direction it was moving in, 
       update the location (x, y) of the robot accordingly, and according to the walls sensed we would send that information back to 
       the bay station using the radios we had set up earlier.
+      The code shows how we did this.
+     <code><pre>
+      //After Gary turns or stays straight and updates direction
+      //check for other robots
+      for (size_t i = 0; i < 3; i++) {
+        check_IR();
+      }
+      // send information to the radio station
+      Serial.println(dataArray[0]); 
+      Serial.println(dataArray[1]);
+      Serial.println("write");
+      radioWrite(dataArray);
+    </pre></code>
       The information was read in by the base station robot and converted into language the GUI could read, IE north=true and the like.
       See below for a video of our robot completing all necessary tasks! 
     </p>

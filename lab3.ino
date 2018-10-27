@@ -313,56 +313,57 @@ void follow_line(){
  
   //at intersection
   else if(center<thresh && right<thresh && left<thresh){
-
+    
+    // Setting north, east, south, and west to false
     for ( int i = 2; i < 6; i++){
       dataArray[i] = 0;
     }
     if(frontw()){ 
-      if (dir_facing == 0) dataArray[0] --;
-      else if (dir_facing == 1) dataArray [1] ++; 
-      else if (dir_facing == 2) dataArray [0] ++; 
-      else if (dir_facing == 3) dataArray [1] --; 
+      if (dir_facing == 0) dataArray[0] --; // If robot is facing north
+      else if (dir_facing == 1) dataArray [1] ++; // If robot is facing east
+      else if (dir_facing == 2) dataArray [0] ++; // If robot is facing south
+      else if (dir_facing == 3) dataArray [1] --; // If robot is facing west
       digitalWrite(wall, HIGH);
-      if(dir_facing == 0) dataArray[2] = 1; //north
-      else if (dir_facing == 1) dataArray[3] =1; 
-      else if (dir_facing == 2) dataArray[4] =1; 
-      else if (dir_facing == 3) dataArray[5] =1; 
+      if(dir_facing == 0) dataArray[2] = 1; // North=true
+      else if (dir_facing == 1) dataArray[3] =1; // East=true
+      else if (dir_facing == 2) dataArray[4] =1; // South=true
+      else if (dir_facing == 3) dataArray[5] =1; // West=true
      
       if(rightw() && !leftw()){
        turn_left();
        if(dir_facing == 0) {
-        dataArray[3] = 1; 
+        dataArray[3] = 1; // If robot faces north, East=true
        }
        else if (dir_facing == 1) {
-        dataArray[4] =1; 
+        dataArray[4] =1; // If robot faces east, South=true
        }
        else if (dir_facing == 2) {
-        dataArray[5] =1;
+        dataArray[5] =1; // If robot faces south, West=true
        }
        else if (dir_facing == 3) {
-        dataArray[2] =1;
+        dataArray[2] =1; // If robot faces west, North=true
        }
        if (dir_facing == 0) dir_facing = 3;
-       else dir_facing --;
+       else dir_facing --; // Update dir_facing for left turning robot
       }
       
       else if (leftw() && !rightw())
       {  
         turn_right();
         if(dir_facing == 0) {
-          dataArray[5] = 1; 
+          dataArray[5] = 1; // If robot faces north, West=true
         }
         else if (dir_facing == 1) {
-          dataArray[2] =1; 
+          dataArray[2] =1; // If robot faces east, North=true
         }
         else if (dir_facing == 2) {
-          dataArray[3] =1; 
+          dataArray[3] =1; // If robot faces south, East=true
         }
         else if (dir_facing == 3) {
-          dataArray[4] =1; 
+          dataArray[4] =1; // If robot faces west, South=true
         }
         if (dir_facing == 3) dir_facing = 0;
-        else dir_facing ++; 
+        else dir_facing ++; // Update dir_facing for right turning robot
         
       }
       else if(leftw() && rightw())
@@ -372,25 +373,26 @@ void follow_line(){
         turn_around();
 
         if(dir_facing == 0){
-          dataArray[3] = 1;
-          dataArray[5] = 1;
+          dataArray[3] = 1; // If robot faces north, East=true
+          dataArray[5] = 1; // If robot faces north, West=true
         }
         else if (dir_facing == 1) {
-          dataArray[4] =1; 
-          dataArray[2] =1;
+          dataArray[4] =1; // If robot faces east, South=true
+          dataArray[2] =1; // If robot faces east, North=true
         }
         else if (dir_facing == 2) {
-          dataArray[5] =1;
-          dataArray[3] =1; 
+          dataArray[5] =1; // If robot faces south, West=true
+          dataArray[3] =1; // If robot faces south, East=true
         }
         else if (dir_facing == 3) {
-          dataArray[2] =1;
-          dataArray[4] =1;
+          dataArray[2] =1; // If robot faces west, North=true
+          dataArray[4] =1; // If robot faces west, South=true
         }
+          // Update dir_facing for robot turning around
           if (dir_facing == 0) dir_facing = 2;
           else if (dir_facing == 2) dir_facing = 0;
           else if (dir_facing == 1) dir_facing = 3;
-          else if (dir_facing == 3) dir_facing = 1;
+          else if (dir_facing == 3) dir_facing = 1; 
       }
       else
       {

@@ -64,10 +64,10 @@ wire clk_25_pll;
 wire clk_50_pll;
 
 lab4 lab4_inst (
-	.inclk0 ( inclk0_sig ),
+	.inclk0 ( CLOCK_50 ),
 	.c0 ( clk_24_pll ),
 	.c1 ( clk_25_pll ),
-	.c2 ( clk_50)pll )
+	.c2 ( clk_50_pll )
 	);
 ///////* M9K Module *///////
 Dual_Port_RAM_M9K mem(
@@ -75,16 +75,16 @@ Dual_Port_RAM_M9K mem(
 	.w_addr(WRITE_ADDRESS),
 	.r_addr(READ_ADDRESS),
 	.w_en(W_EN),
-	.clk_W(CLOCK_50),
+	.clk_W(clk_50_pll),
 	//.clk_R(CLK_25_PLL), // DO WE NEED TO READ SLOWER THAN WRITE??
-	.clk_R(c1),
+	.clk_R(clk_25_pll),
 	.output_data(MEM_OUTPUT)
 );
 
 ///////* VGA Module *///////
 VGA_DRIVER driver (
 	.RESET(VGA_RESET),
-	.CLOCK(c1),
+	.CLOCK(clk_25_pll),
 	.PIXEL_COLOR_IN(VGA_READ_MEM_EN ? MEM_OUTPUT : BLUE),
 	.PIXEL_X(VGA_PIXEL_X),
 	.PIXEL_Y(VGA_PIXEL_Y),
@@ -96,7 +96,7 @@ VGA_DRIVER driver (
 ///////* Image Processor *///////
 IMAGE_PROCESSOR proc(
 	.PIXEL_IN(MEM_OUTPUT),
-	.CLK(CLK_25_PLL),
+	.CLK(clk_25_pll),
 	.VGA_PIXEL_X(VGA_PIXEL_X),
 	.VGA_PIXEL_Y(VGA_PIXEL_Y),
 	.VGA_VSYNC_NEG(VGA_VSYNC_NEG),
@@ -105,6 +105,7 @@ IMAGE_PROCESSOR proc(
 
 
 ///////* Update Read Address *///////
+/*
 always @ (VGA_PIXEL_X, VGA_PIXEL_Y) begin
 		READ_ADDRESS = (VGA_PIXEL_X + VGA_PIXEL_Y*`SCREEN_WIDTH);
 		if(VGA_PIXEL_X>(`SCREEN_WIDTH-1) || VGA_PIXEL_Y>(`SCREEN_HEIGHT-1))begin
@@ -115,7 +116,29 @@ always @ (VGA_PIXEL_X, VGA_PIXEL_Y) begin
 		end
 end
 
+always @ (VGA_PIXEL_X, VGA_PIXEL_Y) begin
+		READ_ADDRESS = (VGA_PIXEL_X + VGA_PIXEL_Y*`SCREEN_WIDTH);
+		if( ( VGA_PIXEL_X == 88 ) || ( VGA_PIXEL_Y == 72 ) ) begin
+				VGA_READ_MEM_EN = 1'b0;
+		end
+		
+		else begin
+				VGA_READ_MEM_EN = 1'b1;
+		end
+end
+*/
 
+	GPIO_0_D pixel_data_RGB332 == ????
 
+always @ (VGA_PIXEL_X, VGA_PIXEL_Y) begin
+		READ_ADDRESS = (VGA_PIXEL_X + VGA_PIXEL_Y*`SCREEN_WIDTH);
+		if(VGA_PIXEL_X>(`SCREEN_WIDTH-1) || VGA_PIXEL_Y>(`SCREEN_HEIGHT-1))begin
+				VGA_READ_MEM_EN = 1'b0;
+		end
+		else begin
+				VGA_READ_MEM_EN = 1'b1;
+		end
+end
+	
 	
 endmodule 

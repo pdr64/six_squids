@@ -30,7 +30,7 @@ input 		    [33:20]		GPIO_1_D;
 input 		     [1:0]		KEY;
 
 ///// PIXEL DATA /////
-reg [7:0]	pixel_data_RGB332 = 8'd0;
+reg [7:0]	pixel_data_RGB332 = GREEN;
 
 ///// READ/WRITE ADDRESS /////
 reg [14:0] X_ADDR;
@@ -63,12 +63,15 @@ wire clk_24_pll;
 wire clk_25_pll;
 wire clk_50_pll;
 
+
+
 lab4 lab4_inst (
 	.inclk0 ( CLOCK_50 ),
 	.c0 ( clk_24_pll ),
 	.c1 ( clk_25_pll ),
 	.c2 ( clk_50_pll )
 	);
+	assign GPIO_0_D[2] = clk_50_pll;
 ///////* M9K Module *///////
 Dual_Port_RAM_M9K mem(
 	.input_data(pixel_data_RGB332),
@@ -85,7 +88,7 @@ Dual_Port_RAM_M9K mem(
 VGA_DRIVER driver (
 	.RESET(VGA_RESET),
 	.CLOCK(clk_25_pll),
-	.PIXEL_COLOR_IN(VGA_READ_MEM_EN ? MEM_OUTPUT : BLUE),
+	.PIXEL_COLOR_IN(VGA_READ_MEM_EN ? MEM_OUTPUT : pixel_data_RGB332),
 	.PIXEL_X(VGA_PIXEL_X),
 	.PIXEL_Y(VGA_PIXEL_Y),
 	.PIXEL_COLOR_OUT({GPIO_0_D[9],GPIO_0_D[11],GPIO_0_D[13],GPIO_0_D[15],GPIO_0_D[17],GPIO_0_D[19],GPIO_0_D[21],GPIO_0_D[23]}),
@@ -115,21 +118,54 @@ always @ (VGA_PIXEL_X, VGA_PIXEL_Y) begin
 				VGA_READ_MEM_EN = 1'b1;
 		end
 end
-
+*/
+/*
 always @ (VGA_PIXEL_X, VGA_PIXEL_Y) begin
 		READ_ADDRESS = (VGA_PIXEL_X + VGA_PIXEL_Y*`SCREEN_WIDTH);
-		if( ( VGA_PIXEL_X == 88 ) || ( VGA_PIXEL_Y == 72 ) ) begin
+		if(VGA_PIXEL_X%5==0 || VGA_PIXEL_Y%5==0)begin
+				VGA_READ_MEM_EN = 1'b1;
+		end
+		else begin
 				VGA_READ_MEM_EN = 1'b0;
 		end
-		
-		else begin
+end
+always @ (VGA_PIXEL_X, VGA_PIXEL_Y) begin
+		READ_ADDRESS = (VGA_PIXEL_X + VGA_PIXEL_Y*`SCREEN_WIDTH);
+		if(VGA_PIXEL_X%3==0 || VGA_PIXEL_Y%3                                 ==0)begin
 				VGA_READ_MEM_EN = 1'b1;
+		end
+		else begin
+				VGA_READ_MEM_EN = 1'b0;
 		end
 end
 */
 
-	GPIO_0_D pixel_data_RGB332 == ????
+always @ (VGA_PIXEL_X, VGA_PIXEL_Y) begin
+		READ_ADDRESS = (VGA_PIXEL_X + VGA_PIXEL_Y*`SCREEN_WIDTH);
+		if( ( VGA_PIXEL_X == 88 ) || ( VGA_PIXEL_Y == 72 ) ) begin
+				VGA_READ_MEM_EN = 1'b1;
+		end
+		
+		else begin
+				VGA_READ_MEM_EN = 1'b0;
+		end
+end
 
+
+always @ (VGA_PIXEL_X, VGA_PIXEL_Y) begin
+		READ_ADDRESS = (VGA_PIXEL_X + VGA_PIXEL_Y*`SCREEN_WIDTH);
+		if( ( VGA_PIXEL_X == 88 ) || ( VGA_PIXEL_Y == 72 ) ) begin
+				VGA_READ_MEM_EN = 1'b1;
+		end
+		
+		else begin
+				VGA_READ_MEM_EN = 1'b0;
+		end
+end
+
+
+//	GPIO_0_D pixel_data_RGB332 == ????
+/*
 always @ (VGA_PIXEL_X, VGA_PIXEL_Y) begin
 		READ_ADDRESS = (VGA_PIXEL_X + VGA_PIXEL_Y*`SCREEN_WIDTH);
 		if(VGA_PIXEL_X>(`SCREEN_WIDTH-1) || VGA_PIXEL_Y>(`SCREEN_HEIGHT-1))begin
@@ -139,6 +175,6 @@ always @ (VGA_PIXEL_X, VGA_PIXEL_Y) begin
 				VGA_READ_MEM_EN = 1'b1;
 		end
 end
-	
+*/	
 	
 endmodule 

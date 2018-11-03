@@ -8,13 +8,12 @@ module DE0_NANO(
 	KEY	
 );
 
-
 //=======================================================
 //  PARAMETER declarations
 //=======================================================
-localparam RED = 8'b111_000_00;
+localparam RED   = 8'b111_000_00;
 localparam GREEN = 8'b000_111_00;
-localparam BLUE = 8'b000_000_11;
+localparam BLUE  = 8'b000_000_11;
 
 //=======================================================
 //  PORT declarations
@@ -48,11 +47,19 @@ wire [9:0]	VGA_PIXEL_Y;
 wire [7:0]	MEM_OUTPUT;
 wire			VGA_VSYNC_NEG;
 wire			VGA_HSYNC_NEG;
+wire        CAM_HREF_NEG;
+wire        CAM_VSYNC_NEG;
+wire        CAM_PCLK; 
 reg			VGA_READ_MEM_EN;
 
-assign GPIO_0_D[5] = VGA_VSYNC_NEG;
-assign GPIO_0_D[7] = VGA_HSYNC_NEG;
-assign VGA_RESET = ~KEY[0];
+assign GPIO_0_D[5]   = VGA_VSYNC_NEG;
+assign GPIO_0_D[7]   = VGA_HSYNC_NEG;
+
+assign CAM_HREF_NEG  = GPIO_1_D[22]; //arbitrarily chosen for href input, v
+assign CAM_VSYNC_NEG = GPIO_1_D[23];
+assign CAM_PCLK      = GPIO_1_D[20];
+
+assign VGA_RESET     = ~KEY[0];
 
 ///// I/O for Img Proc /////
 wire [8:0] RESULT;
@@ -107,72 +114,102 @@ IMAGE_PROCESSOR proc(
 
 
 ///////* Update Read Address *///////
-/*
+
 always @ (VGA_PIXEL_X, VGA_PIXEL_Y) begin
 		WRITE_ADDRESS = (VGA_PIXEL_X + VGA_PIXEL_Y*`SCREEN_WIDTH);
 		if(VGA_PIXEL_X>=0 &&VGA_PIXEL_X<=22 &&VGA_PIXEL_Y<(`SCREEN_HEIGHT-1))begin
-			pixel_data_RGB332 = 8'b11111111;
+			//pixel_data_RGB332 = 8'b11111111;
+			pixel_data_RGB332[7:4] = {GPIO_1_D[32], GPIO_1_D[30], GPIO_1_D[25], GPIO_1_D[29]};
+			pixel_data_RGB332[4:1] = {GPIO_1_D[29], GPIO_1_D[31], GPIO_1_D[28], GPIO_1_D[33]};
 				W_EN = 1'b1;
 		end
 		else if(VGA_PIXEL_X>22 &&VGA_PIXEL_X<=44&&VGA_PIXEL_Y<(`SCREEN_HEIGHT-1))begin
-			pixel_data_RGB332 = 8'b00011111;
+			//pixel_data_RGB332 = 8'b00011111;
+			pixel_data_RGB332[7:4] = {GPIO_1_D[32], GPIO_1_D[30], GPIO_1_D[25], GPIO_1_D[29]};
+			pixel_data_RGB332[4:1] = {GPIO_1_D[29], GPIO_1_D[31], GPIO_1_D[28], GPIO_1_D[33]};
 				W_EN = 1'b1;
 		end
 		else if(VGA_PIXEL_X>44 &&VGA_PIXEL_X<=66 &&VGA_PIXEL_Y<(`SCREEN_HEIGHT-1))begin
-			pixel_data_RGB332 = 8'b11111100;
+			//pixel_data_RGB332 = 8'b11111100;
+			pixel_data_RGB332[7:4] = {GPIO_1_D[32], GPIO_1_D[30], GPIO_1_D[25], GPIO_1_D[29]};
+			pixel_data_RGB332[4:1] = {GPIO_1_D[29], GPIO_1_D[31], GPIO_1_D[28], GPIO_1_D[33]};
 				W_EN = 1'b1;
 		end
 		else if(VGA_PIXEL_X>66 &&VGA_PIXEL_X<=88 &&VGA_PIXEL_Y<(`SCREEN_HEIGHT-1))begin
-			pixel_data_RGB332 = 8'b00011100;
+			//pixel_data_RGB332 = 8'b00011100;
+			pixel_data_RGB332[7:4] = {GPIO_1_D[32], GPIO_1_D[30], GPIO_1_D[25], GPIO_1_D[29]};
+			pixel_data_RGB332[4:1] = {GPIO_1_D[29], GPIO_1_D[31], GPIO_1_D[28], GPIO_1_D[33]};
 				W_EN = 1'b1;
 		end
 		else if(VGA_PIXEL_X>88 &&VGA_PIXEL_X<=110 &&VGA_PIXEL_Y<(`SCREEN_HEIGHT-1))begin
-			pixel_data_RGB332 = 8'b11100011;
+			//pixel_data_RGB332 = 8'b11100011;
+			pixel_data_RGB332[7:4] = {GPIO_1_D[32], GPIO_1_D[30], GPIO_1_D[25], GPIO_1_D[29]};
+			pixel_data_RGB332[4:1] = {GPIO_1_D[29], GPIO_1_D[31], GPIO_1_D[28], GPIO_1_D[33]};
 				W_EN = 1'b1;
 		end
 		else if(VGA_PIXEL_X>110 &&VGA_PIXEL_X<=132 &&VGA_PIXEL_Y<(`SCREEN_HEIGHT-1))begin
-			pixel_data_RGB332 = 8'b00101111;
+			//pixel_data_RGB332 = 8'b00101111;
+			pixel_data_RGB332[7:4] = {GPIO_1_D[32], GPIO_1_D[30], GPIO_1_D[25], GPIO_1_D[29]};
+			pixel_data_RGB332[4:1] = {GPIO_1_D[29], GPIO_1_D[31], GPIO_1_D[28], GPIO_1_D[33]};
 				W_EN = 1'b1;
 		end
 		else if(VGA_PIXEL_X>132 &&VGA_PIXEL_X<=154 &&VGA_PIXEL_Y<(`SCREEN_HEIGHT-1))begin
-			pixel_data_RGB332 = 8'b11100101;
+			//pixel_data_RGB332 = 8'b11100101;
+			pixel_data_RGB332[7:4] = {GPIO_1_D[32], GPIO_1_D[30], GPIO_1_D[25], GPIO_1_D[29]};
+			pixel_data_RGB332[4:1] = {GPIO_1_D[29], GPIO_1_D[31], GPIO_1_D[28], GPIO_1_D[33]};
 				W_EN = 1'b1;
 		end
 		else if(VGA_PIXEL_X>154 &&VGA_PIXEL_X<=176 &&VGA_PIXEL_Y<(`SCREEN_HEIGHT-1))begin
-			pixel_data_RGB332 = 8'b00000000;
+			//pixel_data_RGB332 = 8'b00000000;
+			pixel_data_RGB332[7:4] = {GPIO_1_D[32], GPIO_1_D[30], GPIO_1_D[25], GPIO_1_D[29]};
+			pixel_data_RGB332[4:1] = {GPIO_1_D[29], GPIO_1_D[31], GPIO_1_D[28], GPIO_1_D[33]};
 				W_EN = 1'b1;
 		end
 		else begin
 				W_EN = 1'b0;
 		end
 end
-*/
+
 ///////////////////////////////////////////////
 //         Reading Camera input              //
 ///////////////////////////////////////////////
-reg counter;
-counter = 1'b0;
-always @ (posedge VGA_VSYNC_NEG) begin
-		if (counter == 1'b0) begin
-			always @ (posedge VGA_HSYNC_NEG) begin
-				pixel_data_RGB332[7:4] = {GPIO_1_D[32], GPIO_1_D[30], GPIO_1_D[25], GPIO_1_D[29]};
-				W_EN = 1'b1;
-			end
-		end
-		if (counter == 1'b1) begin
-			always @ (posedge VGA_HSYNC_NEG) begin
-				pixel_data_RGB332[4:1] = {GPIO_1_D[29], GPIO_1_D[31], GPIO_1_D[28], GPIO_1_D[33]};
-				W_EN = 1'b1;
-			end
-		end
-		if (counter == 1'b0) begin
-			counter = 1'b1;
-		end
-		else begin
-			counter = 1'b0;
-		end
-		W_EN = 1'b0;
+
+reg reset   = 1'b0;
+reg newByte = 1'b0;
+
+
+//new image 
+always @(negedge CAM_VSYNC_NEG) begin 
+	reset = 1'b1;
+end 
+
+//new row
+always @(negedge CAM_HREF_NEG)begin 
+	if (reset == 1'b1) begin
+		reset = 1'b0;
+		//switch pixels or something? 
+	end
+	
+	if (newByte == 1'b0) begin
+		//ixel_data_RGB332[7:4] = {GPIO_1_D[32], GPIO_1_D[30], GPIO_1_D[25], GPIO_1_D[29]};
+		//W_EN = 1'b1;
+	
+	end
+		
+	if (newByte == 1'b1) begin
+		//pixel_data_RGB332[4:1] = {GPIO_1_D[29], GPIO_1_D[31], GPIO_1_D[28], GPIO_1_D[33]};
+		//W_EN = 1'b1;
+
+	end
+	//store info in m9k block
+		
 end
+
+//for each byte (1 and 2)
+always @(negedge CAM_PCLK)begin 
+	newByte = ~newByte;
+end
+
 
 always @ (VGA_PIXEL_X, VGA_PIXEL_Y) begin
 		READ_ADDRESS = (VGA_PIXEL_X + VGA_PIXEL_Y*`SCREEN_WIDTH);
@@ -196,7 +233,7 @@ always @ (VGA_PIXEL_X, VGA_PIXEL_Y) begin
 end
 always @ (VGA_PIXEL_X, VGA_PIXEL_Y) begin
 		READ_ADDRESS = (VGA_PIXEL_X + VGA_PIXEL_Y*`SCREEN_WIDTH);
-		if(VGA_PIXEL_X%3==0 || VGA_PIXEL_Y%3                                 ==0)begin
+		if(VGA_PIXEL_X%3==0 || VGA_PIXEL_Y%3==0)begin
 				VGA_READ_MEM_EN = 1'b1;
 		end
 		else begin

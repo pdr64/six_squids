@@ -1,29 +1,43 @@
 #include <Wire.h>
+#define OV7670_I2C_ADDRESS 0x21 //0x42 write 0x43 read
+#define OV7670_I2C_W_ADDRESS 0x42
+#define OV7670_I2C_R_ADDRESS 0x43 
 
-#define OV7670_I2C_ADDRESS /*TODO: write this in hex (eg. 0xAB) */
-
+int fpga_a = 7; 
+int fpga_b = 8; 
+int fpga_c = 9; 
 
 ///////// Main Program //////////////
 void setup() {
   Wire.begin();
   Serial.begin(9600);
-  
-  // TODO: READ KEY REGISTERS
-  
-  delay(100);
-  
-  // TODO: WRITE KEY REGISTERS
+
+  Serial.println("starting i2c"); 
+  set_registers();
+  delay(1000);
   
   read_key_registers();
+  set_color_matrix();
+
+  pinMode(fpga_a, INPUT); 
+  pinMode(fpga_b, INPUT);
+  pinMode(fpga_c, INPUT);
 }
 
 void loop(){
+  checkTreasure();
  }
-
 
 ///////// Function Definition //////////////
 void read_key_registers(){
-  /*TODO: DEFINE THIS FUNCTION*/
+  Serial.println("printing registers");
+  Serial.println(read_register_value(0x12));
+  Serial.println(read_register_value(0x0C));
+  Serial.println(read_register_value(0x11));
+  Serial.println(read_register_value(0x40));
+  Serial.println(read_register_value(0x42));
+  Serial.println(read_register_value(0x1E));
+  Serial.println("done reading");
 }
 
 byte read_register_value(int register_address){
@@ -32,7 +46,9 @@ byte read_register_value(int register_address){
   Wire.write(register_address);
   Wire.endTransmission();
   Wire.requestFrom(OV7670_I2C_ADDRESS,1);
-  while(Wire.available()<1);
+  while(Wire.available()<1){
+    Serial.println("in loop");
+  }
   data = Wire.read();
   return data;
 }
@@ -59,13 +75,20 @@ String OV7670_write_register(int reg_address, byte data){
   return OV7670_write(reg_address, &data, 1);
  }
 
+
+    //Q1. 594000 (bits) 
+    //Q2. rgb 565/555
+    //Q3. rgb 3:3:2 r<<2, g<<3, b<<3 
+    //Q4. 176x144
 void set_registers(){
-    OV7670_write_register(0x12, 0x82); //COM7: Reset registers, enable color bar
+    Serial.println("Writing registers");
+    OV7670_write_register(0x12, 0x8E); //COM7: Reset registers, enable color bar, resolution and pixel format 
     OV7670_write_register(0x0C, 0x08); //COM3: Enable scaling
+    OV7670_write_register(0x11, 0xA0); //CLKRC: Use external clock directly 
+    OV7670_write_register(0x40, 0xF0); //COM15: pixel format
     OV7670_write_register(0x42, 0x08); //COM17: DSP color bar enable
-    OV7670_write_register(0x40, 0xB0); //COM15: Output range: [00] to [FF]???
-    OV7670_write_register(0x1E, 0x08); //MVFP: Vertically flip image enable
-    OV7670_write_register(0x11, 0x..); //CLKRC: Use external clock directly ???
+    OV7670_write_register(0x1E, 0x10); //MVFP: Vertically flip image enable
+    
 }
 
 void set_color_matrix(){
@@ -92,3 +115,24 @@ void set_color_matrix(){
     OV7670_write_register(0x6f, 0x9f);
     OV7670_write_register(0xb0, 0x84);
 }
+
+
+void checkTreasure(){
+
+  int a = digitalRead(fpga_a);
+  int b = digitalRead(fpga_b);
+  int c = digitalRead(fpga_c);
+
+  if      ((a==0)&(b==0)&(c==0)) Serial.println("none detected"); 
+  
+  else if ((a==0)&(b==0)&(c==1)) Serial.println("red triangle");
+  else if ((a==0)&(b==1)&(c==0)) Serial.println("red square");
+  else if ((a==0)&(b==1)&(c==1)) Serial.println("red diamond");
+  
+  else if ((a==1)&(b==0)&(c==0)) Serial.println("blue triangle"); 
+  else if ((a==1)&(b==0)&(c==1)) Serial.println("blue square");
+  else if ((a==1)&(b==1)&(c==0)) Serial.println("blue diamond");
+
+  else Serial.println("error: not a known state"); 
+}
+

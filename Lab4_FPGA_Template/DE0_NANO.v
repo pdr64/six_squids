@@ -55,6 +55,7 @@ reg			VGA_READ_MEM_EN;
 assign GPIO_0_D[5]   = VGA_VSYNC_NEG;
 assign GPIO_0_D[7]   = VGA_HSYNC_NEG;
 
+
 assign CAM_HREF_NEG  = GPIO_1_D[22]; //arbitrarily chosen for href input, v
 assign CAM_VSYNC_NEG = GPIO_1_D[23];
 assign CAM_PCLK      = GPIO_1_D[20];
@@ -114,59 +115,69 @@ IMAGE_PROCESSOR proc(
 
 
 ///////* Update Read Address *///////
+wire [7:0] data;
+assign GPIO_0_D[32]  = clk_24_pll;
+assign data[7] = GPIO_1_D[32];
+assign data[6] = GPIO_1_D[33];
+assign data[5] = GPIO_1_D[30];
+assign data[4] = GPIO_1_D[31];
+assign data[3] = GPIO_1_D[28];
+assign data[2] = GPIO_1_D[29];
+assign data[1] = GPIO_1_D[26];
+assign data[0] = GPIO_1_D[27];
 
 always @ (VGA_PIXEL_X, VGA_PIXEL_Y) begin
 		WRITE_ADDRESS = (VGA_PIXEL_X + VGA_PIXEL_Y*`SCREEN_WIDTH);
 		if(VGA_PIXEL_X>=0 &&VGA_PIXEL_X<=22 &&VGA_PIXEL_Y<(`SCREEN_HEIGHT-1))begin
-			//pixel_data_RGB332 = 8'b11111111;
-			pixel_data_RGB332[7:4] = {GPIO_1_D[32], GPIO_1_D[30], GPIO_1_D[25], GPIO_1_D[29]};
-			pixel_data_RGB332[4:1] = {GPIO_1_D[29], GPIO_1_D[31], GPIO_1_D[28], GPIO_1_D[33]};
-				W_EN = 1'b1;
+//			//pixel_data_RGB332 = 8'b11111111;
+//			pixel_data_RGB332[7:4] = {GPIO_1_D[32], GPIO_1_D[30], GPIO_1_D[25], GPIO_1_D[29]};
+//			pixel_data_RGB332[3:0] = {GPIO_1_D[29], GPIO_1_D[31], GPIO_1_D[28], GPIO_1_D[33]};
+//				W_EN = 1'b1;
 		end
 		else if(VGA_PIXEL_X>22 &&VGA_PIXEL_X<=44&&VGA_PIXEL_Y<(`SCREEN_HEIGHT-1))begin
 			//pixel_data_RGB332 = 8'b00011111;
-			pixel_data_RGB332[7:4] = {GPIO_1_D[32], GPIO_1_D[30], GPIO_1_D[25], GPIO_1_D[29]};
-			pixel_data_RGB332[4:1] = {GPIO_1_D[29], GPIO_1_D[31], GPIO_1_D[28], GPIO_1_D[33]};
-				W_EN = 1'b1;
+//			pixel_data_RGB332[7:4] = {GPIO_1_D[32], GPIO_1_D[30], GPIO_1_D[25], GPIO_1_D[29]};
+//			pixel_data_RGB332[3:0] = {GPIO_1_D[29], GPIO_1_D[31], GPIO_1_D[28], GPIO_1_D[33]};
+//				W_EN = 1'b1;
 		end
 		else if(VGA_PIXEL_X>44 &&VGA_PIXEL_X<=66 &&VGA_PIXEL_Y<(`SCREEN_HEIGHT-1))begin
 			//pixel_data_RGB332 = 8'b11111100;
-			pixel_data_RGB332[7:4] = {GPIO_1_D[32], GPIO_1_D[30], GPIO_1_D[25], GPIO_1_D[29]};
-			pixel_data_RGB332[4:1] = {GPIO_1_D[29], GPIO_1_D[31], GPIO_1_D[28], GPIO_1_D[33]};
-				W_EN = 1'b1;
+//			pixel_data_RGB332[7:4] = {GPIO_1_D[32], GPIO_1_D[30], GPIO_1_D[25], GPIO_1_D[29]};
+//			pixel_data_RGB332[3:0] = {GPIO_1_D[29], GPIO_1_D[31], GPIO_1_D[28], GPIO_1_D[33]};
+//				W_EN = 1'b1;
 		end
 		else if(VGA_PIXEL_X>66 &&VGA_PIXEL_X<=88 &&VGA_PIXEL_Y<(`SCREEN_HEIGHT-1))begin
 			//pixel_data_RGB332 = 8'b00011100;
-			pixel_data_RGB332[7:4] = {GPIO_1_D[32], GPIO_1_D[30], GPIO_1_D[25], GPIO_1_D[29]};
-			pixel_data_RGB332[4:1] = {GPIO_1_D[29], GPIO_1_D[31], GPIO_1_D[28], GPIO_1_D[33]};
-				W_EN = 1'b1;
+//			pixel_data_RGB332[7:4] = {GPIO_1_D[32], GPIO_1_D[30], GPIO_1_D[25], GPIO_1_D[29]};
+//			pixel_data_RGB332[3:0] = {GPIO_1_D[29], GPIO_1_D[31], GPIO_1_D[28], GPIO_1_D[33]};
+//				W_EN = 1'b1;
 		end
 		else if(VGA_PIXEL_X>88 &&VGA_PIXEL_X<=110 &&VGA_PIXEL_Y<(`SCREEN_HEIGHT-1))begin
 			//pixel_data_RGB332 = 8'b11100011;
-			pixel_data_RGB332[7:4] = {GPIO_1_D[32], GPIO_1_D[30], GPIO_1_D[25], GPIO_1_D[29]};
-			pixel_data_RGB332[4:1] = {GPIO_1_D[29], GPIO_1_D[31], GPIO_1_D[28], GPIO_1_D[33]};
-				W_EN = 1'b1;
+//			pixel_data_RGB332[7:4] = {GPIO_1_D[32], GPIO_1_D[30], GPIO_1_D[25], GPIO_1_D[29]};
+//			pixel_data_RGB332[3:0] = {GPIO_1_D[29], GPIO_1_D[31], GPIO_1_D[28], GPIO_1_D[33]};
+//				W_EN = 1'b1;
 		end
 		else if(VGA_PIXEL_X>110 &&VGA_PIXEL_X<=132 &&VGA_PIXEL_Y<(`SCREEN_HEIGHT-1))begin
 			//pixel_data_RGB332 = 8'b00101111;
-			pixel_data_RGB332[7:4] = {GPIO_1_D[32], GPIO_1_D[30], GPIO_1_D[25], GPIO_1_D[29]};
-			pixel_data_RGB332[4:1] = {GPIO_1_D[29], GPIO_1_D[31], GPIO_1_D[28], GPIO_1_D[33]};
-				W_EN = 1'b1;
+//			pixel_data_RGB332[7:4] = {GPIO_1_D[32], GPIO_1_D[30], GPIO_1_D[25], GPIO_1_D[29]};
+//			pixel_data_RGB332[3:0] = {GPIO_1_D[29], GPIO_1_D[31], GPIO_1_D[28], GPIO_1_D[33]};
+//				W_EN = 1'b1;
 		end
 		else if(VGA_PIXEL_X>132 &&VGA_PIXEL_X<=154 &&VGA_PIXEL_Y<(`SCREEN_HEIGHT-1))begin
 			//pixel_data_RGB332 = 8'b11100101;
-			pixel_data_RGB332[7:4] = {GPIO_1_D[32], GPIO_1_D[30], GPIO_1_D[25], GPIO_1_D[29]};
-			pixel_data_RGB332[4:1] = {GPIO_1_D[29], GPIO_1_D[31], GPIO_1_D[28], GPIO_1_D[33]};
-				W_EN = 1'b1;
+//			pixel_data_RGB332[7:4] = {GPIO_1_D[32], GPIO_1_D[30], GPIO_1_D[25], GPIO_1_D[29]};
+//			pixel_data_RGB332[3:0] = {GPIO_1_D[29], GPIO_1_D[31], GPIO_1_D[28], GPIO_1_D[33]};
+//				W_EN = 1'b1;
 		end
 		else if(VGA_PIXEL_X>154 &&VGA_PIXEL_X<=176 &&VGA_PIXEL_Y<(`SCREEN_HEIGHT-1))begin
 			//pixel_data_RGB332 = 8'b00000000;
-			pixel_data_RGB332[7:4] = {GPIO_1_D[32], GPIO_1_D[30], GPIO_1_D[25], GPIO_1_D[29]};
-			pixel_data_RGB332[4:1] = {GPIO_1_D[29], GPIO_1_D[31], GPIO_1_D[28], GPIO_1_D[33]};
-				W_EN = 1'b1;
+//			pixel_data_RGB332[7:4] = {GPIO_1_D[32], GPIO_1_D[30], GPIO_1_D[25], GPIO_1_D[29]};
+//			pixel_data_RGB332[3:0] = {GPIO_1_D[29], GPIO_1_D[31], GPIO_1_D[28], GPIO_1_D[33]};
+//				W_EN = 1'b1;
 		end
 		else begin
-				W_EN = 1'b0;
+//				W_EN = 1'b0;
 		end
 end
 
@@ -191,14 +202,14 @@ always @(negedge CAM_HREF_NEG)begin
 	end
 	
 	if (newByte == 1'b0) begin
-		//ixel_data_RGB332[7:4] = {GPIO_1_D[32], GPIO_1_D[30], GPIO_1_D[25], GPIO_1_D[29]};
-		//W_EN = 1'b1;
+		pixel_data_RGB332[7:4] = {GPIO_1_D[32], GPIO_1_D[30], GPIO_1_D[25], GPIO_1_D[29]};
+		W_EN = 1'b1;
 	
 	end
 		
 	if (newByte == 1'b1) begin
-		//pixel_data_RGB332[4:1] = {GPIO_1_D[29], GPIO_1_D[31], GPIO_1_D[28], GPIO_1_D[33]};
-		//W_EN = 1'b1;
+		pixel_data_RGB332[4:1] = {GPIO_1_D[29], GPIO_1_D[31], GPIO_1_D[28], GPIO_1_D[33]};
+		W_EN = 1'b1;
 
 	end
 	//store info in m9k block

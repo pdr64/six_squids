@@ -117,6 +117,7 @@ IMAGE_PROCESSOR proc(
 ///////* Update Read Address *///////
 wire [7:0] data;
 assign GPIO_0_D[32]  = clk_24_pll;
+
 assign data[7] = GPIO_1_D[32];
 assign data[6] = GPIO_1_D[33];
 assign data[5] = GPIO_1_D[30];
@@ -195,20 +196,20 @@ always @(negedge CAM_VSYNC_NEG) begin
 end 
 
 //new row
-always @(negedge CAM_HREF_NEG)begin 
+always @(posedge CAM_HREF_NEG)begin 
 	if (reset == 1'b1) begin
 		reset = 1'b0;
 		//switch pixels or something? 
 	end
 	
 	if (newByte == 1'b0) begin
-		pixel_data_RGB332[7:4] = {GPIO_1_D[32], GPIO_1_D[30], GPIO_1_D[25], GPIO_1_D[29]};
+		pixel_data_RGB332[7:4] = data[7:4];
 		W_EN = 1'b1;
 	
 	end
 		
 	if (newByte == 1'b1) begin
-		pixel_data_RGB332[4:1] = {GPIO_1_D[29], GPIO_1_D[31], GPIO_1_D[28], GPIO_1_D[33]};
+		pixel_data_RGB332[3:0] = data[4:1];
 		W_EN = 1'b1;
 
 	end
@@ -217,7 +218,7 @@ always @(negedge CAM_HREF_NEG)begin
 end
 
 //for each byte (1 and 2)
-always @(negedge CAM_PCLK)begin 
+always @(posedge CAM_PCLK)begin 
 	newByte = ~newByte;
 end
 

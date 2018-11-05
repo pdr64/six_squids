@@ -192,7 +192,8 @@ void set_select(int x, int y, int z)
 //turn left
 void turn_left(){
   //adjust dir_facing 
- 
+   if (dir_facing == 0) dir_facing = 3;
+   else dir_facing --; // Update dir_facing for left turning robot
   //go forward a bit to turn properly
   parallax1.write(95);
   parallax2.write(85);
@@ -211,7 +212,13 @@ void turn_left(){
 
 //turn around
 void turn_around(){
-  //adjust dir_facing 
+  //adjust dir_facing
+
+  if (dir_facing == 0) dir_facing = 2;
+  else if (dir_facing == 2) dir_facing = 0;
+  else if (dir_facing == 1) dir_facing = 3;
+  else if (dir_facing == 3) dir_facing = 1;  
+  
   parallax1.write(95);
   parallax2.write(85);
   delay(600);
@@ -228,6 +235,9 @@ void turn_around(){
 //turn right
 void turn_right(){
   //adjust dir_facing 
+  if (dir_facing == 3) dir_facing = 0;
+  else dir_facing ++; // Update dir_facing for right turning robot
+  
   parallax1.write(105);
   parallax2.write(75);
   delay(600);
@@ -380,37 +390,18 @@ void follow_line(){
 
     //pick the last thing off the stack and go that way 
 //////////////////////////////////////////////////////////////////////////////////
-
     char nextSquare = visitStack.pop();
+
+    
     if(frontw()){ 
 
       digitalWrite(wall, HIGH);
 
-      if(rightw() && !leftw()){
-       turn_left();
-       if (dir_facing == 0) dir_facing = 3;
-       else dir_facing --; // Update dir_facing for left turning robot
-      }
+      if(rightw() && !leftw()) turn_left(); //DO THIS LAST OR DIR IS WRONG
       
-      else if (leftw() && !rightw())
-      {  
-        turn_right();
-        if (dir_facing == 3) dir_facing = 0;
-        else dir_facing ++; // Update dir_facing for right turning robot
-        
-      }
-      else if(leftw() && rightw())
-      {
-        dataArray[3] = 1; //east = true
-        dataArray[5] = 1; //west = true
-        turn_around();
-
-          // Update dir_facing for robot turning around
-          if (dir_facing == 0) dir_facing = 2;
-          else if (dir_facing == 2) dir_facing = 0;
-          else if (dir_facing == 1) dir_facing = 3;
-          else if (dir_facing == 3) dir_facing = 1; 
-      }
+      else if (leftw() && !rightw())turn_right();
+    
+      else if(leftw() && rightw()) turn_around();
       else
       {
         turn_left();

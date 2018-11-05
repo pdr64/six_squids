@@ -127,6 +127,7 @@ assign data[2] = GPIO_1_D[29];
 assign data[1] = GPIO_1_D[26];
 assign data[0] = GPIO_1_D[27];
 
+/*
 always @ (VGA_PIXEL_X, VGA_PIXEL_Y) begin
 		WRITE_ADDRESS = (VGA_PIXEL_X + VGA_PIXEL_Y*`SCREEN_WIDTH);
 		if(VGA_PIXEL_X>=0 &&VGA_PIXEL_X<=22 &&VGA_PIXEL_Y<(`SCREEN_HEIGHT-1))begin
@@ -181,15 +182,15 @@ always @ (VGA_PIXEL_X, VGA_PIXEL_Y) begin
 //				W_EN = 1'b0;
 		end
 end
-
+*/
 ///////////////////////////////////////////////
 //         Reading Camera input              //
 ///////////////////////////////////////////////
 
-reg reset   = 1'b0;
+//reg reset   = 1'b0;
 reg newByte = 1'b0;
 
-
+/*
 //new image 
 always @(negedge CAM_VSYNC_NEG) begin 
 	reset = 1'b1;
@@ -216,13 +217,31 @@ always @(posedge CAM_HREF_NEG)begin
 	//store info in m9k block
 		
 end
+*/
 
+assign WRITE_ADDRESS = (X_ADDR + Y_ADDR*`SCREEN_WIDTH);
 //for each byte (1 and 2)
-always @(posedge CAM_PCLK)begin 
-	newByte = ~newByte;
-end
-
-
+//always @(posedge CAM_PCLK)begin 
+	always @(posedge CAM_VSYNC_NEG) begin
+		X_ADDR = 0;
+		Y_ADDR = 0;
+		always @(posedge CAM_HREF_NEG) begin
+			always @(posedge CAM_PCLK)begin
+				if (newByte == 1'b0) begin	
+					pixel_data_RGB332[7:4] = data[7:4];
+					W_EN = 1'b1;
+				end
+				if (newByte == 1'b1) begin
+					pixel_data_RGB332[3:0] = data[4:1];
+					W_EN = 1'b1;
+				end
+				W_EN = 1'b0;
+				X_ADDR = X_ADDR + 1;
+				newByte = ~newByte;
+			end
+		Y_ADDR = Y_ADDR + 1;
+		end
+	end
 always @ (VGA_PIXEL_X, VGA_PIXEL_Y) begin
 		READ_ADDRESS = (VGA_PIXEL_X + VGA_PIXEL_Y*`SCREEN_WIDTH);
 		if(VGA_PIXEL_X>(`SCREEN_WIDTH-1) || VGA_PIXEL_Y>(`SCREEN_HEIGHT-1))begin

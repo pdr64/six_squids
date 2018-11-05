@@ -2,12 +2,14 @@
 #define FFT_N 256// set to 256point fft
 #include <FFT.h>
 #include <Servo.h>
+#include <StackArray.h>
 
 /////////////////////
 
 #include <SPI.h>
 #include "nRF24L01.h"
 #include "RF24.h"
+
 
 RF24 radio(9,10);
 const uint64_t pipes[2] = { 0x000000000CLL, 0x000000000DLL };
@@ -20,18 +22,9 @@ byte dir_facing = 0;
 // 0 = north, 1 = east, 2 = south, 3 = west
 
 int prevSquare[] = {0, 0};
-int totalSquares[9][3] = {
-//x, y, isVisited
-{0, 0 ,0},
-{0, 1, 0},
-{0, 2, 0},
-{1, 0, 0},
-{1, 1, 0},
-{1, 2, 0},
-{2, 0, 0},
-{2, 1, 0},
-{2, 2, 0}
-};
+char totalSquares[3][3];
+StackArray <char> visitStack;
+
 ///////////////////
 
 Servo parallax1;
@@ -202,8 +195,7 @@ void set_select(int x, int y, int z)
 //turn left
 void turn_left(){
   //adjust dir_facing 
-  
-
+ 
   //go forward a bit to turn properly
   parallax1.write(95);
   parallax2.write(85);
@@ -211,7 +203,7 @@ void turn_left(){
   //turn away from the line so we can detect it again
   parallax1.write(85);
   parallax2.write(85);
-  delay(300);
+  delay(800);
   //wait until we are back on the line 
   while(analogRead(centSen)>thresh)
   {
@@ -242,14 +234,12 @@ void turn_around(){
 //turn right
 void turn_right(){
   //adjust dir_facing 
-  
-  
-  parallax1.write(95);
-  parallax2.write(85);
+  parallax1.write(105);
+  parallax2.write(75);
   delay(600);
   parallax1.write(95);
   parallax2.write(95);
-  delay(100);
+  delay(800);
   while(analogRead(centSen)>thresh)
   {
     parallax1.write(95);
@@ -313,36 +303,29 @@ void follow_line(){
  
   //at intersection
   else if(center<thresh && right<thresh && left<thresh){
-    
+      if      (dir_facing == 0) dataArray [0] --; // If robot is facing north
+      else if (dir_facing == 1) dataArray [1] ++; // If robot is facing east
+      else if (dir_facing == 2) dataArray [0] ++; // If robot is facing south
+      else if (dir_facing == 3) dataArray [1] --; // If robot is facing west
     // Setting north, east, south, and west to false
     for ( int i = 2; i < 6; i++){
       dataArray[i] = 0;
     }
     if(frontw()){ 
-      if (dir_facing == 0) dataArray[0] --; // If robot is facing north
-      else if (dir_facing == 1) dataArray [1] ++; // If robot is facing east
-      else if (dir_facing == 2) dataArray [0] ++; // If robot is facing south
-      else if (dir_facing == 3) dataArray [1] --; // If robot is facing west
+
       digitalWrite(wall, HIGH);
-      if(dir_facing == 0) dataArray[2] = 1; // North=true
+      if      (dir_facing == 0) dataArray[2] =1; // North=true
       else if (dir_facing == 1) dataArray[3] =1; // East=true
       else if (dir_facing == 2) dataArray[4] =1; // South=true
       else if (dir_facing == 3) dataArray[5] =1; // West=true
      
       if(rightw() && !leftw()){
        turn_left();
-       if(dir_facing == 0) {
-        dataArray[3] = 1; // If robot faces north, East=true
-       }
-       else if (dir_facing == 1) {
-        dataArray[4] =1; // If robot faces east, South=true
-       }
-       else if (dir_facing == 2) {
-        dataArray[5] =1; // If robot faces south, West=true
-       }
-       else if (dir_facing == 3) {
-        dataArray[2] =1; // If robot faces west, North=true
-       }
+       if      (dir_facing == 0) dataArray[3] = 1;
+       else if (dir_facing == 1) dataArray[4] =1; // If robot faces east, South=true
+       else if (dir_facing == 2) dataArray[5] =1; // If robot faces south, West=true
+       else if (dir_facing == 3) dataArray[2] =1; // If robot faces west, North=true
+
        if (dir_facing == 0) dir_facing = 3;
        else dir_facing --; // Update dir_facing for left turning robot
       }
@@ -350,18 +333,11 @@ void follow_line(){
       else if (leftw() && !rightw())
       {  
         turn_right();
-        if(dir_facing == 0) {
-          dataArray[5] = 1; // If robot faces north, West=true
-        }
-        else if (dir_facing == 1) {
-          dataArray[2] =1; // If robot faces east, North=true
-        }
-        else if (dir_facing == 2) {
-          dataArray[3] =1; // If robot faces south, East=true
-        }
-        else if (dir_facing == 3) {
-          dataArray[4] =1; // If robot faces west, South=true
-        }
+        if      (dir_facing == 0) dataArray[5] = 1; // If robot faces north, West=true
+        else if (dir_facing == 1) dataArray[2] =1; // If robot faces east, North=true
+        else if (dir_facing == 2) dataArray[3] =1; // If robot faces south, East=true
+        else if (dir_facing == 3) dataArray[4] =1; // If robot faces west, South=true
+        
         if (dir_facing == 3) dir_facing = 0;
         else dir_facing ++; // Update dir_facing for right turning robot
         
@@ -400,7 +376,7 @@ void follow_line(){
       }
       digitalWrite(wall, LOW);
     } 
-    else{ //go straight 
+    else{  
       parallax1.write(100);
       parallax2.write(80);
     }

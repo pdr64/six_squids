@@ -82,10 +82,11 @@ String OV7670_write_register(int reg_address, byte data){
     //Q4. 176x144
 void set_registers(){
     Serial.println("Writing registers");
-    OV7670_write_register(0x12, 0x8E); //COM7: Reset registers, enable color bar, resolution and pixel format 
+    OV7670_write_register(0x12, 0x0E); //COM7: Reset registers, enable color bar, resolution and pixel format 
     OV7670_write_register(0x0C, 0x08); //COM3: Enable scaling
-    OV7670_write_register(0x11, 0xA0); //CLKRC: Use external clock directly 
-    OV7670_write_register(0x40, 0xF0); //COM15: pixel format
+    OV7670_write_register(0x14, 0x0B); //COM9: To make the image less noisy
+    OV7670_write_register(0x11, 0xC0); //CLKRC: Use external clock directly 
+    OV7670_write_register(0x40, 0xD0); //COM15: pixel format
     OV7670_write_register(0x42, 0x08); //COM17: DSP color bar enable
     OV7670_write_register(0x1E, 0x10); //MVFP: Vertically flip image enable
     

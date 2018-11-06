@@ -37,6 +37,7 @@ void read_key_registers(){
   Serial.println(read_register_value(0x40));
   Serial.println(read_register_value(0x42));
   Serial.println(read_register_value(0x1E));
+  Serial.println(read_register_value(0x14));
   Serial.println("done reading");
 }
 

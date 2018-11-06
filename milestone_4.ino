@@ -73,6 +73,7 @@ while(isReady == 0){
 //radio stuff
 ////////////////////
 radio.begin();
+
 radio.setRetries(15,15);
 radio.setAutoAck(true);
 radio.setChannel(0x50);
@@ -84,18 +85,18 @@ role = role_ping_out;
   radio.openReadingPipe(1,pipes[1]);
 
 radio.startListening();
-radio.printDetails();
+//radio.printDetails();
 //////////////////////
-
 radioWrite(dataArray);
 parallax1.attach(6);
 parallax2.attach(5);
-//Serial.println("To loop");
+
 }
 
 void loop() {
-  follow_line();
   //Serial.println("out of loop");
+  follow_line();
+  
 // check_IR();
 }
 
@@ -315,9 +316,9 @@ void follow_line(){
         //Serial.println("can go front");
         visitStack.push (front_space);
 
-       // Serial.println("dirFacing = " + String(dir_facing));
-        //Serial.println("front space x: " + String(front_space[0]));
-        //Serial.println("front space y: " + String(front_space[1]));
+        Serial.println("dirFacing = " + String(dir_facing));
+        Serial.println("front space x: " + String(front_space[0]));
+        Serial.println("front space y: " + String(front_space[1]));
         }
       }
     else { 

@@ -134,7 +134,6 @@ always @ (posedge CAM_PCLK) begin
 			pixel_data_RGB332 = 8'b11111111;
 			pixel_data_RGB332[7:4] = {GPIO_1_D[32], GPIO_1_D[30], GPIO_1_D[25], GPIO_1_D[29]};
 			pixel_data_RGB332[3:0] = {GPIO_1_D[29], GPIO_1_D[31], GPIO_1_D[28], GPIO_1_D[33]};
-
 			end
 		else if(VGA_PIXEL_X>22 &&VGA_PIXEL_X<=44&&VGA_PIXEL_Y<(`SCREEN_HEIGHT-1))begin
 			//pixel_data_RGB332 = 8'b00011111;
@@ -245,10 +244,9 @@ reg newByte = 1'b0;
 assign WRITE_ADDRESS = X_ADDR + Y_ADDR*(`SCREEN_WIDTH);
 //assign data[7:0] = RED;
 reg prevHref;
-reg prevVsync;
 always @(posedge CAM_PCLK) begin
 	W_EN = 1'b0;
-	if (~CAM_VSYNC_NEG && prevVsync) begin
+	if (CAM_VSYNC_NEG) begin
 		X_ADDR = 0;
 		Y_ADDR = 0;
 	end
@@ -258,21 +256,19 @@ always @(posedge CAM_PCLK) begin
 	end
 	if (newByte == 1'b0 && CAM_HREF_NEG ) begin	
 		//W_EN = 1'b1;
-		pixel_data_RGB332[7:2] <= {data[7], data[6], data[5], data[2], data[1], data[0]};
+		pixel_data_RGB332[7:2] = {data[7], data[6], data[5], data[2], data[1], data[0]};
 		newByte = 1'b1;
 	end
 	else if (newByte == 1'b1 && CAM_HREF_NEG) begin
-		pixel_data_RGB332[1:0] <= data[4:3];
-		W_EN = 1'b1;
+		pixel_data_RGB332[1:0] = data[4:3];
 		X_ADDR = X_ADDR + 1;
+		W_EN = 1'b1;
 		newByte = 1'b0;
 	end
 
 	
 	prevHref = CAM_HREF_NEG;
-	prevVsync = CAM_VSYNC_NEG;
 end
-
 
 
 //reading
@@ -341,5 +337,5 @@ always @ (VGA_PIXEL_X, VGA_PIXEL_Y) begin
 		end
 end
 */	
-	
+
 endmodule 

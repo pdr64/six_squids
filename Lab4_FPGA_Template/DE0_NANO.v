@@ -244,31 +244,64 @@ reg newByte = 1'b0;
 assign WRITE_ADDRESS = X_ADDR + Y_ADDR*(`SCREEN_WIDTH);
 //assign data[7:0] = RED;
 reg prevHref;
+reg prevVsync;
+reg [15:0] temp;
 always @(posedge CAM_PCLK) begin
-	W_EN = 1'b0;
-	if (CAM_VSYNC_NEG) begin
-		X_ADDR = 0;
-		Y_ADDR = 0;
-	end
-	if (~CAM_HREF_NEG && prevHref) begin
-		Y_ADDR = Y_ADDR + 1;
-		X_ADDR = 0;
-	end
-	if (newByte == 1'b0 && CAM_HREF_NEG ) begin	
-		//W_EN = 1'b1;
-		pixel_data_RGB332[7:2] = {data[7], data[6], data[5], data[2], data[1], data[0]};
-		newByte = 1'b1;
-	end
-	else if (newByte == 1'b1 && CAM_HREF_NEG) begin
-		pixel_data_RGB332[1:0] = data[4:3];
-		X_ADDR = X_ADDR + 1;
-		W_EN = 1'b1;
+	if (CAM_VSYNC_NEG && ~prevVsync) begin
+		X_ADDR  = 10'b0;
+		Y_ADDR  = 10'b0;
 		newByte = 1'b0;
 	end
-
-	
-	prevHref = CAM_HREF_NEG;
+	else if (~CAM_HREF_NEG && prevHref) begin
+		Y_ADDR  = Y_ADDR + 10'b1;
+		X_ADDR  = 10'b0;
+		newByte = 1'b0;
+	end
+	else begin
+		Y_ADDR = Y_ADDR;
+		if (CAM_HREF_NEG) begin
+			if (newByte ==1'b0) begin
+				//pixel_data_RGB332[7:4] = {data[7], data[6], data[5], data[2], data[1], data[0]};
+				temp[7:0] = data;
+				W_EN = 1'b0;
+				X_ADDR = X_ADDR;
+				newByte = 1'b1;
+				pixel_data_RGB332[7:5] = data[3:1];
+			end
+			else begin
+				//pixel_data_RGB332[1:0] = data[4:3];
+				temp[15:8] = data;
+				pixel_data_RGB332 = {temp[15:13], temp[10:8], temp[4:3]};
+				X_ADDR = X_ADDR + 10'b1;
+				W_EN = 1'b1;
+				newByte = 1'b0;
+			end
+		end
+		else begin
+			X_ADDR = 10'b0;
+		end
+	end
+	prevVsync = CAM_VSYNC_NEG;
+	prevHref  = CAM_HREF_NEG;
 end
+				
+//	if (newByte == 1'b0 && CAM_HREF_NEG ) begin	
+//		//W_EN = 1'b1;
+//		pixel_data_RGB332[7:2] = {data[7], data[6], data[5], data[2], data[1], data[0]};
+//		W_EN = 1'b0;
+//		X_ADDR = X_ADDR;
+//		newByte = 1'b1;
+//	end
+//	else if (newByte == 1'b1 && CAM_HREF_NEG) begin
+//		pixel_data_RGB332[1:0] = data[4:3];
+//		X_ADDR = X_ADDR + 10'b1;
+//		W_EN = 1'b1;
+//		newByte = 1'b0;
+//	end
+//
+//	prevVsync = CAM_VSYNC_NEG;
+//	prevHref  = CAM_HREF_NEG;
+//end
 
 
 //reading

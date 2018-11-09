@@ -55,8 +55,7 @@
       external clock, pixel format and more. We had difficulty with getting the right results from our camera and the problem proofed to be 
       from the registers we had set using outdated data sheet. Eventually, we were able to get the correct registers and a snippet of our
       code is shown below.
-    </p>
-    <p><code><pre>
+      <code><pre>
       Serial.println("Writing registers");
       Serial.println (OV7670_write_register(0x12, 0x80)); //COM7: Reset registers 
       delay(100);
@@ -67,7 +66,8 @@
       Serial.println(OV7670_write_register(0x40, 0xD0)); //COM15: Pixel format
       Serial.println(OV7670_write_register(0x42, 0x08)); //COM17: DSP color bar enable
       Serial.println(OV7670_write_register(0x1E, 0x30)); //MVFP: Vertically flip image enable
-    </pre></code></p>
+      </pre></code>
+    </p>
 
     <h4>Getting Data from the Camera</h4>
     <p> To run the Arduino program, we needed to protect the camera. We had  to disable the internal pull-up resistors that are a part of
@@ -87,16 +87,16 @@
     <br>
     <h3>Programming the FPGA to Read Camera Data</h3>
     <h4>Writing to M9K blocks</h4>
+    <br>
     <h4>Downsampling</h4>
     <p>The information above about the camera indicates that the camera outputs a data structure of RGB565 which is 16 bits of information. We however need only 8 bits out of the 
       16 bits in order to save on memory. The Downsampling code collects all the data from the camera and selects only the most important bits necessary to display the colors we need.
       The OV7670 Camera can only output 8 bits of a pixel at a time through D7 - D0 (output connections). Using the camera clock cycle (see fig.2), we sampled down the output into RGB332.
       <center><img src="camera_clock.png" class="img-rounded" alt="Camera clock cycle" width="600" height="450">
       <p><b>Fig.1:</b> Clock cycle from the OV7670 Datasheet.This shows how the output from the clock is received based on time cycle</p></center>
-      Below is a snippet of our downsampler code. 
-    </p>
-    <p><code><pre>
-    //This set of codes receive camera data in RGB565 and downsamples it into RGB 332 by taking the important bits
+      <br>Below is a snippet of our downsampler code. 
+      <code><pre>
+      //This set of codes receive camera data in RGB565 and downsamples it into RGB 332 by taking the important bits
       if (CAM_HREF_NEG) begin   //stuff has finished reading and clock has fallen
       	if (newByte ==1'b0) begin  //meaning we are reading the second 8 bit data set
         	temp[7:0] = data;        //receive what we have so we don't mess it up with new readings
@@ -111,8 +111,9 @@
             	W_EN = 1'b1;
             	newByte = 1'b0;       //reset status
        end
-      </pre></code></p>
-      
+      </pre></code>
+    </p>
+    <br>
     <h4>Reading Pixels</h4>
     <p>
 

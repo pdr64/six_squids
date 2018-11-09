@@ -69,20 +69,50 @@
       Serial.println(OV7670_write_register(0x1E, 0x30)); //MVFP: Vertically flip image enable
     </pre></code>
 
-    <h4>Sending Data from the Camera</h4>
+    <h4>Getting Data from the Camera</h4>
     <p> To run the Arduino program, we needed to protect the camera. We had  to disable the internal pull-up resistors that are a part of
       the Arduino’s I2C interface. This is because they pull the signals that set up our camera to 5V, while our camera requires 3.3V.
       Sending 5V through will harm the camera. We did this by locating the twi.c file at C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries\Wire\src\utility.
       Then we commented out the following lines of code:
       <code><pre>
-        //activate internal pullups for twi
+       //activate internal pullups for twi
        digitalWrite(SDA,1);
        digitalWrite(SCL,1);
       </pre></code>
+      <br>
+      We read the camera data and the picture below shows the output. Comparing the output to the written values into the registers, we confirmed that our camera was working 
+      correctly and is ready to send data into the DE0-Nano FPGA.
+      <!--image here-->
     </p>
+    <br>
     <h3>Programming the FPGA to Read Camera Data</h3>
     <h4>Writing to M9K blocks</h4>
     <h4>Downsampling</h4>
+    <p>The information above about the camera indicates that the camera outputs a data structure of RGB565 which is 16 bits of information. We however need only 8 bits out of the 
+      16 bits in order to save on memory. The Downsampling code collects all the data from the camera and selects only the most important bits necessary to display the colors we need.
+      The OV7670 Camera can only output 8 bits of a pixel at a time through D7 - D0 (output connections). Using the camera clock cycle (see fig.2), we sampled down the output into RGB332.
+      <center><img src="camera_clock.png" class="img-rounded" alt="Camera clock cycle" width="600" height="300">
+      <p><b>Fig.1:</b> Clock cycle from the OV7670 Datasheet.This shows how the output from the clock is received based on time cycle</p></center>
+      Below is a snippet of our downsampler code. 
+    </p>
+      <code><pre>
+      //This set of codes receive camera data in RGB565 and downsamples it into RGB 332 by taking the important bits
+        if (CAM_HREF_NEG) begin   //stuff has finished reading and clock has falling
+			    if (newByte ==1'b0) begin  //meaning we are reading the second 8 bit data set
+            temp[7:0] = data;        //receive what we have so we don't mess it up with new readings
+            W_EN = 1'b0;
+            X_ADDR = X_ADDR;         //save x address
+            newByte = 1'b1;           //change status
+			    end
+			    else begin
+            temp[15:8] = data;
+            pixel_data_RGB332 = {temp[15:13], temp[10:8], temp[4:3]};  //get all 8 bits of Red, Green and Blue
+            X_ADDR = X_ADDR + 10'b1; //increment x address
+            W_EN = 1'b1;
+            newByte = 1'b0;       //reset status
+          end
+      </pre></code>
+      
     <h4>Reading Pixels</h4>
     <p>
 

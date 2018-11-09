@@ -91,7 +91,7 @@
     <p>The information above about the camera indicates that the camera outputs a data structure of RGB565 which is 16 bits of information. We however need only 8 bits out of the 
       16 bits in order to save on memory. The Downsampling code collects all the data from the camera and selects only the most important bits necessary to display the colors we need.
       The OV7670 Camera can only output 8 bits of a pixel at a time through D7 - D0 (output connections). Using the camera clock cycle (see fig.2), we sampled down the output into RGB332.
-      <center><img src="camera_clock.png" class="img-rounded" alt="Camera clock cycle" width="600" height="300">
+      <center><img src="camera_clock.png" class="img-rounded" alt="Camera clock cycle" width="600" height="450">
       <p><b>Fig.1:</b> Clock cycle from the OV7670 Datasheet.This shows how the output from the clock is received based on time cycle</p></center>
       Below is a snippet of our downsampler code. 
     </p>

@@ -56,7 +56,7 @@
       from the registers we had set using outdated data sheet. Eventually, we were able to get the correct registers and a snippet of our
       code is shown below.
     </p>
-    <code><pre>
+    <p><code><pre>
       Serial.println("Writing registers");
       Serial.println (OV7670_write_register(0x12, 0x80)); //COM7: Reset registers 
       delay(100);
@@ -67,7 +67,7 @@
       Serial.println(OV7670_write_register(0x40, 0xD0)); //COM15: Pixel format
       Serial.println(OV7670_write_register(0x42, 0x08)); //COM17: DSP color bar enable
       Serial.println(OV7670_write_register(0x1E, 0x30)); //MVFP: Vertically flip image enable
-    </pre></code>
+    </pre></code></p>
 
     <h4>Getting Data from the Camera</h4>
     <p> To run the Arduino program, we needed to protect the camera. We had  to disable the internal pull-up resistors that are a part of
@@ -95,23 +95,23 @@
       <p><b>Fig.1:</b> Clock cycle from the OV7670 Datasheet.This shows how the output from the clock is received based on time cycle</p></center>
       Below is a snippet of our downsampler code. 
     </p>
-      <code><pre>
-      //This set of codes receive camera data in RGB565 and downsamples it into RGB 332 by taking the important bits
-        if (CAM_HREF_NEG) begin   //stuff has finished reading and clock has falling
-		if (newByte ==1'b0) begin  //meaning we are reading the second 8 bit data set
-            		temp[7:0] = data;        //receive what we have so we don't mess it up with new readings
-            		W_EN = 1'b0;
-           		X_ADDR = X_ADDR;         //save x address
-            		newByte = 1'b1;           //change status
-		end
-		else begin
-            		temp[15:8] = data;
-            		pixel_data_RGB332 = {temp[15:13], temp[10:8], temp[4:3]};  //get all 8 bits of Red, Green and Blue
-            		X_ADDR = X_ADDR + 10'b1; //increment x address
-            		W_EN = 1'b1;
-            		newByte = 1'b0;       //reset status
-          	end
-      </pre></code>
+    <p><code><pre>
+    //This set of codes receive camera data in RGB565 and downsamples it into RGB 332 by taking the important bits
+      if (CAM_HREF_NEG) begin   //stuff has finished reading and clock has fallen
+      	if (newByte ==1'b0) begin  //meaning we are reading the second 8 bit data set
+        	temp[7:0] = data;        //receive what we have so we don't mess it up with new readings
+            	W_EN = 1'b0;
+           	X_ADDR = X_ADDR;         //save x address
+           	newByte = 1'b1;           //change status
+	end
+	else begin
+            	temp[15:8] = data;
+            	pixel_data_RGB332 = {temp[15:13], temp[10:8], temp[4:3]};  //get all 8 bits of Red, Green and Blue
+           	X_ADDR = X_ADDR + 10'b1; //increment x address
+            	W_EN = 1'b1;
+            	newByte = 1'b0;       //reset status
+       end
+      </pre></code></p>
       
     <h4>Reading Pixels</h4>
     <p>

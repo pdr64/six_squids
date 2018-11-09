@@ -29,40 +29,57 @@
     <br>
     <center><h2>Materials Used</h2></center>
     <ul>
-     <li>1 DE0 FPGA</li>
-     <li>2 Arduino Unos</li>
-      <li>1 camera</li>
+     <li>1 DE0-Nano FPGA</li>
+     <li>2 Arduino Uno</li>
+      <li>1 OV7670 camera</li>
+      <li>VGA Adapter</li>
+      <li>Wires and Jumper Cables</li>
     </ul>
     <br>
     <center><h2>Sub Teams</h2></center>
-    <span><left><h3> Arduino/Camera Team</h3>
+    <span><h3> Arduino/Camera Team</h3>
       <ul>
         <li>Katie</li>
-        <li>Ben </li></ul></left></span>
-    <span><right> <h3>FPGA/Verilog</h3>
+        <li>Ben </li></ul></span>
+    <span><h3>FPGA/Verilog</h3>
       <ul>
         <li> Caroline</li>
         <li> Pablo</li>
-      </ul></right></span>
+      </ul></span>
     <br>
     <center><h2>Procedure</h2></center>
     <h4>Getting the Cameras Operational</h4>
     <p>
       The first thing we did was get the Arduinos programmed to write registers to the camera. To do this we read through the 
       camera datasheet and found the right registers to set the data structure (RGB565), resolution (176x144), camera noise, using an 
-      external clock, and more from the prelab. Originally we had difficulty with this because we were using the outdated data sheet 
-      posted in the lab, but we were eventually able to both read and write the correct registers
+      external clock, pixel format and more. We had difficulty with getting the right results from our camera and the problem proofed to be 
+      from the registers we had set using outdated data sheet. Eventually, we were able to get the correct registers and a snippet of our
+      code is shown below.
     </p>
     <code><pre>
-    Serial.println(OV7670_write_register(0x12, 0x0E)); //COM7: Reset registers, enable color bar, resolution and pixel format 
-    Serial.println(OV7670_write_register(0x0C, 0x08)); //COM3: Enable scaling
-    Serial.println(OV7670_write_register(0x14, 0x0B)); //COM9: To make the image less noisy
-    Serial.println(OV7670_write_register(0x11, 0xC0)); //CLKRC: Use external clock directly 
-    Serial.println(OV7670_write_register(0x40, 0xD0)); //COM15: pixel format
-    Serial.println(OV7670_write_register(0x42, 0x08)); //COM17: DSP color bar enable
-    Serial.println(OV7670_write_register(0x1E, 0x30)); //MVFP: Vertically flip image enable
+      Serial.println("Writing registers");
+      Serial.println (OV7670_write_register(0x12, 0x80)); //COM7: Reset registers 
+      delay(100);
+      Serial.println(OV7670_write_register(0x12, 0x0E)); //COM7: Enable color bar, resolution and pixel format 
+      Serial.println(OV7670_write_register(0x0C, 0x08)); //COM3: Enable scaling
+      Serial.println(OV7670_write_register(0x14, 0x0B)); //COM9: To make the image less noisy
+      Serial.println(OV7670_write_register(0x11, 0xC0)); //CLKRC: Use external clock directly 
+      Serial.println(OV7670_write_register(0x40, 0xD0)); //COM15: Pixel format
+      Serial.println(OV7670_write_register(0x42, 0x08)); //COM17: DSP color bar enable
+      Serial.println(OV7670_write_register(0x1E, 0x30)); //MVFP: Vertically flip image enable
     </pre></code>
 
+    <h4>Sending Data from the Camera</h4>
+    <p> To run the Arduino program, we needed to protect the camera. We had  to disable the internal pull-up resistors that are a part of
+      the Arduino’s I2C interface. This is because they pull the signals that set up our camera to 5V, while our camera requires 3.3V.
+      Sending 5V through will harm the camera. We did this by locating the twi.c file at C:\Program Files (x86)\Arduino\hardware\arduino\avr\libraries\Wire\src\utility.
+      Then we commented out the following lines of code:
+      <code><pre>
+        //activate internal pullups for twi
+       digitalWrite(SDA,1);
+       digitalWrite(SCL,1);
+      </pre></code>
+    </p>
     <h3>Programming the FPGA to Read Camera Data</h3>
     <h4>Writing to M9K blocks</h4>
     <h4>Downsampling</h4>

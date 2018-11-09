@@ -98,19 +98,19 @@
       <code><pre>
       //This set of codes receive camera data in RGB565 and downsamples it into RGB 332 by taking the important bits
         if (CAM_HREF_NEG) begin   //stuff has finished reading and clock has falling
-			    if (newByte ==1'b0) begin  //meaning we are reading the second 8 bit data set
-            temp[7:0] = data;        //receive what we have so we don't mess it up with new readings
-            W_EN = 1'b0;
-            X_ADDR = X_ADDR;         //save x address
-            newByte = 1'b1;           //change status
-			    end
-			    else begin
-            temp[15:8] = data;
-            pixel_data_RGB332 = {temp[15:13], temp[10:8], temp[4:3]};  //get all 8 bits of Red, Green and Blue
-            X_ADDR = X_ADDR + 10'b1; //increment x address
-            W_EN = 1'b1;
-            newByte = 1'b0;       //reset status
-          end
+		if (newByte ==1'b0) begin  //meaning we are reading the second 8 bit data set
+            		temp[7:0] = data;        //receive what we have so we don't mess it up with new readings
+            		W_EN = 1'b0;
+           		X_ADDR = X_ADDR;         //save x address
+            		newByte = 1'b1;           //change status
+		end
+		else begin
+            		temp[15:8] = data;
+            		pixel_data_RGB332 = {temp[15:13], temp[10:8], temp[4:3]};  //get all 8 bits of Red, Green and Blue
+            		X_ADDR = X_ADDR + 10'b1; //increment x address
+            		W_EN = 1'b1;
+            		newByte = 1'b0;       //reset status
+          	end
       </pre></code>
       
     <h4>Reading Pixels</h4>

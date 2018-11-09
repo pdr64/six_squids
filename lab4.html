@@ -1,30 +1,75 @@
 <!DOCTYPE html>
   <html lang="en">
-   <head>
+  <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <title> Lab 4</title>
+    <title> Lab 3</title>
     <style>
       body{
-        padding: 0 80px;
-      }
+        padding: 0 80px;}
     </style>
-  </head>
+</head>
   <body>
     <div id= "header">
-      <center><h1> Lab 4</h1></center>
+      <center><h1> Lab 4 - FPGA and Color Detection</h1></center>
     </div>
     <div id = "navbar">
       <a href="https://pdr64.github.io/six_squids/"><button class="btn"><i class="fa fa-home"></i> Back to Home Page</button></a>
     </div>
     <br>
-    <p> Coming Soon!</p>
+    <br>
+    <center><h2>Objective </h2></center>
+    <p>The objective of this lab was to use a camera hooked up to an FPGA to read in data from the camera and display it 
+    on a screen, eventually analyzing the image for both color and shape to detect targets during competition</p>
     <br>
     <br>
-    <a href="#header"><button class="btn"><i class="fa fa-arrow-up"></i>Return to top</button></a>
-  </body>
+    <center><h2>Materials Used</h2></center>
+    <ul>
+     <li>1 DE0 FPGA</li>
+     <li>2 Arduino Unos</li>
+      <li>1 camera</li>
+    </ul>
+    <br>
+    <center><h2>Sub Teams</h2></center>
+    <p>Originally, Katie and Ben worked on setting up the camera with the Arduino, writing registers, and Caroline and Pablo 
+      worked on setting up verilog with the FPGA. </p>
+    <br>
+    <center><h2>Procedure</h2></center>
+    <h4>Getting the Cameras Operational</h4>
+    <p>
+      The first thing we did was get the Arduinos programmed to write registers to the camera. To do this we read through the 
+      camera datasheet and found the right registers to set the data structure (RGB565), resolution (176x144), camera noise, using an 
+      external clock, and more from the prelab. Originally we had difficulty with this because we were using the outdated data sheet 
+      posted in the lab, but we were eventually able to both read and write the correct registers
+    </p>
+    <code><pre>
+    Serial.println(OV7670_write_register(0x12, 0x0E)); //COM7: Reset registers, enable color bar, resolution and pixel format 
+    Serial.println(OV7670_write_register(0x0C, 0x08)); //COM3: Enable scaling
+    Serial.println(OV7670_write_register(0x14, 0x0B)); //COM9: To make the image less noisy
+    Serial.println(OV7670_write_register(0x11, 0xC0)); //CLKRC: Use external clock directly 
+    Serial.println(OV7670_write_register(0x40, 0xD0)); //COM15: pixel format
+    Serial.println(OV7670_write_register(0x42, 0x08)); //COM17: DSP color bar enable
+    Serial.println(OV7670_write_register(0x1E, 0x30)); //MVFP: Vertically flip image enable
+    </pre></code>
+
+    <h4>Programming the FPGA to Read Camera Data</h4>
+    <p>
+
+    </p>
+    <br>
+   
+    <br>
+    <h4>Putting it all together</h4>
+     <p>
+
+    </p>
+    <br>
+    <br>
+   <a href="#header"><button class="btn"><i class="fa fa-arrow-up"></i>Return to top</button></a>
+       
+ </body>
 </html>

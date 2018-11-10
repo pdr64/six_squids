@@ -25,7 +25,7 @@ input 		          		CLOCK_50;
 //////////// GPIO_0, GPIO_0 connect to GPIO Default //////////
 output 		    [33:0]		GPIO_0_D;
 //////////// GPIO_0, GPIO_1 connect to GPIO Default //////////
-input 		    [33:20]		GPIO_1_D;
+input 		    [23:0]		GPIO_1_D;
 input 		     [1:0]		KEY;
 
 ///// PIXEL DATA /////
@@ -56,9 +56,9 @@ assign GPIO_0_D[5]   = VGA_VSYNC_NEG;
 assign GPIO_0_D[7]   = VGA_HSYNC_NEG;
 
 
-assign CAM_HREF_NEG  = GPIO_1_D[22]; //arbitrarily chosen for href input, v
-assign CAM_VSYNC_NEG = GPIO_1_D[23];
-assign CAM_PCLK      = GPIO_1_D[20];
+assign CAM_HREF_NEG  = GPIO_1_D[3]; //arbitrarily chosen for href input, v
+assign CAM_VSYNC_NEG = GPIO_1_D[1];
+assign CAM_PCLK      = GPIO_1_D[7];
 
 assign VGA_RESET     = ~KEY[0];
 
@@ -104,6 +104,7 @@ VGA_DRIVER driver (
 );
 
 ///////* Image Processor *///////
+
 IMAGE_PROCESSOR proc(
 	.PIXEL_IN(MEM_OUTPUT),
 	.CLK(clk_25_pll),
@@ -119,14 +120,14 @@ IMAGE_PROCESSOR proc(
 wire [7:0] data;
 assign GPIO_0_D[32]  = clk_24_pll;
 
-assign data[7] = GPIO_1_D[32];
-assign data[6] = GPIO_1_D[33];
-assign data[5] = GPIO_1_D[30];
-assign data[4] = GPIO_1_D[31];
-assign data[3] = GPIO_1_D[28];
-assign data[2] = GPIO_1_D[29];
-assign data[1] = GPIO_1_D[26];
-assign data[0] = GPIO_1_D[27];
+assign data[7] = GPIO_1_D[23];
+assign data[6] = GPIO_1_D[21];
+assign data[5] = GPIO_1_D[19];
+assign data[4] = GPIO_1_D[17];
+assign data[3] = GPIO_1_D[15];
+assign data[2] = GPIO_1_D[13];
+assign data[1] = GPIO_1_D[11];
+assign data[0] = GPIO_1_D[9];
 
 /*
 always @ (posedge CAM_PCLK) begin

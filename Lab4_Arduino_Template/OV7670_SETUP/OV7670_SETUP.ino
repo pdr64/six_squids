@@ -85,14 +85,14 @@ void set_registers(){
     Serial.println("Writing registers");
     Serial.println (OV7670_write_register(0x12, 0x80)); //COM7: Reset registers, enable color bar, resolution and pixel format 
     delay(100);
-    Serial.println(OV7670_write_register(0x12, 0x0C)); //COM7: Reset registers, enable color bar, resolution and pixel format 
+    Serial.println(OV7670_write_register(0x12, 0x0E)); //COM7: Reset registers, enable color bar, resolution and pixel format 
     Serial.println(OV7670_write_register(0x0C, 0x08)); //COM3: Enable scaling
     Serial.println(OV7670_write_register(0x14, 0x0B)); //COM9: To make the image less noisy
     Serial.println(OV7670_write_register(0x11, 0xC0)); //CLKRC: Use external clock directly 
     Serial.println(OV7670_write_register(0x40, 0xD0)); //COM15: pixel format
-    Serial.println(OV7670_write_register(0x42, 0x00)); //COM17: DSP color bar enable
+    Serial.println(OV7670_write_register(0x42, 0x08)); //COM17: DSP color bar enable (0x42, 0x08)
     Serial.println(OV7670_write_register(0x1E, 0x30)); //MVFP: Vertically flip image enable
-    
+    Serial.println(OV7670_write_register(0x8C, 0x02));
 }
 
 void set_color_matrix(){
@@ -139,4 +139,5 @@ void checkTreasure(){
 
   else Serial.println("error: not a known state"); 
 }
+
 

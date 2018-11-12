@@ -247,7 +247,7 @@ assign WRITE_ADDRESS = X_ADDR + Y_ADDR*(`SCREEN_WIDTH);
 //assign data[7:0] = RED;
 reg prevHref;
 reg prevVsync;
-reg [15:0] temp;
+reg [7:0] temp;
 always @(posedge CAM_PCLK) begin
 	if (CAM_VSYNC_NEG && ~prevVsync) begin
 		X_ADDR  = 10'b0;
@@ -262,18 +262,18 @@ always @(posedge CAM_PCLK) begin
 	else begin
 		Y_ADDR = Y_ADDR;
 		if (CAM_HREF_NEG) begin
-			if (newByte ==1'b0) begin
+			if (newByte == 1'b0) begin
 				//pixel_data_RGB332[7:4] = {data[7], data[6], data[5], data[2], data[1], data[0]};
 				temp[7:0] = data;
-				W_EN = 1'b0;
-				X_ADDR = X_ADDR;
-				newByte = 1'b1;
-				pixel_data_RGB332[7:5] = data[3:1];
+				W_EN      = 1'b0;
+				X_ADDR    = X_ADDR;
+				newByte   = 1'b1;
+				pixel_data_RGB332[4:0] = {data[7:5], data[3:2]};
 			end
 			else begin
 				//pixel_data_RGB332[1:0] = data[4:3];
-				temp[15:8] = data;
-				pixel_data_RGB332 = {temp[15:13], temp[10:8], temp[4:3]};
+				//temp[15:8] = data;
+				pixel_data_RGB332[7:5] = {data[3:1]};
 				X_ADDR = X_ADDR + 10'b1;
 				W_EN = 1'b1;
 				newByte = 1'b0;

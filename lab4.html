@@ -51,21 +51,22 @@
     <h4>Getting the Cameras Operational</h4>
     <p>
       The first thing we did was get the Arduinos programmed to write registers to the camera. To do this we read through the 
-      camera datasheet and found the right registers to set the data structure (RGB565), resolution (176x144), camera noise, using an 
+      camera datasheet and found the right registers to set the data structure (RGB444), resolution (176x144), camera noise, using an 
       external clock, pixel format and more. We had difficulty with getting the right results from our camera and the problem proofed to be 
       from the registers we had set using outdated data sheet. Eventually, we were able to get the correct registers and a snippet of our
       code is shown below.
       <code><pre>
-      Serial.println("Writing registers");
-      Serial.println (OV7670_write_register(0x12, 0x80)); //COM7: Reset registers 
-      delay(100);
-      Serial.println(OV7670_write_register(0x12, 0x0E)); //COM7: Enable color bar, resolution and pixel format 
-      Serial.println(OV7670_write_register(0x0C, 0x08)); //COM3: Enable scaling
-      Serial.println(OV7670_write_register(0x14, 0x0B)); //COM9: To make the image less noisy
-      Serial.println(OV7670_write_register(0x11, 0xC0)); //CLKRC: Use external clock directly 
-      Serial.println(OV7670_write_register(0x40, 0xD0)); //COM15: Pixel format
-      Serial.println(OV7670_write_register(0x42, 0x08)); //COM17: DSP color bar enable
-      Serial.println(OV7670_write_register(0x1E, 0x30)); //MVFP: Vertically flip image enable
+      	Serial.println("Writing registers");
+    	Serial.println (OV7670_write_register(0x12, 0x80)); //COM7: Reset registers, enable color bar, resolution and pixel format 
+    	delay(100);
+    	Serial.println(OV7670_write_register(0x12, 0x0E)); //COM7: Reset registers, enable color bar, resolution and pixel format 
+    	Serial.println(OV7670_write_register(0x0C, 0x08)); //COM3: Enable scaling
+    	Serial.println(OV7670_write_register(0x14, 0x0B)); //COM9: To make the image less noisy
+    	Serial.println(OV7670_write_register(0x11, 0xC0)); //CLKRC: Use external clock directly 
+    	Serial.println(OV7670_write_register(0x40, 0xD0)); //COM15: pixel format
+    	Serial.println(OV7670_write_register(0x42, 0x08)); //COM17: DSP color bar enable (0x42, 0x08)
+   	Serial.println(OV7670_write_register(0x1E, 0x30)); //MVFP: Vertically flip image enable
+    	Serial.println(OV7670_write_register(0x8C, 0x02)); //enable RGB444
       </pre></code>
     </p>
 
@@ -82,36 +83,48 @@
       <br>
       We read the camera data and the picture below shows the output. Comparing the output to the written values into the registers, we confirmed that our camera was working 
       correctly and is ready to send data into the DE0-Nano FPGA.
-      <!--image here-->
+      <center><img src="registers.png" class="img-rounded" alt="Camera register output" width="600" height="450">
+      <p><b>Fig.1:</b> Camera Register Output</p></center>
     </p>
     <br>
     <h3>Programming the FPGA to Read Camera Data</h3>
     <h4>Writing to M9K blocks</h4>
+    <p>
+	We tested our M9K block code which communicated with our VGA driver to output the colors which will be received from the camera. We wrote a few hard coded colors to be displayed on the monitor.
+	Below is an image of a hard coded color bar patterns to the M9K block for display.
+	<center><img src="color_patt.jpg" class="img-rounded" alt="color pattern" width="600" height="450">
+        <p><b>Fig.2:</b> Color pattern output</p></center>
+	
+    </p>
     <br>
     <h4>Downsampling</h4>
     <p>The information above about the camera indicates that the camera outputs a data structure of RGB565 which is 16 bits of information. We however need only 8 bits out of the 
       16 bits in order to save on memory. The Downsampling code collects all the data from the camera and selects only the most important bits necessary to display the colors we need.
-      The OV7670 Camera can only output 8 bits of a pixel at a time through D7 - D0 (output connections). Using the camera clock cycle (see fig.2), we sampled down the output into RGB332.
+      The OV7670 Camera can only output 8 bits of a pixel at a time through D7 - D0 (output connections). Using the camera clock cycle (see fig.3), we sampled down the output into RGB332.
       <center><img src="camera_clock.png" class="img-rounded" alt="Camera clock cycle" width="600" height="450">
-      <p><b>Fig.1:</b> Clock cycle from the OV7670 Datasheet.This shows how the output from the clock is received based on time cycle</p></center>
+      <p><b>Fig.3:</b> Clock cycle from the OV7670 Datasheet.This shows how the output from the clock is received based on time cycle</p></center>
       <br>Below is a snippet of our downsampler code. 
       <code><pre>
-      //This set of codes receive camera data in RGB565 and downsamples it into RGB 332 by taking the important bits
-      if (CAM_HREF_NEG) begin   //stuff has finished reading and clock has fallen
-      	if (newByte ==1'b0) begin  //meaning we are reading the second 8 bit data set
-        	temp[7:0] = data;        //receive what we have so we don't mess it up with new readings
-            	W_EN = 1'b0;
-           	X_ADDR = X_ADDR;         //save x address
-           	newByte = 1'b1;           //change status
+      //This set of codes receive camera data in RGB444 and downsamples it into RGB 332 by taking the important bits
+      if (CAM_HREF_NEG) begin   //href clock is high
+      	if (newByte == 1'b0) begin
+				temp[7:0] = data;
+				W_EN      = 1'b0;
+				X_ADDR    = X_ADDR;
+				newByte   = 1'b1;
+				pixel_data_RGB332[4:0] = {data[7:5], data[3:2]};//get values for blue and green
+			end
+			else begin
+				pixel_data_RGB332[7:5] = {data[3:1]};// get value for red
+				X_ADDR = X_ADDR + 10'b1;
+				W_EN = 1'b1;
+				newByte = 1'b0;
+			end
 	end
-	else begin
-            	temp[15:8] = data;
-            	pixel_data_RGB332 = {temp[15:13], temp[10:8], temp[4:3]};  //get all 8 bits of Red, Green and Blue
-           	X_ADDR = X_ADDR + 10'b1; //increment x address
-            	W_EN = 1'b1;
-            	newByte = 1'b0;       //reset status
-       end
       </pre></code>
+	    The code above even so simple did not work on the first try. To check the correctness of the downsampling, we had to do a color bar test, which at first did not go as planned.
+	    A compilation of our outcomes has been included in the video below. From that, it can be seen that we are close to obtaining all the bars except the two last bar were expected to be maroon and black. 
+	    <center><iframe width="560" height="315" src="https://www.youtube.com/embed/cyY-qdVEeRE" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></iframe></center>
     </p>
     <br>
     <h4>Reading Pixels</h4>

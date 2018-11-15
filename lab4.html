@@ -91,8 +91,15 @@
     <h4>Writing to M9K blocks</h4>
     <p>
 	We tested our M9K block code which communicated with our VGA driver to output the colors which will be received from the camera. We wrote a few hard coded colors to be displayed on the monitor.
-	Below is an image of a hard coded color bar patterns to the M9K block for display.
-	<center><img src="color_patt.jpeg" class="img-rounded" alt="color pattern" width="600" height="450">
+	The following example shows how it is done
+	    <code><pre>
+	    if(VGA_PIXEL_X>44 &&VGA_PIXEL_X<=66 &&VGA_PIXEL_Y<(`SCREEN_HEIGHT-1))begin
+		pixel_data_RGB332 = 8'b11111100;  //set color
+		W_EN = 1'b1;   //write enable
+	    end
+	    </pre></code>
+	Below is an image of the color pattern we sent to the M9K block for display.
+	<center><img src="color_patt.jpeg" class="img-rounded" alt="color pattern" width="400" height="450">
         <p><b>Fig.2:</b> Color pattern output</p></center>
 	
     </p>

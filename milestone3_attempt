@@ -28,8 +28,8 @@ Servo parallax1;
 Servo parallax2;
 
 int rightSen = A2;
-int centSen  = A3;
-int leftSen  = A4;
+int centSen  = A4;
+int leftSen  = A3;
 int sensor   = A5; //used for mux
 
 char ir         = 8;
@@ -122,11 +122,12 @@ void turn_left(){
   parallax2.write(85);
   delay(600);
   //wait until we are back on the line 
-  while(analogRead(centSen)>thresh)
+  while(analogRead(leftSen)>thresh)
   {
     parallax1.write(85);
     parallax2.write(85);
   }
+  delay(200);
   parallax1.write(92);
   parallax2.write(88);
 }
@@ -151,6 +152,9 @@ void turn_around(){
     parallax1.write(85);
     parallax2.write(85);
   }
+  delay(200);
+  parallax1.write(92);
+  parallax2.write(88);
 }
 
 //turn right
@@ -165,7 +169,7 @@ void turn_right(){
   parallax1.write(95);
   parallax2.write(95);
   delay(800);
-  while(analogRead(centSen)>thresh)
+  while(analogRead(leftSen)>thresh)
   {
     parallax1.write(95);
     parallax2.write(95);

@@ -1,25 +1,20 @@
 #define LOG_OUT 1// use the log output func  tion
-#define FFT_N 256// set to 256point fft
-//#include <FFT.h>
 #include <Servo.h>
 #include <StackArray.h>
+
+#define North 0 
+#define East  1 
+#define South 2 
+#define West  3
 
 /////////////////////
 
 #include <SPI.h>
-#include "nRF24L01.h"
-#include "RF24.h"
-
-RF24 radio(9,10);
-const uint64_t pipes[2] = { 0x000000000CLL, 0x000000000DLL };
-typedef enum { role_ping_out = 1, role_pong_back } role_e;
-const char* role_friendly_name[] = { "invalid", "Ping out", "Pong back" };
-role_e role = role_pong_back;
 int dataArray[] = {2, 2, 0, 1, 1, 1}; 
 byte dir_facing = 0; 
 // 0 = north, 1 = east, 2 = south, 3 = west
 
-char totalSquares[9][9]; //to see if we have visited or not 
+int totalSquares[9][9]; //to see if we have visited or not 
 StackArray <int> visitStack;
 
 ///////////////////
@@ -27,24 +22,25 @@ StackArray <int> visitStack;
 Servo parallax1;
 Servo parallax2;
 
-int rightSen = A2;
+int rightSen = A2; //wall sensors
 int centSen  = A4;
 int leftSen  = A3;
 int sensor   = A5; //used for mux
 
 char ir         = 8;
-int wall       = 12;
+int  wall       = 12;
 char seen_robot = 0;
 char heard      = 0;
-int roboStart  = 2; 
+int  roboStart  = 2; 
 
+//for mux control
 char pin_out_s0W = 4;
 char pin_out_s1W = 7;
 char pin_out_s2W = 3;
 
-
-int thresh          = 500;
-int frontwallThresh = 150;
+//thresholds for movement
+int thresh          = 500; //ground threshhold (for line following)
+int frontwallThresh = 250;
 int sidewallThresh  = 200;
 
 void setup() {
@@ -57,47 +53,26 @@ pinMode(pin_out_s2W, OUTPUT);
 pinMode(ir,          OUTPUT);
 pinMode(wall,        OUTPUT);
 pinMode(roboStart,   INPUT);
-
 Serial.begin(9600);
+
+//default mux values
 set_select(0,1,1);
 
 //wait for a start signal, either from the sound or from a button press
 int isReady = 0; 
 while(isReady == 0){
-  //check_audio();
   if(digitalRead(roboStart) == LOW){
     isReady =1;
   }
 }
 
-//radio stuff
-////////////////////
-radio.begin();
-
-radio.setRetries(15,15);
-radio.setAutoAck(true);
-radio.setChannel(0x50);
-radio.setPALevel(RF24_PA_MIN);
-radio.setDataRate(RF24_250KBPS);
-
-role = role_ping_out;
-  radio.openWritingPipe(pipes[0]);
-  radio.openReadingPipe(1,pipes[1]);
-
-radio.startListening();
-//radio.printDetails();
-//////////////////////
-radioWrite(dataArray);
 parallax1.attach(6);
 parallax2.attach(5);
 
 }
 
 void loop() {
-  //Serial.println("out of loop");
   follow_line();
-  
-// check_IR();
 }
 
 //set mux value: this is for wall sensors as well as audio input  
@@ -114,47 +89,44 @@ void turn_left(){
    if (dir_facing == 0) dir_facing = 3;
    else dir_facing --; // Update dir_facing for left turning robot
   //go forward a bit to turn properly
-  parallax1.write(95);
-  parallax2.write(85);
-  delay(500);
+  parallax1.write(105);
+  parallax2.write(75);
+  delay(400);
   //turn away from the line so we can detect it again
   parallax1.write(85);
-  parallax2.write(85);
-  delay(600);
+  parallax2.write(82);
+  delay(800);
   //wait until we are back on the line 
-  while(analogRead(leftSen)>thresh)
+  while(analogRead(rightSen)>thresh)
   {
     parallax1.write(85);
     parallax2.write(85);
   }
-  delay(200);
-  parallax1.write(92);
-  parallax2.write(88);
 }
 
 //turn around
+//TODO: wtf
 void turn_around(){
   //adjust dir_facing
 
-  if      (dir_facing == 0) dir_facing = 2;
-  else if (dir_facing == 2) dir_facing = 0;
-  else if (dir_facing == 1) dir_facing = 3;
-  else if (dir_facing == 3) dir_facing = 1;  
-  
-  parallax1.write(95);
-  parallax2.write(85);
-  delay(600);
-  parallax1.write(0);
-  parallax2.write(0);
-  delay(300);
-  while(analogRead(centSen)>thresh)
-  {
-    parallax1.write(85);
-    parallax2.write(85);
-  }
-  delay(200);
-  parallax1.write(92);
-  parallax2.write(88);
+//  if      (dir_facing == 0) dir_facing = 2;
+//  else if (dir_facing == 2) dir_facing = 0;
+//  else if (dir_facing == 1) dir_facing = 3;
+//  else if (dir_facing == 3) dir_facing = 1;  
+//  
+//  parallax1.write(105);
+//  parallax2.write(75);
+//  delay(600);
+//  parallax1.write(0);
+//  parallax2.write(0);
+//  delay(300);
+//  while(analogRead(centSen)>thresh)
+//  {
+//    parallax1.write(85);
+//    parallax2.write(85);
+//  }
+turn_left(); 
+turn_left();
 }
 
 //turn right
@@ -231,29 +203,30 @@ void follow_line(){
  
   //at intersection
   else if(center<thresh && right<thresh && left<thresh){
-      if      (dir_facing == 0) dataArray [0] --; // If robot is facing north
-      else if (dir_facing == 1) dataArray [1] ++; // If robot is facing east
-      else if (dir_facing == 2) dataArray [0] ++; // If robot is facing south
-      else if (dir_facing == 3) dataArray [1] --; // If robot is facing west
 
-      //Serial.println("x loc: " + String(dataArray[0]));
-      //Serial.println("y loc: " + String(dataArray[1]));
-    // Setting north, east, south, and west to false
+
+//      Serial.println("x loc: " + String(dataArray[0]));
+//      Serial.println("y loc: " + String(dataArray[1]));
+
+    totalSquares[dataArray[0]][dataArray[1]] = 1; //this square has now been visited
+    
+    // Setting north, east, south, and west to false (default)
     for ( int i = 2; i < 6; i++){
       dataArray[i] = 0;
     }
+
+    //finding values of boxes to front, left and right 
       int left_space[2]; 
       int right_space[2]; 
       int front_space[2]; 
       
       if      (dir_facing == 0) {
-        dataArray [0] --; // If robot is facing north
         left_space[0]  = dataArray[0]-1;
         left_space[1]  = dataArray[1];
         right_space[0] = dataArray[0]+1;
         right_space[1] = dataArray[1]; 
         front_space[0] = dataArray[0];
-        front_space[1] = dataArray[1]+1;
+        front_space[1] = dataArray[1]-1;
       }
       else if (dir_facing == 1) {
         left_space[0]  = dataArray[0];
@@ -264,16 +237,14 @@ void follow_line(){
         front_space[1] = dataArray[1];
       }
       else if (dir_facing == 2) {
-        dataArray [0] ++; // If robot is facing south
         left_space[0]  = dataArray[0]+1;
         left_space[1]  = dataArray[1];
         right_space[0] = dataArray[0]-1;
         right_space[1] = dataArray[1]; 
         front_space[0] = dataArray[0];
-        front_space[1] = dataArray[1]-1;
+        front_space[1] = dataArray[1]+1;
       }
       else if (dir_facing == 3) {
-        dataArray [1] --; // If robot is facing west
         left_space[0]  = dataArray[0];
         left_space[1]  = dataArray[1]-1;
         right_space[0] = dataArray[0];
@@ -283,6 +254,7 @@ void follow_line(){
         
       }
 
+
 ///////////////////////////////////////////////////////////////////
 ///////////////// Check walls and add to stack ////////////////////
 ///////////////////////////////////////////////////////////////////
@@ -290,92 +262,103 @@ void follow_line(){
     if (!leftw())  {
        if (totalSquares[left_space[0], left_space[1]] != 0) {
         //Serial.println("can go left");
-        visitStack.push (left_space);
+        visitStack.push (left_space[1]);
+        visitStack.push (left_space[0]);
+        
        }
       }  
     //update wall positions
     else {
-        if      (dir_facing == 0) dataArray[5] =1; // If robot faces north, West=true
-        else if (dir_facing == 1) dataArray[2] =1; // If robot faces east,  North=true
-        else if (dir_facing == 2) dataArray[3] =1; // If robot faces south, East=true
-        else if (dir_facing == 3) dataArray[4] =1; // If robot faces west,  South=true
+        if      (dir_facing == North) dataArray[5] =1; // If robot faces north, West=true
+        else if (dir_facing == East)  dataArray[2] =1; // If robot faces east,  North=true
+        else if (dir_facing == South) dataArray[3] =1; // If robot faces south, East=true
+        else if (dir_facing == West)  dataArray[4] =1; // If robot faces west,  South=true
     }
     if (!rightw()) {
       if (totalSquares[right_space[0], right_space[1]] != 0) {
-        //.println("can go right");
-        visitStack.push (right_space);
+        visitStack.push (right_space[1]);
+        visitStack.push (right_space[0]);
+        
       }
       }//add right step to stack
 
     else {
-       if      (dir_facing == 0) dataArray[3] =1;
-       else if (dir_facing == 1) dataArray[4] =1; // If robot faces east, South=true
-       else if (dir_facing == 2) dataArray[5] =1; // If robot faces south, West=true
-       else if (dir_facing == 3) dataArray[2] =1; // If robot faces west, North=true
+       if      (dir_facing == North) dataArray[3] =1;
+       else if (dir_facing == East)  dataArray[4] =1; // If robot faces east, South=true
+       else if (dir_facing == South) dataArray[5] =1; // If robot faces south, West=true
+       else if (dir_facing == West)  dataArray[2] =1; // If robot faces west, North=true
     }
 
     //add front step to stack 
     if (!frontw()) {
       if (totalSquares[front_space[0], front_space[1]] != 0) {
         //Serial.println("can go front");
-        visitStack.push (front_space);
-
-        Serial.println("dirFacing = " + String(dir_facing));
-        Serial.println("front space x: " + String(front_space[0]));
-        Serial.println("front space y: " + String(front_space[1]));
+        visitStack.push (front_space[1]);
+        visitStack.push (front_space[0]);
+        
+//        Serial.println("dirFacing = " + String(dir_facing));
+//        Serial.println("front space x: " + String(front_space[0]));
+//        Serial.println("front space y: " + String(front_space[1]));
         }
       }
     else { 
-      if      (dir_facing == 0) dataArray[2] =1; // North=true
-      else if (dir_facing == 1) dataArray[3] =1; // East=true
-      else if (dir_facing == 2) dataArray[4] =1; // South=true
-      else if (dir_facing == 3) dataArray[5] =1; // West=true
+      if      (dir_facing == North) dataArray[2] =1; // North=true
+      else if (dir_facing == East)  dataArray[3] =1; // East=true
+      else if (dir_facing == South) dataArray[4] =1; // South=true
+      else if (dir_facing == West)  dataArray[5] =1; // West=true
     }
 
     //pick the last thing off the stack and go that way 
 //////////////////////////////////////////////////////////////////////////////////
-    int nextSquare = visitStack.pop();
-    //Serial.println("Next Square: " + String(nextSquare));
-    //Serial.println("Next Square X: " + String(nextSquare[0]);
-    //Serial.println("Next Square Y: " + String(nextSquare[1]);
-    if(frontw()){ 
+    int nextSquare[2] = {visitStack.pop(), visitStack.pop()};
 
-      if(rightw() && !leftw())       turn_left(); //DO THIS LAST OR DIR IS WRONG
-      else if (leftw() && !rightw()) turn_right();
-      else if(leftw() && rightw())   turn_around();
-      else
-      {
-        turn_left();
+    //Serial.println("Next Square: " + String(nextSquare));
+    Serial.println("Next Square X: " + String(nextSquare[0]));
+    Serial.println("Next Square Y: " + String(nextSquare[1]));
+
+    
+    int deltaX = dataArray[0] - nextSquare[0];
+    int deltaY = dataArray[1] - nextSquare[1];
+    
+    Serial.println("Delta X: " + String(deltaX)); 
+    Serial.println("Delta Y: " + String(deltaY));
+    
+    //simplest case: we can move to one right next to us 
+    if (abs(deltaX) + abs(deltaY) == 1) {
+      if((dir_facing == North && deltaY == 1) || 
+         (dir_facing == East  && deltaX == 1) || 
+         (dir_facing == South && deltaY == -1) ||
+         (dir_facing == West  && deltaX == -1)){
+        parallax1.write(92);
+        parallax2.write(88); 
       }
-    } 
-    else{  
-      parallax1.write(100);
-      parallax2.write(80);
+      else if ((dir_facing == North && deltaX == 1) || 
+               (dir_facing == East  && deltaY == -1) || 
+               (dir_facing == South && deltaX == -1) ||
+               (dir_facing == West  && deltaY == 1)) {
+                turn_left();
+               }
+
+      else if ((dir_facing == North && deltaX == -1) || 
+               (dir_facing == East  && deltaY == 1) || 
+               (dir_facing == South && deltaX == 1) ||
+               (dir_facing == West  && deltaY == -1)) {
+                turn_right();
+               }
+      else turn_around();
     }
-    for (size_t i = 0; i < 3; i++) {
-      //check_IR();
-    }
+    
+      if      (dir_facing == North) dataArray [1] --; // If robot is facing north
+      else if (dir_facing == East)  dataArray [0] ++; // If robot is facing east
+      else if (dir_facing == South) dataArray [1] ++; // If robot is facing south
+      else if (dir_facing == West)  dataArray [0] --; // If robot is facing west
+//      Serial.println("left space:  " + String(left_space[0])  + ", " + String(left_space[1]));
+//      Serial.println("right space: " + String(right_space[0]) + ", " + String(right_space[1]));
+//      Serial.println("front space: " + String(front_space[0]) + ", " + String(front_space[1]));
+
     parallax1.write(92);
     parallax2.write(88); 
-    radioWrite(dataArray);
+    delay(600);
   }
 }
-int radioWrite(int dataArray[]){
-    int number[6] = {dataArray[0],dataArray[1],dataArray[2], dataArray[3],dataArray[4], dataArray[5]};
-  
-    bool ok = radio.write( &number, 6 * sizeof(int) );
-    // Now, continue listening
-    radio.startListening();
-    unsigned long started_waiting_at = millis();// Wait here until we get a response, or timeout (250ms)
-    bool timeout = false;
-    while ( ! radio.available() && ! timeout )
-      if (millis() - started_waiting_at > 200 )
-        timeout = true;
-    // Describe the results
-    if ( timeout ){}//Serial.println("Failed, response timed out.\n\r");
-    else
-    {
-      unsigned long got_time;
-      radio.read( &got_time, sizeof(unsigned long) );// Grab the response, compare, and send to debugging spew
-    }
-}
+

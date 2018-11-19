@@ -8,10 +8,10 @@ module IMAGE_PROCESSOR (
 	CLK,
 	VGA_PIXEL_X,
 	VGA_PIXEL_Y,
-	//VGA_HREF_NEG,
+	VGA_HREF_NEG,
 	VGA_VSYNC_NEG,
 	RESULT, 
-	CAM_HREF_NEG
+	//CAM_HREF_NEG
 );
 
 
@@ -24,7 +24,7 @@ input 		CLK;
 input [9:0] VGA_PIXEL_X;
 input [9:0] VGA_PIXEL_Y;
 input			VGA_VSYNC_NEG;
-input       CAM_HREF_NEG;
+input       VGA_HREF_NEG;
 
 output[2:0] RESULT;
 
@@ -32,17 +32,17 @@ reg RESULT;
 reg [15:0] countBLUE;
 reg [15:0] countRED;
 reg [15:0] countNULL;
-	reg [15:0] R_CNT_THRESHOLD = 16'd4000;
-	reg [15:0] B_CNT_THRESHOLD = 16'd4000;
+reg [15:0] R_CNT_THRESHOLD = 16'd2000;
+reg [15:0] B_CNT_THRESHOLD = 16'd4000;
 reg lastsync = 1'b0;
 
 always @(posedge CLK) begin
-	if(VGA_PIXEL_X>(`SCREEN_WIDTH/2-40)&& VGA_PIXEL_X<(`SCREEN_WIDTH/2+40) && VGA_PIXEL_Y>(`SCREEN_HEIGHT/2-40)&& VGA_PIXEL_Y<(`SCREEN_HEIGHT/2+40)) begin
-		if(CAM_HREF_NEG) begin
-			if(PIXEL_IN[3:0] ==4'b1111) begin
+	if(VGA_PIXEL_X>((`SCREEN_WIDTH/2)-50)&& VGA_PIXEL_X<((`SCREEN_WIDTH/2)+50) || VGA_PIXEL_Y>((`SCREEN_HEIGHT/2)-50)&& VGA_PIXEL_Y<((`SCREEN_HEIGHT/2)+50)) begin
+		if(VGA_HREF_NEG) begin
+			if(PIXEL_IN[3:0] == 4'b1111) begin
 				countBLUE = countBLUE + 16'd1;
 			end
-			else if(PIXEL_IN[7:4] ==4'b1111) begin
+			else if(PIXEL_IN[7:4] >=4'b0011) begin
 				countRED = countRED +16'd1; 
 			end
 			else begin
@@ -53,7 +53,7 @@ always @(posedge CLK) begin
 			if(countRED > R_CNT_THRESHOLD) begin
 				RESULT = 3'b010;
 			end
-			else if(countBLUE < B_CNT_THRESHOLD) begin 
+			else if(countBLUE > B_CNT_THRESHOLD) begin 
 				RESULT = 3'b100;
 			end
 			else begin

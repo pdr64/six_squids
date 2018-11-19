@@ -109,34 +109,34 @@ IMAGE_PROCESSOR proc(
 	.CLK(clk_25_pll),
 	.VGA_PIXEL_X(VGA_PIXEL_X),
 	.VGA_PIXEL_Y(VGA_PIXEL_Y),
-	//.VGA_HREF_NEG(CAM_HSYNC_NEG),
+	.VGA_HREF_NEG(CAM_HSYNC_NEG),
 	.VGA_VSYNC_NEG(CAM_VSYNC_NEG),
 	.RESULT(RESULT)
 );
 
 
 ///////* Update Read Address *///////
-wire [7:0] data;
+wire [7:0] DATA;
 assign GPIO_0_D[32]  = clk_24_pll;
 
-assign data[7] = GPIO_1_D[23];
-assign data[6] = GPIO_1_D[21];
-assign data[5] = GPIO_1_D[19];
-assign data[4] = GPIO_1_D[17];
-assign data[3] = GPIO_1_D[15];
-assign data[2] = GPIO_1_D[13];
-assign data[1] = GPIO_1_D[11];
-assign data[0] = GPIO_1_D[9];
+assign DATA[7] = GPIO_1_D[23];
+assign DATA[6] = GPIO_1_D[21];
+assign DATA[5] = GPIO_1_D[19];
+assign DATA[4] = GPIO_1_D[17];
+assign DATA[3] = GPIO_1_D[15];
+assign DATA[2] = GPIO_1_D[13];
+assign DATA[1] = GPIO_1_D[11];
+assign DATA[0] = GPIO_1_D[9];
 
 ///// I/O for Img Proc /////
 wire [2:0] RESULT;
 
-assign GPIO_0_D[33]   = RESULT[0];
-assign GPIO_0_D[31]   = RESULT[1];
-assign GPIO_0_D[30]   = RESULT[2];
+assign GPIO_0_D[33]   = RESULT[1];   // this is b
+assign GPIO_0_D[31]   = RESULT[2];   // this is c
+assign GPIO_0_D[30]   = RESULT[0];    // this is a
 
-//assign GPIO_0_D[33]   = 1'b1;
-//assign GPIO_0_D[31]   = 1'b1;
+//assign GPIO_0_D[33]   = 1'b0;
+//assign GPIO_0_D[31]   = 1'b0;
 //assign GPIO_0_D[30]   = 1'b1;
 
 ///////////////////////////////////////////////
@@ -147,19 +147,17 @@ assign GPIO_0_D[30]   = RESULT[2];
 
 reg newByte = 1'b0;
 assign WRITE_ADDRESS = X_ADDR + Y_ADDR*(`SCREEN_WIDTH);
-
+//assign data[7:0] = RED;
 reg prevHref;
 reg prevVsync;
-reg [7:0] pre_filter;
-reg [7:0] temp;
-
+reg [15:0] TEMP;
 always @(posedge CAM_PCLK) begin
-	if (CAM_VSYNC_NEG && ~prevVsync) begin //new frame
+	if (CAM_VSYNC_NEG & ~prevVsync) begin //new frame
 		X_ADDR  = 10'b0;
 		Y_ADDR  = 10'b0;
 		newByte = 1'b0;
 	end
-	else if (~CAM_HREF_NEG && prevHref) begin //new row
+	else if (~CAM_HREF_NEG & prevHref) begin //new row
 		Y_ADDR  = Y_ADDR + 10'b1;
 		X_ADDR  = 10'b0;
 		newByte = 1'b0;
@@ -168,22 +166,16 @@ always @(posedge CAM_PCLK) begin
 		Y_ADDR = Y_ADDR;
 		if (CAM_HREF_NEG) begin
 			if (newByte == 1'b0) begin
-				//pixel_data_RGB332[7:5] = data[7:5];
-				pre_filter[7:5] = data[7:5];
-				
-				temp[7:0] = data;
+				TEMP[7:0]= DATA[7:0];
 				W_EN      = 1'b0;
 				X_ADDR    = X_ADDR;
-				newByte   <= 1'b1;				
-				break
+				newByte   = 1'b1;
+				//pixel_data_RGB332[7:5] = {DATA[3:1]};
+				
 			end
 			else begin
-			
-				pre_filter[7:5] = data[7:5];
-				//pixel_data_RGB332[4:2] = data[2:0];
-				pre_filter[4:2] = 3'b0;
-				pre_filter[1:0] = temp[4:3];
-				
+			   TEMP[15:8] = DATA[7:0];
+				pixel_data_RGB332= {TEMP[11:8],TEMP[3:0]};
 				X_ADDR = X_ADDR + 10'b1;
 				W_EN = 1'b1;
 				newByte = 1'b0;
@@ -195,9 +187,7 @@ always @(posedge CAM_PCLK) begin
 	end
 	prevVsync = CAM_VSYNC_NEG;
 	prevHref  = CAM_HREF_NEG;
-	pixel_data_RGB332[7:0] = pre_filter[7:0];
 end
-
 
 //reading
 always @ (VGA_PIXEL_X, VGA_PIXEL_Y) begin

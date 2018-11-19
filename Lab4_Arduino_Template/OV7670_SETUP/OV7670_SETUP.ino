@@ -26,6 +26,7 @@ void setup() {
 
 void loop(){
   checkTreasure();
+  delay(500);
  }
 
 ///////// Function Definition //////////////
@@ -85,12 +86,12 @@ void set_registers(){
     Serial.println("Writing registers");
     Serial.println (OV7670_write_register(0x12, 0x80)); //COM7: Reset registers, enable color bar, resolution and pixel format 
     delay(100);
-    Serial.println(OV7670_write_register(0x12, 0x0E)); //COM7: Reset registers, enable color bar, resolution and pixel format 
+    Serial.println(OV7670_write_register(0x12, 0x0C)); //COM7: Reset registers, enable color bar, resolution and pixel format 
     Serial.println(OV7670_write_register(0x0C, 0x08)); //COM3: Enable scaling
     Serial.println(OV7670_write_register(0x14, 0x0B)); //COM9: To make the image less noisy
     Serial.println(OV7670_write_register(0x11, 0xC0)); //CLKRC: Use external clock directly 
     Serial.println(OV7670_write_register(0x40, 0xD0)); //COM15: pixel format
-    Serial.println(OV7670_write_register(0x42, 0x08)); //COM17: DSP color bar enable (0x42, 0x08)
+    Serial.println(OV7670_write_register(0x42, 0x00)); //COM17: DSP color bar enable (0x42, 0x08)
     Serial.println(OV7670_write_register(0x1E, 0x30)); //MVFP: Vertically flip image enable
     Serial.println(OV7670_write_register(0x8C, 0x02));
 }
@@ -126,18 +127,28 @@ void checkTreasure(){
   int a = digitalRead(fpga_a);
   int b = digitalRead(fpga_b);
   int c = digitalRead(fpga_c);
+  if (a==1)
+  Serial.println("a = 1");
+  else
+  Serial.println("a = 0");
+  if (b==1)
+  Serial.println("b = 1");
+  else
+  Serial.println("b = 0");
+  if (c==1)
+  Serial.println("c = 1");
+  else
+  Serial.println("c = 0");
 
-  if      ((a==0)&(b==0)&(c==0)) Serial.println("none detected"); 
-  
-  else if ((a==0)&(b==0)&(c==1)) Serial.println("red triangle");
-  else if ((a==0)&(b==1)&(c==0)) Serial.println("red square");
-  else if ((a==0)&(b==1)&(c==1)) Serial.println("red diamond");
-  
-  else if ((a==1)&(b==0)&(c==0)) Serial.println("blue triangle"); 
-  else if ((a==1)&(b==0)&(c==1)) Serial.println("blue square");
-  else if ((a==1)&(b==1)&(c==0)) Serial.println("blue diamond");
-
-  else Serial.println("error: not a known state"); 
+//  if      ((a==0)&(b==0)&(c==0)) Serial.println("none detected"); 
+//  
+//  else if ((a==0)&(b==0)&(c==1)) Serial.println("red triangle");
+//  else if ((a==0)&(b==1)&(c==0)) Serial.println("red square");
+//  else if ((a==0)&(b==1)&(c==1)) Serial.println("red diamond");
+//  
+//  else if ((a==1)&(b==0)&(c==0)) Serial.println("blue triangle"); 
+//  else if ((a==1)&(b==0)&(c==1)) Serial.println("blue square");
+//  else if ((a==1)&(b==1)&(c==0)) Serial.println("blue diamond");
+//
+//  else Serial.println("error: not a known state"); 
 }
-
-

@@ -32,8 +32,8 @@ reg RESULT;
 reg [15:0] countBLUE;
 reg [15:0] countRED;
 reg [15:0] countNULL;
-reg [15:0] R_CNT_THRESHOLD = 16'd20000;
-reg [15:0] B_CNT_THRESHOLD = 16'd20000;
+	reg [15:0] R_CNT_THRESHOLD = 16'd4000;
+	reg [15:0] B_CNT_THRESHOLD = 16'd4000;
 reg lastsync = 1'b0;
 
 always @(posedge CLK) begin

@@ -10,12 +10,11 @@
 /////////////////////
 
 #include <SPI.h>
-int dataArray[] = {2, 2, 0, 1, 1, 1}; 
-byte dir_facing = 0; 
-// 0 = north, 1 = east, 2 = south, 3 = west
+int dataArray[] = {2, 2, 0, 1, 1, 1}; //TODO: don't harcode walls at the start
+byte dir_facing = North; 
 
 int totalSquares[9][9]; //to see if we have visited or not 
-StackArray <int> visitStack;
+StackArray <int> visitStack; //where we're going next 
 
 ///////////////////
 
@@ -27,6 +26,7 @@ int centSen  = A4;
 int leftSen  = A3;
 int sensor   = A5; //used for mux
 
+//these are mostly just LEDs
 char ir         = 8;
 int  wall       = 12;
 char seen_robot = 0;
@@ -44,31 +44,30 @@ int frontwallThresh = 250;
 int sidewallThresh  = 200;
 
 void setup() {
-pinMode(rightSen,    INPUT);
-pinMode(centSen,     INPUT);
-pinMode(leftSen,     INPUT);
-pinMode(pin_out_s0W, OUTPUT);
-pinMode(pin_out_s1W, OUTPUT);
-pinMode(pin_out_s2W, OUTPUT);
-pinMode(ir,          OUTPUT);
-pinMode(wall,        OUTPUT);
-pinMode(roboStart,   INPUT);
-Serial.begin(9600);
-
-//default mux values
-set_select(0,1,1);
-
-//wait for a start signal, either from the sound or from a button press
-int isReady = 0; 
-while(isReady == 0){
-  if(digitalRead(roboStart) == LOW){
-    isReady =1;
+  
+  pinMode(rightSen,    INPUT);
+  pinMode(centSen,     INPUT);
+  pinMode(leftSen,     INPUT);
+  pinMode(pin_out_s0W, OUTPUT);
+  pinMode(pin_out_s1W, OUTPUT);
+  pinMode(pin_out_s2W, OUTPUT);
+  pinMode(ir,          OUTPUT);
+  pinMode(wall,        OUTPUT);
+  pinMode(roboStart,   INPUT);
+  Serial.begin(9600);
+  
+  set_select(0,1,1); //default mux values
+  
+  //wait for a start signal, either from the sound or from a button press
+  int isReady = 0; 
+  while(isReady == 0){
+    if(digitalRead(roboStart) == LOW){
+      isReady =1;
+    }
   }
-}
-
-parallax1.attach(6);
-parallax2.attach(5);
-
+  
+  parallax1.attach(6);
+  parallax2.attach(5);
 }
 
 void loop() {
@@ -85,9 +84,8 @@ void set_select(int x, int y, int z)
 
 //turn left
 void turn_left(){
-  //adjust dir_facing 
    if (dir_facing == 0) dir_facing = 3;
-   else dir_facing --; // Update dir_facing for left turning robot
+   else dir_facing --; // 
   //go forward a bit to turn properly
   parallax1.write(105);
   parallax2.write(75);
@@ -105,28 +103,26 @@ void turn_left(){
 }
 
 //turn around
-//TODO: wtf
 void turn_around(){
   //adjust dir_facing
 
-//  if      (dir_facing == 0) dir_facing = 2;
-//  else if (dir_facing == 2) dir_facing = 0;
-//  else if (dir_facing == 1) dir_facing = 3;
-//  else if (dir_facing == 3) dir_facing = 1;  
-//  
-//  parallax1.write(105);
-//  parallax2.write(75);
-//  delay(600);
-//  parallax1.write(0);
-//  parallax2.write(0);
-//  delay(300);
-//  while(analogRead(centSen)>thresh)
-//  {
-//    parallax1.write(85);
-//    parallax2.write(85);
-//  }
-turn_left(); 
-turn_left();
+  if      (dir_facing == 0) dir_facing = 2;
+  else if (dir_facing == 2) dir_facing = 0;
+  else if (dir_facing == 1) dir_facing = 3;
+  else if (dir_facing == 3) dir_facing = 1;  
+  
+  parallax1.write(105);
+  parallax2.write(75);
+  delay(300);
+  parallax1.write(0);
+  parallax2.write(0);
+  delay(1200);
+  while(analogRead(rightSen)>thresh)
+  {
+    parallax1.write(85);
+    parallax2.write(85);
+  }
+
 }
 
 //turn right
@@ -204,11 +200,13 @@ void follow_line(){
   //at intersection
   else if(center<thresh && right<thresh && left<thresh){
 
-
-//      Serial.println("x loc: " + String(dataArray[0]));
-//      Serial.println("y loc: " + String(dataArray[1]));
-
     totalSquares[dataArray[0]][dataArray[1]] = 1; //this square has now been visited
+//    for (int i = 0; i < 9; i++){
+//      for (int j = 0; j < 9; j++){
+//        Serial.print(totalSquares[j][i]);
+//      }
+//      Serial.println();
+//    }
     
     // Setting north, east, south, and west to false (default)
     for ( int i = 2; i < 6; i++){
@@ -254,7 +252,6 @@ void follow_line(){
         
       }
 
-
 ///////////////////////////////////////////////////////////////////
 ///////////////// Check walls and add to stack ////////////////////
 ///////////////////////////////////////////////////////////////////
@@ -264,7 +261,6 @@ void follow_line(){
         //Serial.println("can go left");
         visitStack.push (left_space[1]);
         visitStack.push (left_space[0]);
-        
        }
       }  
     //update wall positions
@@ -278,7 +274,6 @@ void follow_line(){
       if (totalSquares[right_space[0], right_space[1]] != 0) {
         visitStack.push (right_space[1]);
         visitStack.push (right_space[0]);
-        
       }
       }//add right step to stack
 
@@ -312,23 +307,22 @@ void follow_line(){
 //////////////////////////////////////////////////////////////////////////////////
     int nextSquare[2] = {visitStack.pop(), visitStack.pop()};
 
-    //Serial.println("Next Square: " + String(nextSquare));
-    Serial.println("Next Square X: " + String(nextSquare[0]));
-    Serial.println("Next Square Y: " + String(nextSquare[1]));
+//    Serial.println("Next Square X: " + String(nextSquare[0]));
+//    Serial.println("Next Square Y: " + String(nextSquare[1]));
 
     
     int deltaX = dataArray[0] - nextSquare[0];
     int deltaY = dataArray[1] - nextSquare[1];
     
-    Serial.println("Delta X: " + String(deltaX)); 
-    Serial.println("Delta Y: " + String(deltaY));
+//    Serial.println("Delta X: " + String(deltaX)); 
+//    Serial.println("Delta Y: " + String(deltaY));
     
     //simplest case: we can move to one right next to us 
     if (abs(deltaX) + abs(deltaY) == 1) {
-      if((dir_facing == North && deltaY == 1) || 
-         (dir_facing == East  && deltaX == 1) || 
-         (dir_facing == South && deltaY == -1) ||
-         (dir_facing == West  && deltaX == -1)){
+          if((dir_facing == North && deltaY == 1) || 
+             (dir_facing == East  && deltaX == 1) || 
+             (dir_facing == South && deltaY == -1) ||
+             (dir_facing == West  && deltaX == -1)){
         parallax1.write(92);
         parallax2.write(88); 
       }
@@ -347,6 +341,7 @@ void follow_line(){
                }
       else turn_around();
     }
+    else turn_around();
     
       if      (dir_facing == North) dataArray [1] --; // If robot is facing north
       else if (dir_facing == East)  dataArray [0] ++; // If robot is facing east

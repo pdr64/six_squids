@@ -170,12 +170,20 @@ always @(posedge CAM_PCLK) begin
 				W_EN      = 1'b0;
 				X_ADDR    = X_ADDR;
 				newByte   = 1'b1;
-				//pixel_data_RGB332[7:5] = {DATA[3:1]};
 				
 			end
 			else begin
-			   TEMP[15:8] = DATA[7:0];
-				pixel_data_RGB332= {TEMP[11:8],TEMP[3:0]};
+			    TEMP[15:8] = DATA[7:0];
+				if(TEMP[11:8]>TEMP[7:4] && TEMP[11:8]>TEMP[3:0])begin
+					pixel_data_RGB332 = RED; end
+				else if(TEMP[7:4]>TEMP[11:8] && TEMP[7:4]>TEMP[3:0]))begin
+					pixel_data_RGB332 = GREEN; end
+				else if(TEMP[3:0]>TEMP[11:8] && TEMP[3:0]>TEMP[7:4]))begin
+					pixel_data_RGB332 = BLUE; end
+				else if(TEMP[7:4]==TEMP[11:8] && TEMP[11:8] == TEMP[3:0] && TEMP[3:0]==4'b1111))begin
+					pixel_data_RGB332 = 8'b11111111; end
+				else begin
+					pixel_data_RGB332 = 8'b00000000; end
 				X_ADDR = X_ADDR + 10'b1;
 				W_EN = 1'b1;
 				newByte = 1'b0;

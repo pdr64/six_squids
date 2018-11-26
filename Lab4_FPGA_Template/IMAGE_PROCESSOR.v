@@ -10,7 +10,7 @@ module IMAGE_PROCESSOR (
 	VGA_PIXEL_Y,
 	VGA_HREF_NEG,
 	VGA_VSYNC_NEG,
-	RESULT, 
+	RESULT 
 	//CAM_HREF_NEG
 );
 
@@ -26,44 +26,51 @@ input [9:0] VGA_PIXEL_Y;
 input			VGA_VSYNC_NEG;
 input       VGA_HREF_NEG;
 
-output[2:0] RESULT;
 
-reg RESULT;
-reg [15:0] countBLUE;
-reg [15:0] countRED;
-reg [15:0] countNULL;
-reg [15:0] R_CNT_THRESHOLD = 16'd2000;
-reg [15:0] B_CNT_THRESHOLD = 16'd4000;
+output reg[2:0] RESULT;
+
+reg [9:0] countBLUE;
+reg [9:0] countRED;
+reg [9:0] countNULL;
+reg [9:0] R_CNT_THRESHOLD = 10'd001;
+reg [9:0] B_CNT_THRESHOLD = 10'd600;
 reg lastsync = 1'b0;
+localparam RED   = 8'b111_000_00;
+localparam GREEN = 8'b000_111_00;
+localparam BLUE  = 8'b000_000_11;
 
+//assign RESULT = 3'b111;
 always @(posedge CLK) begin
-	if(VGA_PIXEL_X>((`SCREEN_WIDTH/2)-50)&& VGA_PIXEL_X<((`SCREEN_WIDTH/2)+50) || VGA_PIXEL_Y>((`SCREEN_HEIGHT/2)-50)&& VGA_PIXEL_Y<((`SCREEN_HEIGHT/2)+50)) begin
+//  RESULT = 3'b110;
+	if(VGA_PIXEL_X>((`SCREEN_WIDTH/2)-35)&& VGA_PIXEL_X<((`SCREEN_WIDTH/2)+35) || VGA_PIXEL_Y>((`SCREEN_HEIGHT/2)-25)&& VGA_PIXEL_Y<((`SCREEN_HEIGHT/2)+25)) begin
+//   if(!(VGA_PIXEL_X>(`SCREEN_WIDTH-1) || VGA_PIXEL_Y>(`SCREEN_HEIGHT-1))) begin
 		if(VGA_HREF_NEG) begin
-			if(PIXEL_IN[3:0] == 4'b1111) begin
-				countBLUE = countBLUE + 16'd1;
+			if(PIXEL_IN == BLUE) begin
+			
+				countBLUE = countBLUE + 10'd1;
 			end
-			else if(PIXEL_IN[7:4] >=4'b0011) begin
-				countRED = countRED +16'd1; 
+			else if(PIXEL_IN == RED) begin
+				countRED = countRED +10'd1; 
 			end
 			else begin
-				countNULL = countNULL + 16'd1;
+				countNULL = countNULL + 10'd1;
 			end
 		end
 		if(VGA_VSYNC_NEG == 1'b1 && lastsync == 1'b0) begin
-			if(countRED > R_CNT_THRESHOLD) begin
+			if(countRED >= R_CNT_THRESHOLD) begin
 				RESULT = 3'b010;
 			end
-			else if(countBLUE > B_CNT_THRESHOLD) begin 
+			else if(countBLUE >= B_CNT_THRESHOLD) begin 
 				RESULT = 3'b100;
 			end
 			else begin
 				RESULT = 3'b111;
 			end
 		end
-		if(VGA_VSYNC_NEG == 1'b0 && lastsync == 1'b1) begin
-			countBLUE = 16'b0;
-			countRED  = 16'b0;
-			countNULL = 16'b0;
+		else if(VGA_VSYNC_NEG == 1'b0 && lastsync == 1'b1) begin
+			countBLUE = 10'b0;
+			countRED  = 10'b0;
+			countNULL = 10'b0;
 		end
 		lastsync = VGA_VSYNC_NEG;
 	end

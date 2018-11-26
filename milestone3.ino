@@ -1,4 +1,3 @@
-#define LOG_OUT 1// use the log output func  tion
 #include <Servo.h>
 #include <StackArray.h>
 
@@ -9,12 +8,12 @@
 
 /////////////////////
 
-#include <SPI.h>
 int dataArray[] = {2, 2, 0, 1, 1, 1}; //TODO: don't harcode walls at the start
 byte dir_facing = North; 
 
 int totalSquares[9][9]; //to see if we have visited or not 
 StackArray <int> visitStack; //where we're going next 
+StackArray <int> history; //keeping track of where we've been so we can backtrack 
 
 ///////////////////
 
@@ -122,7 +121,6 @@ void turn_around(){
     parallax1.write(85);
     parallax2.write(85);
   }
-
 }
 
 //turn right
@@ -180,19 +178,16 @@ void follow_line(){
   int center = analogRead(centSen);
   // go straight
   if(center<thresh && right>thresh && left>thresh){
-    //Serial.println("straight");
     parallax1.write(92);
     parallax2.write(88); 
   }
   // correct for veer right
   else if(right<thresh && left>thresh){
-    //Serial.println(" veer right");
     parallax1.write(96);
     parallax2.write(89); 
   }
   //correct for veer left
   else if(right>thresh && left<thresh){
-    //Serial.println("veer left");
     parallax1.write(91);
     parallax2.write(86); 
   }
@@ -305,21 +300,22 @@ void follow_line(){
 
     //pick the last thing off the stack and go that way 
 //////////////////////////////////////////////////////////////////////////////////
-    int nextSquare[2] = {visitStack.pop(), visitStack.pop()};
+    
 
 //    Serial.println("Next Square X: " + String(nextSquare[0]));
 //    Serial.println("Next Square Y: " + String(nextSquare[1]));
-
     
+    int nextSquare[2] = {visitStack.pop(), visitStack.pop()};
     int deltaX = dataArray[0] - nextSquare[0];
     int deltaY = dataArray[1] - nextSquare[1];
+    if ((abs(deltaX) + abs(deltaY) != 1) || (totalSquares[nextSquare[0], nextSquare[1]] == 1)) {
+      nextSquare = {history.pop(), history.pop()} //pop off history stack 
+    }
     
 //    Serial.println("Delta X: " + String(deltaX)); 
 //    Serial.println("Delta Y: " + String(deltaY));
-    
-    //simplest case: we can move to one right next to us 
-    if (abs(deltaX) + abs(deltaY) == 1) {
-          if((dir_facing == North && deltaY == 1) || 
+
+      if((dir_facing == North && deltaY == 1) || 
              (dir_facing == East  && deltaX == 1) || 
              (dir_facing == South && deltaY == -1) ||
              (dir_facing == West  && deltaX == -1)){
@@ -341,7 +337,11 @@ void follow_line(){
                }
       else turn_around();
     }
-    else turn_around();
+
+    //adding to the history so we can back track easily 
+    history.push (dataArray[1]);
+    history.push (dataArray[0]);
+
     
       if      (dir_facing == North) dataArray [1] --; // If robot is facing north
       else if (dir_facing == East)  dataArray [0] ++; // If robot is facing east
@@ -356,4 +356,3 @@ void follow_line(){
     delay(600);
   }
 }
-

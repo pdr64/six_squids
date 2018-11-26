@@ -8,7 +8,7 @@
 
 /////////////////////
 
-int dataArray[] = {2, 2, 0, 1, 1, 1}; //TODO: don't harcode walls at the start
+int dataArray[] = {9, 9, 0, 1, 1, 1}; //TODO: don't harcode walls at the start
 byte dir_facing = North; 
 
 int totalSquares[9][9]; //to see if we have visited or not 
@@ -39,8 +39,8 @@ char pin_out_s2W = 3;
 
 //thresholds for movement
 int thresh          = 500; //ground threshhold (for line following)
-int frontwallThresh = 250;
-int sidewallThresh  = 200;
+int frontwallThresh = 100;
+int sidewallThresh  = 120;
 
 void setup() {
   
@@ -194,8 +194,7 @@ void follow_line(){
  
   //at intersection
   else if(center<thresh && right<thresh && left<thresh){
-
-    totalSquares[dataArray[0]][dataArray[1]] = 1; //this square has now been visited
+    totalSquares[dataArray[0]-1][dataArray[1]-1] = 1; //this square has now been visited
 //    for (int i = 0; i < 9; i++){
 //      for (int j = 0; j < 9; j++){
 //        Serial.print(totalSquares[j][i]);
@@ -213,7 +212,7 @@ void follow_line(){
       int right_space[2]; 
       int front_space[2]; 
       
-      if      (dir_facing == 0) {
+      if      (dir_facing == North) {
         left_space[0]  = dataArray[0]-1;
         left_space[1]  = dataArray[1];
         right_space[0] = dataArray[0]+1;
@@ -221,15 +220,15 @@ void follow_line(){
         front_space[0] = dataArray[0];
         front_space[1] = dataArray[1]-1;
       }
-      else if (dir_facing == 1) {
+      else if (dir_facing == East) {
         left_space[0]  = dataArray[0];
-        left_space[1]  = dataArray[1]+1;
+        left_space[1]  = dataArray[1]-1;
         right_space[0] = dataArray[0];
-        right_space[1] = dataArray[1]-1; 
+        right_space[1] = dataArray[1]+1; 
         front_space[0] = dataArray[0]+1;
         front_space[1] = dataArray[1];
       }
-      else if (dir_facing == 2) {
+      else if (dir_facing == South) {
         left_space[0]  = dataArray[0]+1;
         left_space[1]  = dataArray[1];
         right_space[0] = dataArray[0]-1;
@@ -237,11 +236,11 @@ void follow_line(){
         front_space[0] = dataArray[0];
         front_space[1] = dataArray[1]+1;
       }
-      else if (dir_facing == 3) {
+      else if (dir_facing == West) {
         left_space[0]  = dataArray[0];
-        left_space[1]  = dataArray[1]-1;
+        left_space[1]  = dataArray[1]+1;
         right_space[0] = dataArray[0];
-        right_space[1] = dataArray[1]+1; 
+        right_space[1] = dataArray[1]-1; 
         front_space[0] = dataArray[0]-1;
         front_space[1] = dataArray[1];
         
@@ -260,6 +259,7 @@ void follow_line(){
       }  
     //update wall positions
     else {
+        Serial.println("left wall");
         if      (dir_facing == North) dataArray[5] =1; // If robot faces north, West=true
         else if (dir_facing == East)  dataArray[2] =1; // If robot faces east,  North=true
         else if (dir_facing == South) dataArray[3] =1; // If robot faces south, East=true
@@ -273,6 +273,7 @@ void follow_line(){
       }//add right step to stack
 
     else {
+      Serial.println("right wall");
        if      (dir_facing == North) dataArray[3] =1;
        else if (dir_facing == East)  dataArray[4] =1; // If robot faces east, South=true
        else if (dir_facing == South) dataArray[5] =1; // If robot faces south, West=true
@@ -282,77 +283,93 @@ void follow_line(){
     //add front step to stack 
     if (!frontw()) {
       if (totalSquares[front_space[0], front_space[1]] != 0) {
-        //Serial.println("can go front");
         visitStack.push (front_space[1]);
         visitStack.push (front_space[0]);
         
 //        Serial.println("dirFacing = " + String(dir_facing));
-//        Serial.println("front space x: " + String(front_space[0]));
-//        Serial.println("front space y: " + String(front_space[1]));
+        Serial.println("front space x: " + String(front_space[0]));
+        Serial.println("front space y: " + String(front_space[1]));
         }
       }
     else { 
+      Serial.println("front wall");
       if      (dir_facing == North) dataArray[2] =1; // North=true
       else if (dir_facing == East)  dataArray[3] =1; // East=true
       else if (dir_facing == South) dataArray[4] =1; // South=true
       else if (dir_facing == West)  dataArray[5] =1; // West=true
     }
 
+      Serial.println("gotten all walls");
     //pick the last thing off the stack and go that way 
 //////////////////////////////////////////////////////////////////////////////////
+    int nextSquare[2] = {visitStack.pop(), visitStack.pop()}; //first choice is to move somewhere new
     
-
-//    Serial.println("Next Square X: " + String(nextSquare[0]));
-//    Serial.println("Next Square Y: " + String(nextSquare[1]));
-    
-    int nextSquare[2] = {visitStack.pop(), visitStack.pop()};
     int deltaX = dataArray[0] - nextSquare[0];
     int deltaY = dataArray[1] - nextSquare[1];
-    if ((abs(deltaX) + abs(deltaY) != 1) || (totalSquares[nextSquare[0], nextSquare[1]] == 1)) {
-      nextSquare = {history.pop(), history.pop()} //pop off history stack 
+      
+    if (((abs(deltaX) + abs(deltaY)) != 1) || (totalSquares[nextSquare[0], nextSquare[1]] == 1)) {
+      Serial.println("backtracking");
+      nextSquare[0] = history.pop(); //pop off history stack 
+      nextSquare[1] = history.pop();
     }
+    else Serial.println("moving to next available square");
+
+    Serial.print("Next Square X: " + String(nextSquare[0]));
+    Serial.println("Next Square Y: " + String(nextSquare[1]));
+
+      deltaX = dataArray[0] - nextSquare[0];
+      deltaY = dataArray[1] - nextSquare[1];
     
-//    Serial.println("Delta X: " + String(deltaX)); 
-//    Serial.println("Delta Y: " + String(deltaY));
+    Serial.print("Delta X: " + String(deltaX)); 
+    Serial.println("Delta Y: " + String(deltaY));
 
       if((dir_facing == North && deltaY == 1) || 
-             (dir_facing == East  && deltaX == 1) || 
+             (dir_facing == East  && deltaX == -1) || 
              (dir_facing == South && deltaY == -1) ||
-             (dir_facing == West  && deltaX == -1)){
+             (dir_facing == West  && deltaX == 1)){
+        //go straight
         parallax1.write(92);
         parallax2.write(88); 
+        delay(300);
       }
       else if ((dir_facing == North && deltaX == 1) || 
-               (dir_facing == East  && deltaY == -1) || 
+               (dir_facing == East  && deltaY == 1) || 
                (dir_facing == South && deltaX == -1) ||
-               (dir_facing == West  && deltaY == 1)) {
+               (dir_facing == West  && deltaY == -1)) {
                 turn_left();
                }
 
       else if ((dir_facing == North && deltaX == -1) || 
-               (dir_facing == East  && deltaY == 1) || 
+               (dir_facing == East  && deltaY == -1) || 
                (dir_facing == South && deltaX == 1) ||
-               (dir_facing == West  && deltaY == -1)) {
+               (dir_facing == West  && deltaY == 1)) {
                 turn_right();
                }
-      else turn_around();
-    }
-
+      else {
+        turn_around();
+      }
+   
     //adding to the history so we can back track easily 
     history.push (dataArray[1]);
     history.push (dataArray[0]);
-
+    
+      if      (dir_facing == North) Serial.println("facing north"); // If robot is facing north
+      else if (dir_facing == East)  Serial.println("facing east"); // If robot is facing east
+      else if (dir_facing == South) Serial.println("facing south"); // If robot is facing south
+      else if (dir_facing == West)  Serial.println("facing west"); // If robot is facing west
     
       if      (dir_facing == North) dataArray [1] --; // If robot is facing north
       else if (dir_facing == East)  dataArray [0] ++; // If robot is facing east
       else if (dir_facing == South) dataArray [1] ++; // If robot is facing south
       else if (dir_facing == West)  dataArray [0] --; // If robot is facing west
-//      Serial.println("left space:  " + String(left_space[0])  + ", " + String(left_space[1]));
-//      Serial.println("right space: " + String(right_space[0]) + ", " + String(right_space[1]));
-//      Serial.println("front space: " + String(front_space[0]) + ", " + String(front_space[1]));
+
+      Serial.print("left space:  " + String(left_space[0])  + ", " + String(left_space[1]));
+      Serial.print("     right space: " + String(right_space[0]) + ", " + String(right_space[1]));
+      Serial.println("   front space: " + String(front_space[0]) + ", " + String(front_space[1]));
 
     parallax1.write(92);
     parallax2.write(88); 
-    delay(600);
+     delay (700);
+    Serial.println();
   }
 }

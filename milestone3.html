@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title> Milestone 3</title>
+    <style>
+      body{
+        padding: 0 80px;
+      }
+    </style>
+</head>
+  <body>
+    <div id= "header">
+      <center><h1>Milestone 3</h1></center>
+    </div>
+    <div id = "navbar">
+      <a href="https://pdr64.github.io/six_squids/"><button class="btn"><i class="fa fa-home"></i> Back to Home Page</button></a>
+    </div>
+    <br>
+    <br>
+    <center><h2>Objective </h2></center>
+    <p>
+      The goal of this milestone was to intelligently navigate the maze using an algorithm such that we could maximize spaces reached. 
+    </p>
+    <br>
+    <br>
+    
+    <center><h2>Implementing DFS</h2></center>
+    <p>
+      We chose DFS (depth first search) as our navigation algorithm, because this seemed to be the simplest to implement 
+      and we did not have a high collective knowledge of algorithms prior to the class. 
+      <br>
+      Several data structures had to be implemented to run this algorithm. We first had to establish a 9x9 (the size of the final maze)
+      matrix for keeping track of which squares had already been visited, such that we wouldn't repeat visits to the same square. We also 
+      implemented a stack using the library StackArray. This was so that we could add possible new squares as we traveled, and pop them 
+      off the stack one by one as we had to decide which direction to travel in. 
+      <br>
+      Next, we had to choose how to deal with that stack. At each intersection, Gary checks which walls next to him have no walls blocking 
+      movement, and if those squares have not yet been visited, they are pushed to the stack of possible squares to travel to. When Gary 
+      has to decide where to move, he pops the most recent square off the stack, and travels in that direction. 
+      <br>
+      This is very straight forward for squares right next to Gary: he simply has to remember which direction he is facing and 
+      what square he is in, determine which direction the next square is in, and turn towards that square. For further away squares, we had 
+      to implement back tracking. To accomplish this, we kept a stack of every square visited, and turned towards the last square as 
+      they were popped off the stack. 
+      </p>
+    <br>
+    <code><pre>
+
+      </pre></code>
+      <br>
+    
+    <p> Below is a short video showing Gary moving around the maze.</p>
+    
+    <center><iframe width="560" height="315" src="https://www.youtube.com/embed/g4ktiWJ39AU" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></center>
+    <br>
+    <br>
+    <a href="#header"><button class="btn"><i class="fa fa-arrow-up"></i>Return to top</button></a>
+    </body>
+    </html>

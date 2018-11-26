@@ -51,6 +51,8 @@ wire        CAM_HREF_NEG;
 wire        CAM_VSYNC_NEG;
 wire        CAM_PCLK; 
 reg			VGA_READ_MEM_EN;
+///// I/O for Img Proc /////
+wire [2:0] RESULT;
 
 assign GPIO_0_D[5]   = VGA_VSYNC_NEG;
 assign GPIO_0_D[7]   = VGA_HSYNC_NEG;
@@ -128,15 +130,14 @@ assign DATA[2] = GPIO_1_D[13];
 assign DATA[1] = GPIO_1_D[11];
 assign DATA[0] = GPIO_1_D[9];
 
-///// I/O for Img Proc /////
-wire [2:0] RESULT;
+
 
 assign GPIO_0_D[33]   = RESULT[1];   // this is b
-assign GPIO_0_D[31]   = RESULT[2];   // this is c
-assign GPIO_0_D[30]   = RESULT[0];    // this is a
-
-//assign GPIO_0_D[33]   = 1'b0;
-//assign GPIO_0_D[31]   = 1'b0;
+assign GPIO_0_D[31]   = RESULT[0];   // this is c
+assign GPIO_0_D[30]   = RESULT[2];    // this is a
+//
+//assign GPIO_0_D[33]   = 1'b1;
+//assign GPIO_0_D[31]   = 1'b1;
 //assign GPIO_0_D[30]   = 1'b1;
 
 ///////////////////////////////////////////////
@@ -174,16 +175,28 @@ always @(posedge CAM_PCLK) begin
 			end
 			else begin
 			    TEMP[15:8] = DATA[7:0];
-				if(TEMP[11:8]>TEMP[7:4] && TEMP[11:8]>TEMP[3:0])begin
-					pixel_data_RGB332 = RED; end
-				else if(TEMP[7:4]>TEMP[11:8] && TEMP[7:4]>TEMP[3:0]))begin
-					pixel_data_RGB332 = GREEN; end
-				else if(TEMP[3:0]>TEMP[11:8] && TEMP[3:0]>TEMP[7:4]))begin
-					pixel_data_RGB332 = BLUE; end
-				else if(TEMP[7:4]==TEMP[11:8] && TEMP[11:8] == TEMP[3:0] && TEMP[3:0]==4'b1111))begin
+			   if(TEMP[7:4] >= 4'b0100 && TEMP[11:8] > 4'b0100 && TEMP[3:0] > 4'b0100)begin
 					pixel_data_RGB332 = 8'b11111111; end
+				else if(TEMP[11:8]>=4'b0011)begin
+					pixel_data_RGB332 = RED; end
+//				else if(TEMP[7:4]>=4'b0111)begin
+//					pixel_data_RGB332 = GREEN; end
+				else if(TEMP[3:0]>=4'b0010)begin
+					pixel_data_RGB332 = BLUE; end
 				else begin
 					pixel_data_RGB332 = 8'b00000000; end
+//				if(TEMP[11:8]>TEMP[7:4] && TEMP[11:8]>TEMP[3:0])begin
+//					pixel_data_RGB332 = RED; end
+////				else if(TEMP[7:4]>TEMP[11:8] && TEMP[7:4]>TEMP[3:0])begin
+////					pixel_data_RGB332 = GREEN; end
+//				else if(TEMP[3:0]>TEMP[11:8] && TEMP[3:0]>TEMP[7:4])begin
+//					pixel_data_RGB332 = BLUE; end
+//				else if(TEMP[7:4]==TEMP[11:8] && TEMP[11:8] == TEMP[3:0] && TEMP[3:0]==4'b1111)begin
+//					pixel_data_RGB332 = 8'b11111111; end
+//				else begin
+//					pixel_data_RGB332 = 8'b00000000; end
+//				pixel_data_RGB332= {TEMP[11:8],TEMP[3:0]};
+
 				X_ADDR = X_ADDR + 10'b1;
 				W_EN = 1'b1;
 				newByte = 1'b0;

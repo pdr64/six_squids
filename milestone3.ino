@@ -251,7 +251,7 @@ void follow_line(){
 ///////////////////////////////////////////////////////////////////
     //add left  step to stack
     if (!leftw())  {
-       if (totalSquares[left_space[0], left_space[1]] != 0) {
+       if (totalSquares[left_space[0]-1][left_space[1]-1] == 0) {
         //Serial.println("can go left");
         visitStack.push (left_space[1]);
         visitStack.push (left_space[0]);
@@ -266,7 +266,7 @@ void follow_line(){
         else if (dir_facing == West)  dataArray[4] =1; // If robot faces west,  South=true
     }
     if (!rightw()) {
-      if (totalSquares[right_space[0], right_space[1]] != 0) {
+      if (totalSquares[right_space[0]-1] [right_space[1]-1] == 0) {
         visitStack.push (right_space[1]);
         visitStack.push (right_space[0]);
       }
@@ -282,7 +282,7 @@ void follow_line(){
 
     //add front step to stack 
     if (!frontw()) {
-      if (totalSquares[front_space[0], front_space[1]] != 0) {
+      if (totalSquares[front_space[0]-1] [front_space[1]-1] == 0) {
         visitStack.push (front_space[1]);
         visitStack.push (front_space[0]);
         
@@ -299,15 +299,17 @@ void follow_line(){
       else if (dir_facing == West)  dataArray[5] =1; // West=true
     }
 
-      Serial.println("gotten all walls");
+
     //pick the last thing off the stack and go that way 
 //////////////////////////////////////////////////////////////////////////////////
     int nextSquare[2] = {visitStack.pop(), visitStack.pop()}; //first choice is to move somewhere new
     
     int deltaX = dataArray[0] - nextSquare[0];
     int deltaY = dataArray[1] - nextSquare[1];
+
+    Serial.println(totalSquares[nextSquare[0]-1] [nextSquare[1]-1]);
       
-    if (((abs(deltaX) + abs(deltaY)) != 1) || (totalSquares[nextSquare[0], nextSquare[1]] == 1)) {
+    if (((abs(deltaX) + abs(deltaY)) != 1) || (totalSquares[nextSquare[0]-1] [nextSquare[1]-1] == 1)) {
       Serial.println("backtracking");
       nextSquare[0] = history.pop(); //pop off history stack 
       nextSquare[1] = history.pop();

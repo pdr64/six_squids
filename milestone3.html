@@ -89,6 +89,20 @@
     }
       </pre></code>
       <br>
+    <p>
+      Once we have the deltaX/deltaY as shown above, we can choose which direction to move in based on the direction we're facing.
+    </p>
+        <code><pre>
+        //example of a time we would turn left; similar logic for going straight or turning right
+      else if ((dir_facing == North && deltaX == 1) || 
+               (dir_facing == East  && deltaY == 1) || 
+               (dir_facing == South && deltaX == -1) ||
+               (dir_facing == West  && deltaY == -1)) {
+                turn_left();
+               }
+      </pre></code>
+      <br>
+    
     
     <p> Below is a short video showing Gary moving around the maze.</p>
     

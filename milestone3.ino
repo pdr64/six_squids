@@ -38,7 +38,7 @@ char pin_out_s1W = 7;
 char pin_out_s2W = 3;
 
 //thresholds for movement
-int thresh          = 500; //ground threshhold (for line following)
+int thresh          = 400; //ground threshhold (for line following)
 int frontwallThresh = 100;
 int sidewallThresh  = 120;
 
@@ -314,7 +314,12 @@ void follow_line(){
       nextSquare[0] = history.pop(); //pop off history stack 
       nextSquare[1] = history.pop();
     }
-    else Serial.println("moving to next available square");
+    else {
+      Serial.println("moving to next available square");
+      //adding to the history so we can back track easily 
+      history.push (dataArray[1]);
+      history.push (dataArray[0]);
+    }
 
     Serial.print("Next Square X: " + String(nextSquare[0]));
     Serial.println("Next Square Y: " + String(nextSquare[1]));
@@ -351,9 +356,7 @@ void follow_line(){
         turn_around();
       }
    
-    //adding to the history so we can back track easily 
-    history.push (dataArray[1]);
-    history.push (dataArray[0]);
+    
     
       if      (dir_facing == North) Serial.println("facing north"); // If robot is facing north
       else if (dir_facing == East)  Serial.println("facing east"); // If robot is facing east
@@ -371,7 +374,7 @@ void follow_line(){
 
     parallax1.write(92);
     parallax2.write(88); 
-     delay (700);
+     delay (500);
     Serial.println();
   }
 }

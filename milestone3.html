@@ -70,7 +70,23 @@
       </p>
     <br>
     <code><pre>
-
+    
+    int nextSquare[2] = {visitStack.pop(), visitStack.pop()}; //first choice is to move somewhere new
+    
+    //get deltas for direction to move in
+    int deltaX = dataArray[0] - nextSquare[0];
+    int deltaY = dataArray[1] - nextSquare[1];
+      
+    //check if the square is next door, and has been visited 
+    if (((abs(deltaX) + abs(deltaY)) != 1) || (totalSquares[nextSquare[0]-1] [nextSquare[1]-1] == 1)) {
+      nextSquare[0] = history.pop(); //pop off history stack 
+      nextSquare[1] = history.pop();
+    }
+    else {
+      //adding to the history so we can back track easily 
+      history.push (dataArray[1]);
+      history.push (dataArray[0]);
+    }
       </pre></code>
       <br>
     

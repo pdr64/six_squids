@@ -63,6 +63,7 @@
       movement, and if those squares have not yet been visited, they are pushed to the stack of possible squares to travel to. When Gary 
       has to decide where to move, he pops the most recent square off the stack, and travels in that direction. 
       <br>
+      <br>
       This is very straight forward for squares right next to Gary: he simply has to remember which direction he is facing and 
       what square he is in, determine which direction the next square is in, and turn towards that square. For further away squares, we had 
       to implement back tracking. To accomplish this, we kept a stack of every square visited, and turned towards the last square as 

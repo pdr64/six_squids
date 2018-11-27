@@ -40,6 +40,25 @@
       implemented a stack using the library StackArray. This was so that we could add possible new squares as we traveled, and pop them 
       off the stack one by one as we had to decide which direction to travel in. 
       <br>
+      <code><pre>
+      //example for North facing; same applies for all other directions
+      if      (dir_facing == North) {
+        left_space[0]  = dataArray[0]-1;
+        left_space[1]  = dataArray[1];
+        right_space[0] = dataArray[0]+1;
+        right_space[1] = dataArray[1]; 
+        front_space[0] = dataArray[0];
+        front_space[1] = dataArray[1]-1;
+      }
+      //example for left wall; same applies to front and right spaces.
+     if (!leftw())  {
+       if (totalSquares[left_space[0]-1][left_space[1]-1] == 0) {
+        //Serial.println("can go left");
+        visitStack.push (left_space[1]);
+        visitStack.push (left_space[0]);
+       }
+      }  
+      </pre></code>
       Next, we had to choose how to deal with that stack. At each intersection, Gary checks which walls next to him have no walls blocking 
       movement, and if those squares have not yet been visited, they are pushed to the stack of possible squares to travel to. When Gary 
       has to decide where to move, he pops the most recent square off the stack, and travels in that direction. 
@@ -47,7 +66,7 @@
       This is very straight forward for squares right next to Gary: he simply has to remember which direction he is facing and 
       what square he is in, determine which direction the next square is in, and turn towards that square. For further away squares, we had 
       to implement back tracking. To accomplish this, we kept a stack of every square visited, and turned towards the last square as 
-      they were popped off the stack. 
+      they were popped off the stack. Squares were only added to the history stack when we were not already backtracking. 
       </p>
     <br>
     <code><pre>

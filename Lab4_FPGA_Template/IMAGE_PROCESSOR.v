@@ -54,8 +54,8 @@ always @(posedge CLK) begin
 			end
 		else begin
 			countNULL = countNULL + 10'd1;
-
 		end
+		
 	end
 	if(VGA_VSYNC_NEG == 1'b1 && lastsync == 1'b0) begin
 //			if(countRED >countBLUE) begin
@@ -83,3 +83,4 @@ always @(posedge CLK) begin
 end
 
 endmodule
+

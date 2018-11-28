@@ -175,7 +175,7 @@ always @(posedge CAM_PCLK) begin
 			end
 			else begin
 			    TEMP[15:8] = DATA[7:0];
-			   if(TEMP[7:4] >= 4'b0100 && TEMP[11:8] > 4'b0100 && TEMP[3:0] > 4'b0100)begin
+			   if(TEMP[7:4] >= 4'b0010 && TEMP[11:8] > 4'b0010 && TEMP[3:0] > 4'b0010)begin
 					pixel_data_RGB332 = 8'b11111111; end
 				else if(TEMP[11:8]>=4'b0011)begin
 					pixel_data_RGB332 = RED; end

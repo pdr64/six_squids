@@ -26,7 +26,7 @@ void setup() {
 
 void loop(){
   checkTreasure();
-  delay(500);
+  delay(100);
  }
 
 ///////// Function Definition //////////////

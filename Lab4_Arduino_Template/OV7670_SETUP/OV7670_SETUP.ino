@@ -140,6 +140,14 @@ void checkTreasure(){
   else
   Serial.println("c = 0");
 
+  if ( a == 1 && b == 0 && c == 0 ) {
+    Serial.println("BLUE");
+  }
+  else if ( a == 0 && b == 1 && c ==0 ) {
+    Serial.println("RED");
+  } else {
+    Serial.println("NULL");
+  }
 //  if      ((a==0)&(b==0)&(c==0)) Serial.println("none detected"); 
 //  
 //  else if ((a==0)&(b==0)&(c==1)) Serial.println("red triangle");

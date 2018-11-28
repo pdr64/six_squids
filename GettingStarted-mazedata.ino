@@ -29,7 +29,7 @@ void setup(void)
 {
 
   Serial.println("reset");
-  Serial.begin(57600);
+  Serial.begin(9600);
   printf_begin();
   printf("\n\rRF24/examples/GettingStarted/\n\r");
   printf("ROLE: %s\n\r",role_friendly_name[role]);
@@ -101,31 +101,23 @@ int radioRead(){
         done = radio.read( &receive, 6 * sizeof(int) );
 
         // Spew it
-        printf("Got payload %d, %d, %d, %d, %d, %d...",receive[0], receive[1], receive[2], receive[3], receive[4], receive[5]);
+        //printf("Got payload %d, %d, %d, %d, %d, %d...",receive[0], receive[1], receive[2], receive[3], receive[4], receive[5]);
 
-        String coords = receive[0] + "," + receive[1];
+        String coords = "";
+        coords = String(receive[1]-1) + "," + String(receive[0]-1);
         int tmp = 0;
-//        for ( size_t i = 0; i < 6; i++ ) {
-//          if ( receive[i] == 5 ){
-//            tmp += 1;
-//          }
-//          if ( tmp == 6 ){
-//            coords = "reset";
-//            Serial.println(coords);
-//          }
-//        }
 
         if ( receive[2] == 1 ){
           coords += ",north=true";
         }
         if ( receive[3] == 1 ){
-          coords += ",east==true";
+          coords += ",east=true";
         }
         if ( receive[4] == 1 ){
-          coords += ",south==true";
+          coords += ",south=true";
         }
         if ( receive[5] == 1 ){
-          coords += ",west==true";
+          coords += ",west=true";
         }
 
         Serial.println(coords);
@@ -141,7 +133,7 @@ int radioRead(){
 
       // Send the final one back.
       radio.write( &receive, 6 * sizeof(int) );
-      printf("Sent response.\n\r");
+      //printf("Sent response.\n\r");
 
       // Now, resume listening so we catch the next packets.
       radio.startListening();

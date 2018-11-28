@@ -8,7 +8,17 @@
 
 /////////////////////
 
-int dataArray[] = {9, 9, 0, 1, 1, 1}; //TODO: don't harcode walls at the start
+#include <SPI.h>
+#include "nRF24L01.h"
+#include "RF24.h"
+RF24 radio(9,10);
+const uint64_t pipes[2] = { 0x000000000CLL, 0x000000000DLL };
+typedef enum { role_ping_out = 1, role_pong_back } role_e;
+const char* role_friendly_name[] = { "invalid", "Ping out", "Pong back" };
+role_e role = role_pong_back;
+/////////////////////////
+
+int dataArray[] = {9, 9, 0, 0, 0, 0}; //TODO: don't harcode walls at the start
 byte dir_facing = North; 
 
 int totalSquares[9][9]; //to see if we have visited or not 
@@ -67,6 +77,24 @@ void setup() {
   
   parallax1.attach(6);
   parallax2.attach(5);
+
+
+  radio.begin();
+radio.setRetries(15,15);
+radio.setAutoAck(true);
+radio.setChannel(0x50);
+radio.setPALevel(RF24_PA_MIN);
+radio.setDataRate(RF24_250KBPS);
+
+role = role_ping_out;
+  radio.openWritingPipe(pipes[0]);
+  radio.openReadingPipe(1,pipes[1]);
+
+radio.startListening();
+radio.printDetails();
+//////////////////////
+
+radioWrite(dataArray);
 }
 
 void loop() {
@@ -330,6 +358,17 @@ void follow_line(){
     Serial.print("Delta X: " + String(deltaX)); 
     Serial.println("Delta Y: " + String(deltaY));
 
+      if      (dir_facing == North) Serial.println("facing north"); // If robot is facing north
+      else if (dir_facing == East)  Serial.println("facing east"); // If robot is facing east
+      else if (dir_facing == South) Serial.println("facing south"); // If robot is facing south
+      else if (dir_facing == West)  Serial.println("facing west"); // If robot is facing west
+    
+      if      (dir_facing == North) dataArray [1] --; // If robot is facing north
+      else if (dir_facing == East)  dataArray [0] ++; // If robot is facing east
+      else if (dir_facing == South) dataArray [1] ++; // If robot is facing south
+      else if (dir_facing == West)  dataArray [0] --; // If robot is facing west
+
+      
       if((dir_facing == North && deltaY == 1) || 
              (dir_facing == East  && deltaX == -1) || 
              (dir_facing == South && deltaY == -1) ||
@@ -358,23 +397,44 @@ void follow_line(){
    
     
     
-      if      (dir_facing == North) Serial.println("facing north"); // If robot is facing north
-      else if (dir_facing == East)  Serial.println("facing east"); // If robot is facing east
-      else if (dir_facing == South) Serial.println("facing south"); // If robot is facing south
-      else if (dir_facing == West)  Serial.println("facing west"); // If robot is facing west
-    
-      if      (dir_facing == North) dataArray [1] --; // If robot is facing north
-      else if (dir_facing == East)  dataArray [0] ++; // If robot is facing east
-      else if (dir_facing == South) dataArray [1] ++; // If robot is facing south
-      else if (dir_facing == West)  dataArray [0] --; // If robot is facing west
+
 
       Serial.print("left space:  " + String(left_space[0])  + ", " + String(left_space[1]));
       Serial.print("     right space: " + String(right_space[0]) + ", " + String(right_space[1]));
       Serial.println("   front space: " + String(front_space[0]) + ", " + String(front_space[1]));
 
     parallax1.write(92);
-    parallax2.write(88); 
-     delay (500);
+    parallax2.write(88);
+     
+    Serial.println("write");
+    radioWrite(dataArray);
+    
     Serial.println();
   }
+}
+
+int radioWrite(int dataArray[]){
+  radio.stopListening(); // First, stop listening so we can talk.
+    //Serial.println(dataArray[0]  dataArray[1], dataArray[2], dataArray[3], dataArray[4], dataArray[5]);
+    int number[6] = {dataArray[0],dataArray[1],dataArray[2], dataArray[3],dataArray[4], dataArray[5]};
+  
+    bool ok = radio.write( &number, 6 * sizeof(int) );
+    if (ok){}
+      //Serial.println("ok...");
+    else{}
+      //Serial.println("failed.\n\r");
+    // Now, continue listening
+    radio.startListening();
+    unsigned long started_waiting_at = millis();// Wait here until we get a response, or timeout (250ms)
+    bool timeout = false;
+    while ( ! radio.available() && ! timeout )
+      if (millis() - started_waiting_at > 200 )
+        timeout = true;
+    // Describe the results
+    if ( timeout ){}//Serial.println("Failed, response timed out.\n\r");
+    else
+    {
+      unsigned long got_time;
+      radio.read( &got_time, sizeof(unsigned long) );// Grab the response, compare, and send to debugging spew
+    }
 }

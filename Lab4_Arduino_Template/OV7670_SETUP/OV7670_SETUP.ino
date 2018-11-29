@@ -127,24 +127,19 @@ void checkTreasure(){
   int a = digitalRead(fpga_a);
   int b = digitalRead(fpga_b);
   int c = digitalRead(fpga_c);
-  if (a==1)
-  Serial.println("a = 1");
-  else
-  Serial.println("a = 0");
-  if (b==1)
-  Serial.println("b = 1");
-  else
-  Serial.println("b = 0");
-  if (c==1)
-  Serial.println("c = 1");
-  else
-  Serial.println("c = 0");
 
-  if ( a == 1 && b == 0 && c == 0 ) {
-    Serial.println("BLUE");
-  }
-  else if ( a == 0 && b == 1 && c ==0 ) {
-    Serial.println("RED");
+  if ( a == 0 && b == 0 && c == 1 ) {
+    Serial.println("Red Diamond");
+  } else if ( a == 0 && b == 1 && c ==0 ) {
+    Serial.println("Red Triangle");
+  } else if ( a == 0 && b == 1 && c ==1 ) {
+    Serial.println("Red Square");
+  }  else if ( a == 1 && b == 0 && c ==0 ) {
+    Serial.println("Blue Diamond");
+  } else if ( a == 1 && b == 0 && c ==1 ) {
+    Serial.println("Blue Triangle ");
+  } else if ( a == 1 && b == 1 && c ==0 ) {
+    Serial.println("Blue Square");
   } else {
     Serial.println("NULL");
   }

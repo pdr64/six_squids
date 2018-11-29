@@ -84,7 +84,7 @@ always @(posedge CLK) begin
 //				RESULT = 3'b100;
 //			end
 //if it is a red diamond (001), if it is red square (011), if it is red triangle (010)
-//if it is a blue diamond (100), if it is red square (110), if it is red triangle (101)
+		//if it is a blue diamond (100), if it is blue square (110), if it is blue triangle (101)
 
 		if(countRED >= R_CNT_THRESHOLD) begin
 			if(red1<(red2-red1)&& (red2-red1)>(red3-red2)) RESULT= 3'b001;   // diamond

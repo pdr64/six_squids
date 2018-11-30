@@ -34,6 +34,11 @@
     <p>
       We chose DFS (depth first search) as our navigation algorithm, because this seemed to be the simplest to implement 
       and we did not have a high collective knowledge of algorithms prior to the class. 
+      Depth First Search goes as far as it can down one side of a tree, in this case as far as we can go in one direction without looping
+      to a node we've already visited or hitting a wall, and then returns to the last node that was split from and goes down the next branch 
+      as far as it can again. While this is not the most efficient, we've proven we can navigate several large mazes this way.
+      <center><img src="https://he-s3.s3.amazonaws.com/media/uploads/9fa1119.jpg" class="img-rounded" alt="DFS" width="400" height="300"></center>
+      
       <br>
       Several data structures had to be implemented to run this algorithm. We first had to establish a 9x9 (the size of the final maze)
       matrix for keeping track of which squares had already been visited, such that we wouldn't repeat visits to the same square. We also 

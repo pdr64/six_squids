@@ -42,97 +42,65 @@ reg [9:0] red3 = 10'b0;
 reg [9:0] blue1 = 10'b0;
 reg [9:0] blue2 = 10'b0;
 reg [9:0] blue3 = 10'b0;
-reg [9:0] blue4 = 10'b0;
-reg [9:0] red4 = 10'b0;
 reg [9:0] firstRED;
 reg [9:0] firstBLUE;
-reg colorseen=1'b0;
+reg [9:0] lastRED;
+reg [9:0] lastBLUE;
 
 localparam RED   = 8'b111_000_00;
 localparam BLUE  = 8'b000_000_11;
 
 always @(posedge CLK) begin
-	if(VGA_PIXEL_X>((`SCREEN_WIDTH/2)-40)&& VGA_PIXEL_X<((`SCREEN_WIDTH/2)+40) && VGA_PIXEL_Y<((`SCREEN_HEIGHT/2)+40)&& VGA_PIXEL_Y>((`SCREEN_HEIGHT/2)-40)) begin
-		if(VGA_PIXEL_X==((`SCREEN_WIDTH/2)-38))begin
-			colorseen=1'b0;
-		end
+	if(VGA_PIXEL_X>((`SCREEN_WIDTH/2)-25)&& VGA_PIXEL_X<((`SCREEN_WIDTH/2)+25) && VGA_PIXEL_Y<((`SCREEN_HEIGHT/2)+30)&& VGA_PIXEL_Y>((`SCREEN_HEIGHT/2)-30)) begin
+		
 		if(PIXEL_IN == BLUE) begin
 			countBLUE = countBLUE + 10'd1;
+			lastBLUE = VGA_PIXEL_Y;
 			if(countBLUE==10'd1) firstBLUE= VGA_PIXEL_Y;
-			
-			if(VGA_PIXEL_Y >(firstBLUE) && (VGA_PIXEL_Y <=(firstBLUE+5))begin
-				if(~colorseen)begin
-					blue1 = blue1 +VGA_PIXEL_X;
-					colorseen=1'b1;
-				end
-			end
-			else if(VGA_PIXEL_Y >(firstBLUE +5) && (VGA_PIXEL_Y <=(firstBLUE+10))begin
-				if(~colorseen)begin
-					blue2 = blue2 +VGA_PIXEL_X;
-					colorseen=1'b1;
-				end
-			end
-			else if(VGA_PIXEL_Y >(firstBLUE +10) && VGA_PIXEL_Y <=(firstBLUE+15))begin
-				if(~colorseen)begin
-					blue3 = blue3 +VGA_PIXEL_X;
-					colorseen=1'b1;
-				end
-			end
-			else if(VGA_PIXEL_Y >(firstBLUE +15) && VGA_PIXEL_Y <=(firstBLUE+20))begin
-				if(~colorseen)begin
-					blue4 = blue4 +VGA_PIXEL_X;
-					colorseen=1'b1;
-				end
-			end	
+				
 		end
 		else if(PIXEL_IN == RED) begin
-			countRED = countRED +10'd1; 
+			countRED = countRED +10'd1;
+			lastRED = VGA_PIXEL_Y;
 			if(countRED==10'd1) firstRED= VGA_PIXEL_Y;
+		end	
+	
+		if(VGA_PIXEL_Y==firstRED+((lastRED-firstRED)*(1/3)) || VGA_PIXEL_Y ==((lastBLUE-firstBLUE)*(1/3)))begin
 			
-			if(VGA_PIXEL_Y >(firstRED) && (VGA_PIXEL_Y <=(firstRED+5))begin
-				if(~colorseen)begin
-					red1 = red1 +VGA_PIXEL_X;
-					colorseen=1'b1;
-				end
-			end
-			else if(VGA_PIXEL_Y >(firstRED +5) && (VGA_PIXEL_Y <=(firstRED+10))begin
-				if(~colorseen)begin
-					red2 = red2 +VGA_PIXEL_X;
-					colorseen=1'b1;
-				end
-			end
-			else if(VGA_PIXEL_Y >(firstRED +10) && VGA_PIXEL_Y <=(firstRED+15))begin
-				if(~colorseen)begin
-					red3 = red3 +VGA_PIXEL_X;
-					colorseen=1'b1;
-				end
-			end
-			else if(VGA_PIXEL_Y >(firstRED +15) && VGA_PIXEL_Y <=(firstRED+20))begin
-				if(~colorseen)begin
-					red4 = red4 +VGA_PIXEL_X;
-					colorseen=1'b1;
-				end
-			end	
+			blue1 = countBLUE;
+			red1=countRED;
 		end
-		else begin
-			countNULL = countNULL + 10'd1;
-		end		
+		else if((VGA_PIXEL_Y==firstRED+((lastRED-firstRED)*(2/3))) || VGA_PIXEL_Y ==(firstBLUE+lastBLUE*(2/3)))begin
 		
+			blue2 =  countBLUE;
+			red2=countRED;
+		end
+		else if((VGA_PIXEL_Y==firstRED+(lastRED-firstRED)) || VGA_PIXEL_Y==firstBLUE +(lastBLUE-firstBLUE))begin
+		
+			blue3 = countBLUE;
+			red3=countRED;
+		
+		end
+	
 	end
 	if(VGA_VSYNC_NEG == 1'b1 && lastsync == 1'b0) begin
 		//if it is a red diamond (001), if it is red square (011), if it is red triangle (010)
 		//if it is a blue diamond (100), if it is blue square (110), if it is blue triangle (101)
 		if(countRED >= R_CNT_THRESHOLD) begin
-			if(red1+red2)>(red2+red3) && (red3+red4)>(red2+red3)) begin
-				RESULT= 3'b001; end  // diamond
-			else if((red1+red2)>(red2+red3)&& (red2+red3)>(red3+red4)) begin  
+			
+			if(red1<(red2-red1)&& (red2-red1)<(red3-red2)) begin  
 				RESULT = 3'b010; end// triangle
-			else RESULT = 3'b011;                                                //square
+			else if(red1<(red2-red1) && (red3-red2)<(red2-red1)) begin
+				RESULT= 3'b001; end  // diamond
+			else if((red1+red2)-(red2+red3)<= 10'd5 ||(red3+red2)-(red1+red2)<= 10'd5) RESULT = 3'b011;
+			//else RESULT = 3'b111;                                                
 		end
 		else if(countBLUE >= B_CNT_THRESHOLD) begin 
-			if(blue1+blue2)>(blue2+blue3) && (blue3+blue4)>(blue2+blue3)) RESULT= 3'b100;   // diamond
-			else if((blue1+blue2)>(blue2+blue3)&& (blue2+blue3)>(blue3+blue4))RESULT = 3'b101; // triangle
-			else RESULT = 3'b110; 																		//square
+			
+			if(blue1<(blue2-blue1)&& (blue2-blue1)<(blue3-blue2)) RESULT = 3'b101; // triangle
+			else if(blue1<(blue2-blue1) && (blue3-blue2)<(blue2-blue1)) RESULT= 3'b100;   // diamond
+			else if((blue1+blue2)-(blue3+blue2)<= 10'd5 ||(blue3+blue2)-(blue1+blue2)<= 10'd5) RESULT = 3'b110;
+			//else RESULT = 3'b111; 																		
 		end
 
 		else begin

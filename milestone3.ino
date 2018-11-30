@@ -75,8 +75,7 @@ void setup() {
     }
   }
   
-  parallax1.attach(6);
-  parallax2.attach(5);
+
 
 
   radio.begin();
@@ -91,10 +90,12 @@ role = role_ping_out;
   radio.openReadingPipe(1,pipes[1]);
 
 radio.startListening();
-radio.printDetails();
 //////////////////////
 
 radioWrite(dataArray);
+
+  parallax1.attach(6);
+  parallax2.attach(5);
 }
 
 void loop() {

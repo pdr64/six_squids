@@ -23,14 +23,31 @@
     <br>
     <br>
 
-    <h2>Hardware </h2>
     <h3>Sensors</h3>
     <h4>Line Sensors</h4>
+    <p>
+      We decided to implement three line sensors. There are four possible scenarios given this configuration: when simply following a 
+      straight line, we can either be perfectly on the line, in which case we simply continue going straight, or we can be veering left 
+      or right slightly off the line, which is when the left or right sensor starts seeing white. To correct for this, we turn very slightly
+      back in the direction towards the line. 
+      <br>
+      The fourth option is that we reach an intersection, in which case Gary launches a sequence of observations about his surroundings, 
+      including wall detection and reporting information via radio about location and treasure detection. 
+    </p>  
     <h4>Wall Sensors</h4>
+    <p>
+    We also decided to have three wall sensors. Initially we believed we should have a back wall sensor to detect if we started with a wall 
+    behind us, but given the general configuration of the maze we determined this to be unecessary. At each intersection, Gary checks the front, 
+    left and right wall sensors, by toggling a mux with the three analog inputs of the walls, and stores this information for both travel and 
+    maze mapping purposes. 
+    TODO: show schematic of mux
+    </p>
     <h4>Robot Sensor (IR)</h4>
     <h4>Audio Sensor</h4>
     <h4>Camera</h4>
+    
     <h3>Chassis</h3>
+    
     <h4>Propulsion</h4>
     <p>
       Batteries and Wheels
@@ -41,10 +58,6 @@
     </p>
     <br>
     
-    <h2>Software</h2>
-    <h3>Line Sensing</h3>
-    <h3>Wall Sensing</h3>
-    <h3>IR and Audio Detection</h3>
     <h3>Algorithmic Navigation</h3>
     <h3>Camera</h3>
    <a href="#header"><button class="btn"><i class="fa fa-arrow-up"></i>Return to top</button></a>

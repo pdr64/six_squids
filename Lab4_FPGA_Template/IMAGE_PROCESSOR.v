@@ -38,10 +38,16 @@ reg lastsync = 1'b0;
 
 reg [9:0] red1;
 reg [9:0] red2;
-reg [9:0] red3;
+reg [9:0] point3;
 reg [9:0] blue1;
 reg [9:0] blue2;
 reg [9:0] blue3;
+reg [9:0] blue4;
+reg [9:0] red4;
+reg [9:0] red3;
+reg [9:0] firstRED;
+reg [9:0] firstBLUE;
+reg colorseen=1'b0;
 
 localparam RED   = 8'b111_000_00;
 localparam BLUE  = 8'b000_000_11;
@@ -49,31 +55,36 @@ localparam BLUE  = 8'b000_000_11;
 //assign RESULT = 3'b111;
 always @(posedge CLK) begin
 //  RESULT = 3'b110;
-	if(VGA_PIXEL_X>((`SCREEN_WIDTH/2)-35)&& VGA_PIXEL_X<((`SCREEN_WIDTH/2)+35) && VGA_PIXEL_Y<((`SCREEN_HEIGHT/2)+25)&& VGA_PIXEL_Y>((`SCREEN_HEIGHT/2)-25)) begin
+	if(VGA_PIXEL_X>((`SCREEN_WIDTH/2)-40)&& VGA_PIXEL_X<((`SCREEN_WIDTH/2)+40) && VGA_PIXEL_Y<((`SCREEN_HEIGHT/2)+40)&& VGA_PIXEL_Y>((`SCREEN_HEIGHT/2)-40)) begin
 //   if(!(VGA_PIXEL_X>(`SCREEN_WIDTH-1) || VGA_PIXEL_Y>(`SCREEN_HEIGHT-1))) begin
 		//if(VGA_HREF_NEG) begin
 		if(PIXEL_IN == BLUE) begin
 			countBLUE = countBLUE + 10'd1;
+			if(countBLUE==10'd1) firstBLUE= VGA_PIXEL_Y;	
 		end
 		else if(PIXEL_IN == RED) begin
 			countRED = countRED +10'd1; 
+			if(countRED==10'd1) firstRED= VGA_PIXEL_Y;
 		end
 		else begin
 			countNULL = countNULL + 10'd1;
 		end
-		if(VGA_PIXEL_X==((`SCREEN_WIDTH/2)-35) && VGA_PIXEL_Y==((`SCREEN_HEIGHT/2)-15))begin
+		if((VGA_PIXEL_Y>=firstRED || VGA_PIXEL_Y >=firstBLUE) && (VGA_PIXEL_Y<=firstRED+2 || VGA_PIXEL_Y <=firstBLUE+2))begin
 			blue1 = countBLUE;
 			red1=countRED;
 		end
-		if(VGA_PIXEL_X==((`SCREEN_WIDTH/2)-35) && VGA_PIXEL_Y==((`SCREEN_HEIGHT/2)+5))begin
+		else if((VGA_PIXEL_Y>firstRED +4 || VGA_PIXEL_Y >=firstBLUE +4) && (VGA_PIXEL_Y<=firstRED+6 || VGA_PIXEL_Y <=firstBLUE+6))begin
 			blue2 = countBLUE;
 			red2=countRED;
 		end
-		if(VGA_PIXEL_X==((`SCREEN_WIDTH/2)-35) && VGA_PIXEL_Y==((`SCREEN_HEIGHT/2)+20))begin
+		else if((VGA_PIXEL_Y>=firstRED +10 || VGA_PIXEL_Y >=firstBLUE +10) && (VGA_PIXEL_Y<=firstRED+12 || VGA_PIXEL_Y <=firstBLUE+12))begin
 			blue3 = countBLUE;
 			red3=countRED;
 		end
-			
+		else if((VGA_PIXEL_Y>firstRED + 15|| VGA_PIXEL_Y >=firstBLUE +15) && (VGA_PIXEL_Y<=firstRED+17 || VGA_PIXEL_Y <=firstBLUE+17))begin
+			blue4 = countBLUE;
+			red4=countRED;
+		end			
 		
 	end
 	if(VGA_VSYNC_NEG == 1'b1 && lastsync == 1'b0) begin
@@ -85,17 +96,19 @@ always @(posedge CLK) begin
 //			end
 //if it is a red diamond (001), if it is red square (011), if it is red triangle (010)
 		//if it is a blue diamond (100), if it is blue square (110), if it is blue triangle (101)
-
 		if(countRED >= R_CNT_THRESHOLD) begin
-			if(red1<(red2-red1)&& (red2-red1)>(red3-red2)) RESULT= 3'b001;   // diamond
-			else if(red1<(red2-red1)&& (red2-red1)<(red3-red2))RESULT = 3'b010; // triangle
-			else RESULT = 3'b011;                                                //square
+			if(red1<(red2-red1) && (red4-red3)<(red3-red2)) begin//&& (red2-red1)>(red3-red2)) 
+				RESULT= 3'b001; end  // diamond
+			else if(red1<(red2-red1)&& (red4-red3)>(red3-red2)) begin   //&& (red2-red1)<(red3-red2))
+				RESULT = 3'b010; end// triangle
+			//else RESULT = 3'b011;                                                //square
 		end
 		else if(countBLUE >= B_CNT_THRESHOLD) begin 
-			if(blue1<(blue2-blue1)&& (blue2-blue1)>(blue3-blue2)) RESULT= 3'b100;   // diamond
-			else if(blue1<(blue2-blue1)&& (blue2-blue1)<(blue3-blue2))RESULT = 3'b101; // triangle
-			else RESULT = 3'b110; 																		//square
+			if(blue1<(blue2-blue1)&& (blue4-blue3)>(blue3-blue2)) RESULT= 3'b100;   // diamond
+			else if(blue1<(blue2-blue1)&& (blue4-blue3)>(blue3-blue2))RESULT = 3'b101; // triangle
+			//else RESULT = 3'b110; 																		//square
 		end
+
 		else begin
 			RESULT = 3'b111;																				//null color
 		end

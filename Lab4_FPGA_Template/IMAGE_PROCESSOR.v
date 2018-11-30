@@ -53,58 +53,70 @@ localparam BLUE  = 8'b000_000_11;
 
 always @(posedge CLK) begin
 	if(VGA_PIXEL_X>((`SCREEN_WIDTH/2)-40)&& VGA_PIXEL_X<((`SCREEN_WIDTH/2)+40) && VGA_PIXEL_Y<((`SCREEN_HEIGHT/2)+40)&& VGA_PIXEL_Y>((`SCREEN_HEIGHT/2)-40)) begin
+		if(VGA_PIXEL_X==((`SCREEN_WIDTH/2)-38))begin
+			colorseen=1'b0;
+		end
 		if(PIXEL_IN == BLUE) begin
 			countBLUE = countBLUE + 10'd1;
-			if(countBLUE==10'd1) firstBLUE= VGA_PIXEL_Y;	
+			if(countBLUE==10'd1) firstBLUE= VGA_PIXEL_Y;
+			
+			if(VGA_PIXEL_Y >(firstBLUE) && (VGA_PIXEL_Y <=(firstBLUE+5))begin
+				if(~colorseen)begin
+					blue1 = blue1 +VGA_PIXEL_X;
+					colorseen=1'b1;
+				end
+			end
+			else if(VGA_PIXEL_Y >(firstBLUE +5) && (VGA_PIXEL_Y <=(firstBLUE+10))begin
+				if(~colorseen)begin
+					blue2 = blue2 +VGA_PIXEL_X;
+					colorseen=1'b1;
+				end
+			end
+			else if(VGA_PIXEL_Y >(firstBLUE +10) && VGA_PIXEL_Y <=(firstBLUE+15))begin
+				if(~colorseen)begin
+					blue3 = blue3 +VGA_PIXEL_X;
+					colorseen=1'b1;
+				end
+			end
+			else if(VGA_PIXEL_Y >(firstBLUE +15) && VGA_PIXEL_Y <=(firstBLUE+20))begin
+				if(~colorseen)begin
+					blue4 = blue4 +VGA_PIXEL_X;
+					colorseen=1'b1;
+				end
+			end	
 		end
 		else if(PIXEL_IN == RED) begin
 			countRED = countRED +10'd1; 
 			if(countRED==10'd1) firstRED= VGA_PIXEL_Y;
+			
+			if(VGA_PIXEL_Y >(firstRED) && (VGA_PIXEL_Y <=(firstRED+5))begin
+				if(~colorseen)begin
+					red1 = red1 +VGA_PIXEL_X;
+					colorseen=1'b1;
+				end
+			end
+			else if(VGA_PIXEL_Y >(firstRED +5) && (VGA_PIXEL_Y <=(firstRED+10))begin
+				if(~colorseen)begin
+					red2 = red2 +VGA_PIXEL_X;
+					colorseen=1'b1;
+				end
+			end
+			else if(VGA_PIXEL_Y >(firstRED +10) && VGA_PIXEL_Y <=(firstRED+15))begin
+				if(~colorseen)begin
+					red3 = red3 +VGA_PIXEL_X;
+					colorseen=1'b1;
+				end
+			end
+			else if(VGA_PIXEL_Y >(firstRED +15) && VGA_PIXEL_Y <=(firstRED+20))begin
+				if(~colorseen)begin
+					red4 = red4 +VGA_PIXEL_X;
+					colorseen=1'b1;
+				end
+			end	
 		end
 		else begin
 			countNULL = countNULL + 10'd1;
-		end
-		
-		if((VGA_PIXEL_Y>firstRED || VGA_PIXEL_Y >firstBLUE) && (VGA_PIXEL_Y<=firstRED+5 || VGA_PIXEL_Y <=firstBLUE+5))begin
-			if(~colorseen)begin
-			blue1 = blue1 +VGA_PIXEL_X;
-			red1=red1 +VGA_PIXEL_X;
-			colorseen=1'b1;
-			end
-			if(VGA_PIXEL_X==((`SCREEN_WIDTH/2)-39))begin
-			colorseen=1'b0;
-			end
-		end
-		else if((VGA_PIXEL_Y>firstRED +5 || VGA_PIXEL_Y >firstBLUE +5) && (VGA_PIXEL_Y<=firstRED+10 || VGA_PIXEL_Y <=firstBLUE+10))begin
-			if(~colorseen)begin
-			blue2 = blue2 +VGA_PIXEL_X;
-			red2=red2 +VGA_PIXEL_X;
-			colorseen=1'b1;
-			end
-			if(VGA_PIXEL_X==((`SCREEN_WIDTH/2)-39))begin
-			colorseen=1'b0;
-			end
-		end
-		else if((VGA_PIXEL_Y>firstRED +10 || VGA_PIXEL_Y >firstBLUE +10) && (VGA_PIXEL_Y<=firstRED+15 || VGA_PIXEL_Y <=firstBLUE+15))begin
-			if(~colorseen)begin
-			blue3 = blue3 +VGA_PIXEL_X;
-			red3=red3 +VGA_PIXEL_X;
-			colorseen=1'b1;
-			end
-			if(VGA_PIXEL_X==((`SCREEN_WIDTH/2)-39))begin
-			colorseen=1'b0;
-			end
-		end
-		else if((VGA_PIXEL_Y>firstRED + 15|| VGA_PIXEL_Y >firstBLUE +15) && (VGA_PIXEL_Y<=firstRED+20 || VGA_PIXEL_Y <=firstBLUE+20))begin
-			if(~colorseen)begin
-			blue4 = blue4 +VGA_PIXEL_X;
-			red4=red4 +VGA_PIXEL_X;
-			colorseen=1'b1;
-			end
-			if(VGA_PIXEL_X==((`SCREEN_WIDTH/2)-39))begin
-			colorseen=1'b0;
-			end
-		end			
+		end		
 		
 	end
 	if(VGA_VSYNC_NEG == 1'b1 && lastsync == 1'b0) begin

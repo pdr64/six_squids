@@ -84,7 +84,19 @@
               red1=countRED;     // or red pixel count
             end
             ... // take two more values for comparison
-     </pre></code>
+     	 </pre></code>
+	 We sent a 3-bit code corresponding to the shape, each color with a different combination. This is an example for the red combinations:
+		<code><pre>
+			// redi, for i = 1, 2... is a segment pixel count for segment i.
+			if(red1<(red2-red1)&& (red2-red1)<(red3-red2)) begin  // analysis of segment pixels to determine shape
+				RESULT = 3'b010; end         // triangle
+			else if(red1<(red2-red1) && (red3-red2)<(red2-red1)) begin
+				RESULT= 3'b001; end          // diamond
+			else if((red1+red2)-(red2+red3)<= 10'd40 ||(red3+red2)-(red1+red2)<= 10'd40) RESULT = 3'b011; //Square
+			//else RESULT = 3'b111; 
+			
+		</pre></code>
+	The Aduino displays the color and image depending on the code combination it received.
       <center><iframe width="560" height="315" src="https://www.youtube.com/embed/BznrdFBTr_I" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></center>
     </p><br>
     <br>

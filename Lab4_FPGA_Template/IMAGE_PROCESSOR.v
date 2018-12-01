@@ -1,4 +1,5 @@
 `define SCREEN_WIDTH 176
+`define SCREEN_WIDTH 176
 `define SCREEN_HEIGHT 144
 `define NUM_BARS 3
 `define BAR_HEIGHT 48
@@ -51,7 +52,7 @@ localparam RED   = 8'b111_000_00;
 localparam BLUE  = 8'b000_000_11;
 
 always @(posedge CLK) begin
-	if(VGA_PIXEL_X>((`SCREEN_WIDTH/2)-25)&& VGA_PIXEL_X<((`SCREEN_WIDTH/2)+25) && VGA_PIXEL_Y<((`SCREEN_HEIGHT/2)+30)&& VGA_PIXEL_Y>((`SCREEN_HEIGHT/2)-30)) begin
+	if(VGA_PIXEL_X>((`SCREEN_WIDTH/2)-30)&& VGA_PIXEL_X<((`SCREEN_WIDTH/2)+30) && VGA_PIXEL_Y<((`SCREEN_HEIGHT/2)+50)&& VGA_PIXEL_Y>((`SCREEN_HEIGHT/2)-50)) begin
 		
 		if(PIXEL_IN == BLUE) begin
 			countBLUE = countBLUE + 10'd1;
@@ -92,14 +93,14 @@ always @(posedge CLK) begin
 				RESULT = 3'b010; end// triangle
 			else if(red1<(red2-red1) && (red3-red2)<(red2-red1)) begin
 				RESULT= 3'b001; end  // diamond
-			else if((red1+red2)-(red2+red3)<= 10'd5 ||(red3+red2)-(red1+red2)<= 10'd5) RESULT = 3'b011;
+			else if((red1+red2)-(red2+red3)<= 10'd40 ||(red3+red2)-(red1+red2)<= 10'd40) RESULT = 3'b011;
 			//else RESULT = 3'b111;                                                
 		end
 		else if(countBLUE >= B_CNT_THRESHOLD) begin 
 			
 			if(blue1<(blue2-blue1)&& (blue2-blue1)<(blue3-blue2)) RESULT = 3'b101; // triangle
 			else if(blue1<(blue2-blue1) && (blue3-blue2)<(blue2-blue1)) RESULT= 3'b100;   // diamond
-			else if((blue1+blue2)-(blue3+blue2)<= 10'd5 ||(blue3+blue2)-(blue1+blue2)<= 10'd5) RESULT = 3'b110;
+			else if((blue1+blue2)-(blue3+blue2)<= 10'd40 ||(blue3+blue2)-(blue1+blue2)<= 10'd40) RESULT = 3'b110;
 			//else RESULT = 3'b111; 																		
 		end
 

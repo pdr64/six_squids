@@ -31,7 +31,14 @@
     <br>
     
     <center><h2>Detecting Presence</h2></center>
-    
+	<p>In order to determine whether there was actually a treasure as opposed to a few stray blue or red pixels, we used a threshold value. If the number of pixels of a certain 
+	   color exceded this threshold, we assumed that there was a treasure and then began the shape detection process. Once done, we send the color and shape to the 
+           arduino, which displays this information on the serial monitor. If the threshold is not reached for either blue or red, "NULL" is sent to the ardunio.
+           Below is a demonstration of this code.
+		
+        <center><iframe width="560" height="315" src="https://youtu.be/uaJuG0VnHoQ" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></center>
+	  </p><br> 
+	  
     <center><h2>Detecting Color</h2></center>
     <p>
       

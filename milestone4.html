@@ -41,7 +41,22 @@
 	  
     <center><h2>Detecting Color</h2></center>
     <p>
-      
+	   
+    <code><pre>
+    		
+	
+	
+	if(VGA_VSYNC_NEG == 1'b1 && lastsync == 1'b0) begin
+		if(countRED >= R_CNT_THRESHOLD) begin
+			begin red shape detection                                           
+		end
+		else if(countBLUE >= B_CNT_THRESHOLD) begin 
+			begin blue shape detection																		
+		end
+		else begin
+			RESULT = 3'b111;																				//null color
+		end
+      </pre></code> 
       <center><iframe width="560" height="315" src="https://www.youtube.com/embed/mjlxl8KlYC8" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></center>
     </p>
       <center><h2>Detecting Shape</h2></center>

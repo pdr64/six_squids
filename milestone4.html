@@ -40,12 +40,20 @@
 	  </p><br> 
 	  
     <center><h2>Detecting Color</h2></center>
-    <p>
+    <p>Because of the code we used inside DEO_NANO to display color, detecting color was made simpler. Inside of DEO_NANO, whenever we saw a pixel that was above a certain threshold 
+       of blue or red, we set that pixel to pure blue or red. In code, we set the pixels equal to 8'b000_000_11 and 8"b111_000_00. We are able to exploit this in our color detection.
+       Firstly, we only detect color if it is within a certain region we have specified. Inside of this region, we examine each pixel and determine whether it is red, blue, or neither.
+       If it is red or blue, we increment a variable that counts the amount of pixels of each color. Finally, if either count is above a specified threshold, we assume that one, we
+       seeing a treasure and two, that it is that color. If this criteria is not met, we display "NULL." An overview of the code used as well as a demonstration are shown below.
 	   
     <code><pre>
-    		
-	
-	
+    	if(VGA_PIXEL_X>((`SCREEN_WIDTH/2)-30)&& VGA_PIXEL_X<((`SCREEN_WIDTH/2)+30) && VGA_PIXEL_Y<((`SCREEN_HEIGHT/2)+50)&& VGA_PIXEL_Y>((`SCREEN_HEIGHT/2)-50)) begin
+		if(PIXEL_IN == BLUE) begin
+			countBLUE = countBLUE + 10'd1;
+		end
+		else if(PIXEL_IN == RED) begin
+			countRED = countRED +10'd1;
+		end		
 	if(VGA_VSYNC_NEG == 1'b1 && lastsync == 1'b0) begin
 		if(countRED >= R_CNT_THRESHOLD) begin
 			begin red shape detection                                           

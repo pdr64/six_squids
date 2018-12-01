@@ -137,7 +137,7 @@
     <h4>Reading Pixels</h4>
     <p>
 	    In order to know what color our camera is seeing without using the VGA driver to output to screen, we need to read the pixels that come from the camera. We did so by implementing another code in our downsamplier to make the colors vivid. 
-	    below is a diagram showing the logic behind the implementation. 
+	    below is a diagram showing the logic behind the implementation. We used threshold values to make sure that our colors are truly present.
 	    <center><img src="colorVivid.PNG" class="img-rounded" alt="Color vivid" width="600" height="450">
       	    <p><b>Fig.4:</b> Making our colors look right</p></center>
 	    We do not care about green as shown in the diagram because there will not be any green treasures during the competition.

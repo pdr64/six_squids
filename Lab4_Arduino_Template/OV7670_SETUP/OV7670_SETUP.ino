@@ -3,9 +3,12 @@
 #define OV7670_I2C_W_ADDRESS 0x42
 #define OV7670_I2C_R_ADDRESS 0x43 
 
-int fpga_a = 7; 
+int fpga_a = 3; 
 int fpga_b = 8; 
-int fpga_c = 9; 
+
+int numRED  = 0;
+int numBLUE = 0;
+int numNULL = 0;
 
 ///////// Main Program //////////////
 void setup() {
@@ -21,12 +24,27 @@ void setup() {
 
   pinMode(fpga_a, INPUT); 
   pinMode(fpga_b, INPUT);
-  pinMode(fpga_c, INPUT);
-}
+ // pinMode(fpga_c, INPUT);
+ }
 
 void loop(){
-  checkTreasure();
-  delay(100);
+  numRED  = 0;
+  numBLUE = 0;
+  numNULL = 0;
+  
+  for(size_t i = 0; i < 200; i++){
+    checkTreasure();
+  }
+  if( numRED >= 140 ) {
+    Serial.println("RED TREASURE");
+  }
+  else if( numBLUE >= 140 ) {
+    Serial.println("BLUE TREASURE");
+  }
+  else if( numNULL >= 60 ) {
+    Serial.println("NULL");
+  }
+  delay(200);
  }
 
 ///////// Function Definition //////////////
@@ -126,22 +144,17 @@ void checkTreasure(){
 
   int a = digitalRead(fpga_a);
   int b = digitalRead(fpga_b);
-  int c = digitalRead(fpga_c);
+  //int c = digitalRead(fpga_c);
 
-  if ( a == 0 && b == 0 && c == 1 ) {
-    Serial.println("Red Diamond");
-  } else if ( a == 0 && b == 1 && c ==0 ) {
-    Serial.println("Red Triangle");
-  } else if ( a == 0 && b == 1 && c ==1 ) {
-    Serial.println("Red Square");
-  }  else if ( a == 1 && b == 0 && c ==0 ) {
-    Serial.println("Blue Diamond");
-  } else if ( a == 1 && b == 0 && c ==1 ) {
-    Serial.println("Blue Triangle ");
-  } else if ( a == 1 && b == 1 && c ==0 ) {
-    Serial.println("Blue Square");
-  } else {
-    Serial.println("NULL");
+  if ( a == 0 && b == 1 ) {
+    //Serial.println("RED Treasure");
+    numRED++;
+  } else if ( a == 1 && b == 0) {
+    //Serial.println("BLUE Treasure");
+    numBLUE++;
+  } else{
+    //Serial.println("NULL");
+    numNULL++;
   }
 //  if      ((a==0)&(b==0)&(c==0)) Serial.println("none detected"); 
 //  

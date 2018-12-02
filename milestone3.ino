@@ -45,7 +45,6 @@ int  roboStart  = 2;
 //for mux control
 char pin_out_s0W = 4;
 char pin_out_s1W = 7;
-char pin_out_s2W = 3;
 
 //thresholds for movement
 int thresh          = 300; //ground threshhold (for line following)
@@ -59,13 +58,12 @@ void setup() {
   pinMode(leftSen,     INPUT);
   pinMode(pin_out_s0W, OUTPUT);
   pinMode(pin_out_s1W, OUTPUT);
-  pinMode(pin_out_s2W, OUTPUT);
   pinMode(ir,          OUTPUT);
   pinMode(wall,        OUTPUT);
   pinMode(roboStart,   INPUT);
   Serial.begin(9600);
   
-  set_select(0,1,1); //default mux values
+  set_select(1,1); //default mux values
   
   //wait for a start signal, either from the sound or from a button press
   int isReady = 0; 
@@ -90,7 +88,7 @@ role = role_ping_out;
 radio.startListening();
 //////////////////////
 
-radioWrite(dataArray);
+//radioWrite(dataArray);
 
   parallax1.attach(6);
   parallax2.attach(5);
@@ -101,11 +99,10 @@ void loop() {
 }
 
 //set mux value: this is for wall sensors as well as audio input  
-void set_select(int x, int y, int z)
+void set_select(int y, int z)
 {
       digitalWrite(pin_out_s0W, z);
       digitalWrite(pin_out_s1W, y);
-      digitalWrite(pin_out_s2W, x);
 }
 
 //turn left
@@ -180,14 +177,14 @@ void robot_stop(){
 
 bool frontw()
 {
-  set_select(0,0,1);
+  set_select(0,1);
   int val = analogRead(sensor);
   if(val>frontwallThresh)return true;
   else return false;
 }
 bool leftw()
 {
-  set_select(0,0,0);
+  set_select(0,0);
   int val = analogRead(sensor);
   if(val>sidewallThresh) return true;
   else return false;
@@ -195,7 +192,7 @@ bool leftw()
 
 bool rightw()
 {
-  set_select(0,1,1);
+  set_select(1,1);
   int val = analogRead(sensor);
   if(val>sidewallThresh)  return true;
   else return false;
@@ -213,13 +210,13 @@ void follow_line(){
   }
   // correct for veer right
   else if(right<thresh && left>thresh){
-    parallax1.write(96);
-    parallax2.write(89); 
+    parallax1.write(100);
+    parallax2.write(90); 
   }
   //correct for veer left
   else if(right>thresh && left<thresh){
-    parallax1.write(91);
-    parallax2.write(86); 
+    parallax1.write(90);
+    parallax2.write(80); 
   }
  
   //at intersection
@@ -233,9 +230,7 @@ void follow_line(){
 //    }
     
     // Setting north, east, south, and west to false (default)
-    for ( int i = 2; i < 6; i++){
-      dataArray[i] = 0;
-    }
+    
 
     //finding values of boxes to front, left and right 
       int left_space[2]; 
@@ -405,6 +400,9 @@ void follow_line(){
     radioWrite(dataArray);
     
     Serial.println();
+    for ( int i = 2; i < 6; i++){
+      dataArray[i] = 0;
+    }
   }
 }
 

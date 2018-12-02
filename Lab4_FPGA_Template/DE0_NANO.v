@@ -52,7 +52,7 @@ wire        CAM_VSYNC_NEG;
 wire        CAM_PCLK; 
 reg			VGA_READ_MEM_EN;
 ///// I/O for Img Proc /////
-wire [2:0] RESULT;
+wire [1:0] RESULT;
 
 assign GPIO_0_D[5]   = VGA_VSYNC_NEG;
 assign GPIO_0_D[7]   = VGA_HSYNC_NEG;
@@ -132,13 +132,13 @@ assign DATA[0] = GPIO_1_D[9];
 
 
 
-assign GPIO_0_D[33]   = RESULT[1];   // this is b
-assign GPIO_0_D[31]   = RESULT[0];   // this is c
-assign GPIO_0_D[30]   = RESULT[2];    // this is a
-//
+assign GPIO_0_D[33]   = RESULT[0];   // this is b
+//assign GPIO_0_D[31]   = RESULT[0];   // this is c
+assign GPIO_0_D[30]   = RESULT[1];    // this is a
+
 //assign GPIO_0_D[33]   = 1'b1;
-//assign GPIO_0_D[31]   = 1'b1;
-//assign GPIO_0_D[30]   = 1'b1;
+ // assign GPIO_0_D[31]   = 1'b1;
+//assign GPIO_0_D[30]   = 1'b0;
 
 ///////////////////////////////////////////////
 //         Reading Camera input              //
@@ -224,4 +224,6 @@ end
 
 
 endmodule 
+
+
 

@@ -197,6 +197,83 @@ bool rightw()
 	</p>
     
     <h3>Algorithmic Navigation</h3>
+<p>
+      We chose DFS (depth first search) as our navigation algorithm, because this seemed to be the simplest to implement 
+      and we did not have a high collective knowledge of algorithms prior to the class. 
+      Depth First Search goes as far as it can down one side of a tree, in this case as far as we can go in one direction without looping
+      to a node we've already visited or hitting a wall, and then returns to the last node that was split from and goes down the next branch 
+      as far as it can again. While this is not the most efficient, we've proven we can navigate several large mazes this way.
+      <center><img src="https://he-s3.s3.amazonaws.com/media/uploads/9fa1119.jpg" class="img-rounded" alt="DFS" width="400" height="300"></center>
+      
+      <br>
+      Several data structures had to be implemented to run this algorithm. We first had to establish a 9x9 (the size of the final maze)
+      matrix for keeping track of which squares had already been visited, such that we wouldn't repeat visits to the same square. We also 
+      implemented a stack using the library StackArray. This was so that we could add possible new squares as we traveled, and pop them 
+      off the stack one by one as we had to decide which direction to travel in. 
+      <br>
+      <code><pre>
+      //example for North facing; same applies for all other directions
+      if      (dir_facing == North) {
+        left_space[0]  = dataArray[0]-1;
+        left_space[1]  = dataArray[1];
+        right_space[0] = dataArray[0]+1;
+        right_space[1] = dataArray[1]; 
+        front_space[0] = dataArray[0];
+        front_space[1] = dataArray[1]-1;
+      }
+      //example for left wall; same applies to front and right spaces.
+     if (!leftw())  {
+       if (totalSquares[left_space[0]-1][left_space[1]-1] == 0) {
+        //Serial.println("can go left");
+        visitStack.push (left_space[1]);
+        visitStack.push (left_space[0]);
+       }
+      }  
+      </pre></code>
+      Next, we had to choose how to deal with that stack. At each intersection, Gary checks which walls next to him have no walls blocking 
+      movement, and if those squares have not yet been visited, they are pushed to the stack of possible squares to travel to. When Gary 
+      has to decide where to move, he pops the most recent square off the stack, and travels in that direction. 
+      <br>
+      <br>
+      This is very straight forward for squares right next to Gary: he simply has to remember which direction he is facing and 
+      what square he is in, determine which direction the next square is in, and turn towards that square. For further away squares, we had 
+      to implement back tracking. To accomplish this, we kept a stack of every square visited, and turned towards the last square as 
+      they were popped off the stack. Squares were only added to the history stack when we were not already backtracking. 
+      </p>
+    <br>
+    <code><pre>
+    
+    int nextSquare[2] = {visitStack.pop(), visitStack.pop()}; //first choice is to move somewhere new
+    
+    //get deltas for direction to move in
+    int deltaX = dataArray[0] - nextSquare[0];
+    int deltaY = dataArray[1] - nextSquare[1];
+      
+    //check if the square is next door, and has been visited 
+    if (((abs(deltaX) + abs(deltaY)) != 1) || (totalSquares[nextSquare[0]-1] [nextSquare[1]-1] == 1)) {
+      nextSquare[0] = history.pop(); //pop off history stack 
+      nextSquare[1] = history.pop();
+    }
+    else {
+      //adding to the history so we can back track easily 
+      history.push (dataArray[1]);
+      history.push (dataArray[0]);
+    }
+      </pre></code>
+      <br>
+    <p>
+      Once we have the deltaX/deltaY as shown above, we can choose which direction to move in based on the direction we're facing.
+    </p>
+        <code><pre>
+        //example of a time we would turn left; similar logic for going straight or turning right
+      else if ((dir_facing == North && deltaX == 1) || 
+               (dir_facing == East  && deltaY == 1) || 
+               (dir_facing == South && deltaX == -1) ||
+               (dir_facing == West  && deltaY == -1)) {
+                turn_left();
+               }
+      </pre></code>
+      <br>
     <h3>Treasure Detection</h3>
     <p>Getting the camera to detect treasures was a long and tedious process but ultimately, we have something we are happy with. 
       Here's how we got it to work.

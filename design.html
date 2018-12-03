@@ -222,10 +222,76 @@
         path and incorporate it into the information we send to the GUI. 
     </p>
     <br>
-    
-    
-    
-    
+	<center><h2>Detecting Presence</h2></center>
+	<p>In order to determine whether there was actually a treasure as opposed to a few stray blue or red pixels, we used a threshold value. If the number of pixels of a certain 
+	   color exceded this threshold, we assumed that there was a treasure and then began the shape detection process. Once done, we send the color and shape to the 
+           arduino, which displays this information on the serial monitor. If the threshold is not reached for either blue or red, "NULL" is sent to the ardunio.
+           Below is a demonstration of this code.
+		
+        <center><iframe width="560" height="315" src="https://www.youtube.com/embed/S9DbVtllleg" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></center>
+	  </p><br> 
+	  
+    <center><h2>Detecting Color</h2></center>
+    <p>Because of the code we used inside DEO_NANO to display color, detecting color was made simpler. Inside of DEO_NANO, whenever we saw a pixel that was above a certain threshold 
+       of blue or red, we set that pixel to pure blue or red. In code, we set the pixels equal to 8'b000_000_11 and 8"b111_000_00. We are able to exploit this in our color detection.
+       Firstly, we only detect color if it is within a certain region we have specified. Inside of this region, we examine each pixel and determine whether it is red, blue, or neither.
+       If it is red or blue, we increment a variable that counts the amount of pixels of each color. Finally, if either count is above a specified threshold, we assume that one, we
+       seeing a treasure and two, that it is that color. If this criteria is not met, we display "NULL." An overview of the code used as well as a demonstration are shown below.
+	   
+    <code><pre>
+    	if(VGA_PIXEL_X>((`SCREEN_WIDTH/2)-30)&& VGA_PIXEL_X<((`SCREEN_WIDTH/2)+30) && VGA_PIXEL_Y<((`SCREEN_HEIGHT/2)+50)&& VGA_PIXEL_Y>((`SCREEN_HEIGHT/2)-50)) begin
+		if(PIXEL_IN == BLUE) begin
+			countBLUE = countBLUE + 10'd1;
+		end
+		else if(PIXEL_IN == RED) begin
+			countRED = countRED +10'd1;
+		end		
+	if(VGA_VSYNC_NEG == 1'b1 && lastsync == 1'b0) begin
+		if(countRED >= R_CNT_THRESHOLD) begin
+			begin red shape detection                                           
+		end
+		else if(countBLUE >= B_CNT_THRESHOLD) begin 
+			begin blue shape detection
+		end
+		else begin
+			display NULL																				
+		end
+      </pre></code> 
+      <center><iframe width="560" height="315" src="https://www.youtube.com/embed/mjlxl8KlYC8" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></center>
+    </p>
+      <center><h2>Detecting Shape</h2></center>
+    <p>We used a unique strategy to detect our shapes by counting pixels in segments of our figure. We first located the first pixel and last pixel in the image with the right color.
+      We use these to create three little sigments where we get the total number of  color pixels. We then compare and average them to determine what shape the image has. 
+      Below is a code snippet and a video to show the outcome. 
+      <code><pre>
+         if(VGA_PIXEL_X>((`SCREEN_WIDTH/2)-30)&& VGA_PIXEL_X<((`SCREEN_WIDTH/2)+30) && VGA_PIXEL_Y<((`SCREEN_HEIGHT/2)+50)&& VGA_PIXEL_Y>((`SCREEN_HEIGHT/2)-50)) begin // only focus on a segment of the screen
+		
+		        if(PIXEL_IN == BLUE) begin     // this is for blue pixel. similar for red
+			          countBLUE = countBLUE + 10'd1; // count blue
+			          lastBLUE = VGA_PIXEL_Y;        // get last pixel
+			          if(countBLUE==10'd1) firstBLUE= VGA_PIXEL_Y; // get first pixel
+            end
+            if(VGA_PIXEL_Y==firstRED+((lastRED-firstRED)*(1/3)) || VGA_PIXEL_Y ==((lastBLUE-firstBLUE)*(1/3)))begin  // at one third of the segment of whole shape
+              blue1 = countBLUE; // take blue pixel count
+              red1=countRED;     // or red pixel count
+            end
+            ... // take two more values for comparison
+     	 </pre></code>
+	 We sent a 3-bit code corresponding to the shape, each color with a different combination. This is an example for the red combinations:
+		<code><pre>
+			// redi, for i = 1, 2... is a segment pixel count for segment i.
+			if(red1<(red2-red1)&& (red2-red1)<(red3-red2)) begin  // analysis of segment pixels to determine shape
+				RESULT = 3'b010; end         // triangle
+			else if(red1<(red2-red1) && (red3-red2)<(red2-red1)) begin
+				RESULT= 3'b001; end          // diamond
+			else if((red1+red2)-(red2+red3)<= 10'd40 ||(red3+red2)-(red1+red2)<= 10'd40) RESULT = 3'b011; //Square
+			//else RESULT = 3'b111; 
+			
+		</pre></code>
+	The Aduino displays the color and image depending on the code combination it received.
+      <center><iframe width="560" height="315" src="https://www.youtube.com/embed/BznrdFBTr_I" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></center>
+    </p><br>
+       
    <a href="#header"><button class="btn"><i class="fa fa-arrow-up"></i>Return to top</button></a>
        
  </body>

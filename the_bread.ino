@@ -6,10 +6,6 @@
 #define South 2 
 #define West  3
 
-//// CAMERA STUFF ////
-#include <Wire.h>
-#define OV7670_I2C_ADDRESS 0x21 //0x42 write 0x43 read
-
 /////////////////////
 
 #include <SPI.h>
@@ -55,16 +51,8 @@ int thresh          = 300; //ground threshhold (for line following)
 int frontwallThresh = 95;
 int sidewallThresh  = 120;
 
-///////// CAMERA STUFF ///////
-int fpga_a = 3; 
-int fpga_b = 8; 
-
-int numRED  = 0;
-int numBLUE = 0;
-int numNULL = 0;
-//////////////////////////////
-
 void setup() {
+  
   pinMode(rightSen,    INPUT);
   pinMode(centSen,     INPUT);
   pinMode(leftSen,     INPUT);
@@ -85,7 +73,9 @@ void setup() {
     }
   }
   
-
+  visitStack.push(0);
+  visitStack.push(1);
+  
   radio.begin();
 radio.setRetries(15,15);
 radio.setAutoAck(true);
@@ -100,28 +90,18 @@ role = role_ping_out;
 radio.startListening();
 //////////////////////
 
-//////// CAMERA STUFF ///////////
-  Wire.begin();
-  
-  Serial.println("starting i2c"); 
-  set_registers();
-  delay(1000);
-  
-  read_key_registers();
-  set_color_matrix();
+  dataArray[2] = 1;
+  dataArray[5] = 1;
 
-  pinMode(fpga_a, INPUT); 
-  pinMode(fpga_b, INPUT);
-
-////////// END CAMERA STUFF //////
-
-
-  dataArray[5] = 1; //wall to our right to start 
-  dataArray[2] = 1; //wall behind us to start 
-  radioWrite(dataArray); //when we dont pass the first intersection
+  radioWrite(dataArray);
 
   parallax1.attach(6);
   parallax2.attach(5);
+
+  dataArray[0] = 0; 
+  dataArray[1] = 1; 
+  dataArray[2] = 0;
+  
 }
 
 void loop() {
@@ -251,7 +231,6 @@ void follow_line(){
  
   //at intersection
   else if(center<thresh && right<thresh && left<thresh){
-    
     totalSquares[dataArray[0]][dataArray[1]] = 1; //this square has now been visited
 //    for (int i = 0; i < 9; i++){
 //      for (int j = 0; j < 9; j++){
@@ -317,9 +296,9 @@ void follow_line(){
     else {
         Serial.println("left wall");
         if      (dir_facing == North) dataArray[5] =1; // If robot faces north, West=true
-        else if (dir_facing == East)  dataArray[2] =1; // If robot faces east,  North=true
+        else if (dir_facing == East)  dataArray[4] =1; // If robot faces east,  North=true
         else if (dir_facing == South) dataArray[3] =1; // If robot faces south, East=true
-        else if (dir_facing == West)  dataArray[4] =1; // If robot faces west,  South=true
+        else if (dir_facing == West)  dataArray[2] =1; // If robot faces west,  South=true
     }
     if (!rightw()) {
       if (totalSquares[right_space[0]] [right_space[1]] == 0) {
@@ -331,26 +310,9 @@ void follow_line(){
     else {
       Serial.println("right wall");
        if      (dir_facing == North) dataArray[3] =1;
-       else if (dir_facing == East)  dataArray[4] =1; // If robot faces east, South=true
+       else if (dir_facing == East)  dataArray[2] =1; // If robot faces east, South=true
        else if (dir_facing == South) dataArray[5] =1; // If robot faces south, West=true
-       else if (dir_facing == West)  dataArray[2] =1; // If robot faces west, North=true
-     /////////////// CAMERA STUFF ///////////////////
-      numRED  = 0;
-      numBLUE = 0;
-      numNULL = 0;
-  
-      for(size_t i = 0; i < 200; i++){
-        checkTreasure();
-      }
-      if( numRED >= 140 ) {
-        Serial.println("RED TREASURE");
-      }
-      else if( numBLUE >= 140 ) {
-        Serial.println("BLUE TREASURE");
-      }
-      else if( numNULL >= 60 ) {
-        Serial.println("NULL");
-      }
+       else if (dir_facing == West)  dataArray[4] =1; // If robot faces west, North=true
     }
 
     //add front step to stack 
@@ -367,31 +329,33 @@ void follow_line(){
       else if (dir_facing == East)  dataArray[3] =1; // East=true
       else if (dir_facing == South) dataArray[4] =1; // South=true
       else if (dir_facing == West)  dataArray[5] =1; // West=true
-
-
     }
 
 
     //pick the last thing off the stack and go that way 
 //////////////////////////////////////////////////////////////////////////////////
     int nextSquare[2] = {visitStack.pop(), visitStack.pop()}; //first choice is to move somewhere new
-    
+
     int deltaX = dataArray[0] - nextSquare[0];
     int deltaY = dataArray[1] - nextSquare[1];
 
       
-    if (((abs(deltaX) + abs(deltaY)) != 1) || (totalSquares[nextSquare[0]] [nextSquare[1]] == 1)) {
+    if (((abs(deltaX) + abs(deltaY)) != 1) || (totalSquares[nextSquare[0]][nextSquare[1]] == 1)) {
       Serial.println("backtracking");
       nextSquare[0] = history.pop(); //pop off history stack 
       nextSquare[1] = history.pop();
+      visitStack.push(nextSquare[1]);
+      visitStack.push(nextSquare[0]);
     }
     else {
       Serial.println("moving to next available square");
-      //adding to the history so we can back track easily 
       history.push (dataArray[1]);
       history.push (dataArray[0]);
+      //adding to the history so we can back track easily     
     }
-
+     
+     Serial.print("Current Square X: " + String(dataArray[0]));
+    Serial.println("Current Square Y: " + String(dataArray[1]));
     Serial.print("Next Square X: " + String(nextSquare[0]));
     Serial.println("Next Square Y: " + String(nextSquare[1]));
 
@@ -406,48 +370,53 @@ void follow_line(){
       else if (dir_facing == South) Serial.println("facing south"); // If robot is facing south
       else if (dir_facing == West)  Serial.println("facing west"); // If robot is facing west
     
+
+
+      int turnedAround = 0;
+      if (0){
+        parallax1.write(90);
+        parallax2.write(90);
+        delay(5000);
+        if (digitalRead(2) == HIGH){
+          turn_around();
+          turnedAround = 1;
+        }
+      }
+      if(turnedAround ==0){
+        if((dir_facing == North && deltaY == 1) || 
+               (dir_facing == East  && deltaX == -1) || 
+               (dir_facing == South && deltaY == -1) ||
+               (dir_facing == West  && deltaX == 1)){
+          //go straight
+          parallax1.write(92);
+          parallax2.write(88); 
+          delay(300);
+        }
+        else if ((dir_facing == North && deltaX == 1) || 
+                 (dir_facing == East  && deltaY == 1) || 
+                 (dir_facing == South && deltaX == -1) ||
+                 (dir_facing == West  && deltaY == -1)) {
+                  turn_left();
+                 }
+  
+        else if ((dir_facing == North && deltaX == -1) || 
+                 (dir_facing == East  && deltaY == -1) || 
+                 (dir_facing == South && deltaX == 1) ||
+                 (dir_facing == West  && deltaY == 1)) {
+                  turn_right();
+                 }
+        else {
+          turn_around();
+        }
+      }
+
+      Serial.println("write");
+    radioWrite(dataArray);
+    
       if      (dir_facing == North) dataArray [1] --; // If robot is facing north
       else if (dir_facing == East)  dataArray [0] ++; // If robot is facing east
       else if (dir_facing == South) dataArray [1] ++; // If robot is facing south
       else if (dir_facing == West)  dataArray [0] --; // If robot is facing west
-
-      if (digitalRead(6) == HIGH) {
-      Serial.println("I see another robot!");
-      parallax1.write(90);
-      parallax2.write(90);
-      delay (5000);
-
-      if (digitalRead(6) == HIGH) {
-        turn_around();
-        
-      }
-    }
-      else if((dir_facing == North && deltaY == 1) || 
-             (dir_facing == East  && deltaX == -1) || 
-             (dir_facing == South && deltaY == -1) ||
-             (dir_facing == West  && deltaX == 1)){
-        //go straight
-        parallax1.write(92);
-        parallax2.write(88); 
-        delay(300);
-      }
-      else if ((dir_facing == North && deltaX == 1) || 
-               (dir_facing == East  && deltaY == 1) || 
-               (dir_facing == South && deltaX == -1) ||
-               (dir_facing == West  && deltaY == -1)) {
-                turn_left();
-               }
-
-      else if ((dir_facing == North && deltaX == -1) || 
-               (dir_facing == East  && deltaY == -1) || 
-               (dir_facing == South && deltaX == 1) ||
-               (dir_facing == West  && deltaY == 1)) {
-                turn_right();
-               }
-      else {
-        turn_around();
-      }
-   
 
       Serial.print("left space:  " + String(left_space[0])  + ", " + String(left_space[1]));
       Serial.print("     right space: " + String(right_space[0]) + ", " + String(right_space[1]));
@@ -456,8 +425,7 @@ void follow_line(){
     parallax1.write(92);
     parallax2.write(88);
      
-    Serial.println("write");
-    radioWrite(dataArray);
+    
     
     Serial.println();
     for ( int i = 2; i < 6; i++){
@@ -490,115 +458,4 @@ int radioWrite(int dataArray[]){
       unsigned long got_time;
       radio.read( &got_time, sizeof(unsigned long) );// Grab the response, compare, and send to debugging spew
     }
-}
-
-//=============================================================
-//                     CAMERA STUFF
-//=============================================================
-
-///////// Function Definition //////////////
-void read_key_registers(){
-  Serial.println("printing registers");
-  Serial.println(read_register_value(0x12));
-  Serial.println(read_register_value(0x0C));
-  Serial.println(read_register_value(0x14));
-  Serial.println(read_register_value(0x11));
-  Serial.println(read_register_value(0x40));
-  Serial.println(read_register_value(0x42));
-  Serial.println(read_register_value(0x1E));
-  Serial.println("done reading");
-}
-
-byte read_register_value(int register_address){
-  byte data = 0;
-  Wire.beginTransmission(OV7670_I2C_ADDRESS);
-  Wire.write(register_address);
-  Wire.endTransmission();
-  Wire.requestFrom(OV7670_I2C_ADDRESS,1);
-  while(Wire.available()<1){
-    Serial.println("in loop");
-  }
-  data = Wire.read();
-  return data;
-}
-
-String OV7670_write(int start, const byte *pData, int size){
-    int n,error;
-    Wire.beginTransmission(OV7670_I2C_ADDRESS);
-    n = Wire.write(start);
-    if(n != 1){
-      return "I2C ERROR WRITING START ADDRESS";   
-    }
-    n = Wire.write(pData, size);
-    if(n != size){
-      return "I2C ERROR WRITING DATA";
-    }
-    error = Wire.endTransmission(true);
-    if(error != 0){
-      return String(error);
-    }
-    return "no errors :)";
- }
-
-String OV7670_write_register(int reg_address, byte data){
-  return OV7670_write(reg_address, &data, 1);
- }
-
-
-void set_registers(){
-    Serial.println("Writing registers");
-    Serial.println (OV7670_write_register(0x12, 0x80)); //COM7: Reset registers, enable color bar, resolution and pixel format 
-    delay(100);
-    Serial.println(OV7670_write_register(0x12, 0x0C)); //COM7: Reset registers, enable color bar, resolution and pixel format 
-    Serial.println(OV7670_write_register(0x0C, 0x08)); //COM3: Enable scaling
-    Serial.println(OV7670_write_register(0x14, 0x0B)); //COM9: To make the image less noisy
-    Serial.println(OV7670_write_register(0x11, 0xC0)); //CLKRC: Use external clock directly 
-    Serial.println(OV7670_write_register(0x40, 0xD0)); //COM15: pixel format
-    Serial.println(OV7670_write_register(0x42, 0x00)); //COM17: DSP color bar enable (0x42, 0x08)
-    Serial.println(OV7670_write_register(0x1E, 0x30)); //MVFP: Vertically flip image enable
-    Serial.println(OV7670_write_register(0x8C, 0x02));
-}
-
-void set_color_matrix(){
-    OV7670_write_register(0x4f, 0x80);
-    OV7670_write_register(0x50, 0x80);
-    OV7670_write_register(0x51, 0x00);
-    OV7670_write_register(0x52, 0x22);
-    OV7670_write_register(0x53, 0x5e);
-    OV7670_write_register(0x54, 0x80);
-    OV7670_write_register(0x56, 0x40);
-    OV7670_write_register(0x58, 0x9e);
-    OV7670_write_register(0x59, 0x88);
-    OV7670_write_register(0x5a, 0x88);
-    OV7670_write_register(0x5b, 0x44);
-    OV7670_write_register(0x5c, 0x67);
-    OV7670_write_register(0x5d, 0x49);
-    OV7670_write_register(0x5e, 0x0e);
-    OV7670_write_register(0x69, 0x00);
-    OV7670_write_register(0x6a, 0x40);
-    OV7670_write_register(0x6b, 0x0a);
-    OV7670_write_register(0x6c, 0x0a);
-    OV7670_write_register(0x6d, 0x55);
-    OV7670_write_register(0x6e, 0x11);
-    OV7670_write_register(0x6f, 0x9f);
-    OV7670_write_register(0xb0, 0x84);
-}
-
-
-void checkTreasure(){
-
-  int a = digitalRead(fpga_a);
-  int b = digitalRead(fpga_b);
-  //int c = digitalRead(fpga_c);
-
-  if ( a == 0 && b == 1 ) {
-    //Serial.println("RED Treasure");
-    numRED++;
-  } else if ( a == 1 && b == 0) {
-    //Serial.println("BLUE Treasure");
-    numBLUE++;
-  } else{
-    //Serial.println("NULL");
-    numNULL++;
-  }
 }

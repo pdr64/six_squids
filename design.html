@@ -115,6 +115,30 @@
     behind us, but given the general configuration of the maze we determined this to be unecessary. At each intersection, Gary checks the front, 
     left and right wall sensors, by toggling a mux with the three analog inputs of the walls, and stores this information for both travel and 
     maze mapping purposes. 
+	   <pre> <code>
+bool frontw()
+{
+  set_select(0,1);
+  int val = analogRead(sensor);
+  if(val>frontwallThresh)return true;
+  else return false;
+}
+bool leftw()
+{
+  set_select(0,0);
+  int val = analogRead(sensor);
+  if(val>sidewallThresh) return true;
+  else return false;
+}
+
+bool rightw()
+{
+  set_select(1,1);
+  int val = analogRead(sensor);
+  if(val>sidewallThresh)  return true;
+  else return false;
+}
+</code></pre>
     TODO: show schematic of mux
     </p>
     <h4>Robot Sensor (IR)</h4>

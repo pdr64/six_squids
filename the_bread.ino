@@ -9,8 +9,6 @@
 //// CAMERA STUFF ////
 #include <Wire.h>
 #define OV7670_I2C_ADDRESS 0x21 //0x42 write 0x43 read
-#define OV7670_I2C_W_ADDRESS 0x42
-#define OV7670_I2C_R_ADDRESS 0x43 
 
 /////////////////////
 
@@ -67,7 +65,6 @@ int numNULL = 0;
 //////////////////////////////
 
 void setup() {
-  
   pinMode(rightSen,    INPUT);
   pinMode(centSen,     INPUT);
   pinMode(leftSen,     INPUT);
@@ -116,8 +113,12 @@ radio.startListening();
   pinMode(fpga_a, INPUT); 
   pinMode(fpga_b, INPUT);
 
-////////// CAMERA STUFF //////
-//radioWrite(dataArray);
+////////// END CAMERA STUFF //////
+
+
+  dataArray[5] = 1; //wall to our right to start 
+  dataArray[2] = 1; //wall behind us to start 
+  radioWrite(dataArray); //when we dont pass the first intersection
 
   parallax1.attach(6);
   parallax2.attach(5);
@@ -250,6 +251,7 @@ void follow_line(){
  
   //at intersection
   else if(center<thresh && right<thresh && left<thresh){
+    
     totalSquares[dataArray[0]][dataArray[1]] = 1; //this square has now been visited
 //    for (int i = 0; i < 9; i++){
 //      for (int j = 0; j < 9; j++){
@@ -332,6 +334,23 @@ void follow_line(){
        else if (dir_facing == East)  dataArray[4] =1; // If robot faces east, South=true
        else if (dir_facing == South) dataArray[5] =1; // If robot faces south, West=true
        else if (dir_facing == West)  dataArray[2] =1; // If robot faces west, North=true
+     /////////////// CAMERA STUFF ///////////////////
+      numRED  = 0;
+      numBLUE = 0;
+      numNULL = 0;
+  
+      for(size_t i = 0; i < 200; i++){
+        checkTreasure();
+      }
+      if( numRED >= 140 ) {
+        Serial.println("RED TREASURE");
+      }
+      else if( numBLUE >= 140 ) {
+        Serial.println("BLUE TREASURE");
+      }
+      else if( numNULL >= 60 ) {
+        Serial.println("NULL");
+      }
     }
 
     //add front step to stack 
@@ -349,23 +368,7 @@ void follow_line(){
       else if (dir_facing == South) dataArray[4] =1; // South=true
       else if (dir_facing == West)  dataArray[5] =1; // West=true
 
-      /////////////// CAMERA STUFF ///////////////////
-      numRED  = 0;
-      numBLUE = 0;
-      numNULL = 0;
-  
-      for(size_t i = 0; i < 200; i++){
-        checkTreasure();
-      }
-      if( numRED >= 140 ) {
-        Serial.println("RED TREASURE");
-      }
-      else if( numBLUE >= 140 ) {
-        Serial.println("BLUE TREASURE");
-      }
-      else if( numNULL >= 60 ) {
-        Serial.println("NULL");
-      }
+
     }
 
 
@@ -408,8 +411,18 @@ void follow_line(){
       else if (dir_facing == South) dataArray [1] ++; // If robot is facing south
       else if (dir_facing == West)  dataArray [0] --; // If robot is facing west
 
-      
-      if((dir_facing == North && deltaY == 1) || 
+      if (digitalRead(6) == HIGH) {
+      Serial.println("I see another robot!");
+      parallax1.write(90);
+      parallax2.write(90);
+      delay (5000);
+
+      if (digitalRead(6) == HIGH) {
+        turn_around();
+        
+      }
+    }
+      else if((dir_facing == North && deltaY == 1) || 
              (dir_facing == East  && deltaX == -1) || 
              (dir_facing == South && deltaY == -1) ||
              (dir_facing == West  && deltaX == 1)){
@@ -532,10 +545,6 @@ String OV7670_write_register(int reg_address, byte data){
  }
 
 
-    //Q1. 594000 (bits) 
-    //Q2. rgb 565/555
-    //Q3. rgb 3:3:2 r<<2, g<<3, b<<3 
-    //Q4. 176x144
 void set_registers(){
     Serial.println("Writing registers");
     Serial.println (OV7670_write_register(0x12, 0x80)); //COM7: Reset registers, enable color bar, resolution and pixel format 

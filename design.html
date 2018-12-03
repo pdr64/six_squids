@@ -140,7 +140,23 @@
   <center><img src="IR_Sensing.PNG" class="img-rounded" alt="IR sensing FFT" width="300" height="500"><p><b>Fig.3:</b> FFT of IR sensor</p></center><br>
    
     <h4>Audio Sensor</h4>
-    
+      <p>We began with the circuit provided for the lab (see <i>IR</i>) but realised that we needed to amplify our waveforms because they had been attenuated.
+    We began the task of independently trying to build a circuit to detect our 660Hz sound wave. We worked hard switching between numerous designs of
+    band-pass filters to amplifiers but nothing seemed to work for us. We decided to resort to Team Alpha's approach. We used the same circuit from the IR above. 
+    with slightly different values for the components. Our results, however, were very similar to Team Alpha's. 
+  </p>
+  <center><img src="microphone_simple.PNG" class="img-rounded" alt="simple microphone circuit" width="400" height="250"><br><p><b>Fig. 4:</b> Initial circuit built to test microphone. Image taken from 3400 website's Lab 2 instructions.</p></center>
+  <br>
+  <p>We run our circuit using the example fft arduino code (fft_adc_serial). We plotted our values on Excel.</p>
+  <center><img src="lab2_simple.PNG" class="img-rounded" alt="graph 1" width="600" height="300"><br><p><b>Fig. 5:</b>Image of FFT of signal.</p></center>
+  <br>
+  <p>After adding the amplification, this was what we observed. We were able to locate our frequency in bin #5.</p>
+  <center><img src="lab2_amplified.PNG" class="img-rounded" alt="Amplified graph" width="600" height="300"><br><p><b>Fig. 6:</b>Amplified version of <i>fig. 5</i>. 660Hz frequency is located in bin 5.</p></center>
+  <br>
+
+    We therefore made some specification to our code to sense when the wave in bin #5 was the highest.
+    This was how we could tell when an incoming frequency was 660Hz. 
+  </p>
     <h4>Design</h4>
     <p>
       Although we initially were using spare parts from the lab, we ultimately decided to CAD our own 
@@ -152,6 +168,9 @@
  <center><img src="CAD.PNG" class="img-rounded" alt="IR sensing FFT" width="300" height="300"><p>Final CAD of Gary</p></center><br>
 
     <br>
+	<p>
+	Below is an image of Gary's final form. TODO: include actual image of robot
+	</p>
     
     <h3>Algorithmic Navigation</h3>
     <h3>Treasure Detection</h3>

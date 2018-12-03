@@ -85,6 +85,26 @@
       straight line, we can either be perfectly on the line, in which case we simply continue going straight, or we can be veering left 
       or right slightly off the line, which is when the left or right sensor starts seeing white. To correct for this, we turn very slightly
       back in the direction towards the line. 
+	<br>
+    <code><pre>
+      int thresh=150;  //sets our threshold
+      // correct for veer right
+      while(analogRead(centSen)&gt;thresh && analogRead(rightSen)&gt;thresh && analogRead(leftSen)&lt;thresh){
+        parallax1.write(94);
+        parallax2.write(75);     
+      }
+      //correct for veer left
+      while(analogRead(centSen)&gt;thresh && analogRead(rightSen)&lt;thresh && analogRead(leftSen)&gt;thresh){
+        parallax1.write(115);
+        parallax2.write(94);
+      }
+      // go straight
+      while(analogRead(centSen)&lt;thresh && analogRead(leftSen)&gt;thresh && analogRead(rightSen)&gt;thresh){
+        parallax1.write(100);
+        parallax2.write(90);
+      }  
+    </code></pre>
+    <br>
       <br>
       The fourth option is that we reach an intersection, in which case Gary launches a sequence of observations about his surroundings, 
       including wall detection and reporting information via radio about location and treasure detection. 
@@ -98,6 +118,27 @@
     TODO: show schematic of mux
     </p>
     <h4>Robot Sensor (IR)</h4>
+	  
+<p>
+    First, the optical team attempted to detect IR emitters on "hats" given to us by the TAs. The emit IR light at 6kHz, which is not 
+    visible to humans but can be read by our IR sensor (OP598). The IR sensor was hooked up as seen below.</p>
+  <br>
+  <center><img src="IRsensor.png" class="img-rounded" alt="Circuit Diagram" width="500" height="450"><br><p><b>Fig.1:</b> Image taken from 3400 website</p></center><br>
+  <p>We used the Arduino library Open Music Labs’ FFT to analyze all the input 
+    from the sensor, and tried to detect a peak at the desired frequency.</p>
+  <br>
+<p>
+    Next we implemented an amplifying circuit based on Team Alpha's solution from last year as recommended by the TAs after we could 
+    not get our personally designed op-amp circuit working.We used a similar circuit to the one below except we used a photo transistor in place of the microphone.
+  </p>   
+  <center><img src="team_alpha_amp.png" class="img-rounded" alt="Amplifier Circuit" width="600" height="300"><p><b>Fig.2:</b> Image taken from Team Alpha's Website</p></center>
+  <br>
+<p>
+   After this we returned to the FFT library, where we were successfully able to identify the 6kHz bucket in the 42nd group, 
+   which the decoy hat had no affect on due to the spacing of the buckets. Below you can see our FFT analysis, where the 42nd bucket is clearly high in the presense of the hat and low without it. 
+  </p>
+  <center><img src="IR_Sensing.PNG" class="img-rounded" alt="IR sensing FFT" width="300" height="500"><p><b>Fig.3:</b> FFT of IR sensor</p></center><br>
+   
     <h4>Audio Sensor</h4>
     
     <h3>Chassis</h3>

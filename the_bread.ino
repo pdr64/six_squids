@@ -355,15 +355,15 @@ void follow_line(){
     }
      
      Serial.print("Current Square X: " + String(dataArray[0]));
-    Serial.println("Current Square Y: " + String(dataArray[1]));
+    Serial.println(" Current Square Y: " + String(dataArray[1]));
     Serial.print("Next Square X: " + String(nextSquare[0]));
-    Serial.println("Next Square Y: " + String(nextSquare[1]));
+    Serial.println(" Next Square Y: " + String(nextSquare[1]));
 
       deltaX = dataArray[0] - nextSquare[0];
       deltaY = dataArray[1] - nextSquare[1];
     
     Serial.print("Delta X: " + String(deltaX)); 
-    Serial.println("Delta Y: " + String(deltaY));
+    Serial.println(" Delta Y: " + String(deltaY));
 
       if      (dir_facing == North) Serial.println("facing north"); // If robot is facing north
       else if (dir_facing == East)  Serial.println("facing east"); // If robot is facing east
@@ -458,4 +458,4 @@ int radioWrite(int dataArray[]){
       unsigned long got_time;
       radio.read( &got_time, sizeof(unsigned long) );// Grab the response, compare, and send to debugging spew
     }
-}
+}\

@@ -42,8 +42,8 @@ int  roboStart  = 2;
 
 //thresholds for movement
 int thresh          = 300; //ground threshhold (for line following)
-int frontwallThresh = 95;
-int sidewallThresh  = 120;
+int frontwallThresh = 90;
+int sidewallThresh  = 150;
 
 void setup() {
   
@@ -60,15 +60,11 @@ void setup() {
     if(digitalRead(roboStart) == LOW){
       isReady =1;
     }
-    if(digitalRead(8) == HIGH){
-      isReady =1;
-      Serial.println("heard noise");
-    }
   }
   
   visitStack.push(0);
   visitStack.push(1);
-  totalSquares[0, 0] = 1;
+  totalSquares[0][0] = 1;
   
   radio.begin();
 radio.setRetries(15,15);
@@ -108,16 +104,17 @@ void turn_left(){
    if (dir_facing == 0) dir_facing = 3;
    else dir_facing --; // 
   //go forward a bit to turn properly
-  parallax1.write(105);
-  parallax2.write(75);
+  parallax1.write(95);
+  parallax2.write(85);
   delay(400);
   //turn away from the line so we can detect it again
   parallax1.write(85);
   parallax2.write(82);
-  delay(800);
+  delay(500);
   //wait until we are back on the line 
   while(analogRead(rightSen)>thresh)
   {
+    Serial.println("turning");
     parallax1.write(85);
     parallax2.write(85);
   }
@@ -133,16 +130,17 @@ void turn_around(){
   else if (dir_facing == 1) dir_facing = 3;
   else if (dir_facing == 3) dir_facing = 1;  
   
-  parallax1.write(105);
-  parallax2.write(75);
+  parallax1.write(95);
+  parallax2.write(85);
   delay(300);
   parallax1.write(0);
   parallax2.write(0);
   delay(1200);
   while(analogRead(rightSen)>thresh)
   {
-    parallax1.write(85);
-    parallax2.write(85);
+    Serial.println("right sens: " +String(analogRead(rightSen)));
+    parallax1.write(75);
+    parallax2.write(75);
   }
 }
 
@@ -153,12 +151,12 @@ void turn_right(){
   if (dir_facing == 3) dir_facing = 0;
   else dir_facing ++; // Update dir_facing for right turning robot
   
-  parallax1.write(105);
-  parallax2.write(75);
+  parallax1.write(95);
+  parallax2.write(85);
   delay(600);
   parallax1.write(95);
   parallax2.write(95);
-  delay(800);
+  delay(600);
   while(analogRead(leftSen)>thresh)
   {
     parallax1.write(95);
@@ -357,15 +355,16 @@ void follow_line(){
 
 
       int turnedAround = 0;
-      if (digitalRead(7)==HIGH){
-        parallax1.write(90);
-        parallax2.write(90);
-        delay(5000);
-        if (digitalRead(7) == HIGH){
-          turn_around();
-          turnedAround = 1;
-        }
-      }
+//      if (digitalRead(7)==HIGH){
+//        Serial.println("robot seen");
+//        parallax1.write(90);
+//        parallax2.write(90);
+//        delay(5000);
+//        if (digitalRead(7) == HIGH){
+//          turn_around();
+//          turnedAround = 1;
+//        }
+//      }
       if(turnedAround ==0){
         if((dir_facing == North && deltaY == 1) || 
                (dir_facing == East  && deltaX == -1) || 

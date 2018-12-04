@@ -33,18 +33,12 @@ Servo parallax2;
 int rightSen = A1; //wall sensors
 int centSen  = A2;
 int leftSen  = A3;
-int sensor   = A5; //used for mux
+int frontWall = A4; 
+int rightWall = A0; 
+int leftWall  = A5;
 
 //these are mostly just LEDs
-char ir         = 8;
-int  wall       = 12;
-char seen_robot = 0;
-char heard      = 0;
 int  roboStart  = 2; 
-
-//for mux control
-char pin_out_s0W = 4;
-char pin_out_s1W = 7;
 
 //thresholds for movement
 int thresh          = 300; //ground threshhold (for line following)
@@ -56,14 +50,9 @@ void setup() {
   pinMode(rightSen,    INPUT);
   pinMode(centSen,     INPUT);
   pinMode(leftSen,     INPUT);
-  pinMode(pin_out_s0W, OUTPUT);
-  pinMode(pin_out_s1W, OUTPUT);
-  pinMode(ir,          OUTPUT);
-  pinMode(wall,        OUTPUT);
   pinMode(roboStart,   INPUT);
   Serial.begin(9600);
   
-  set_select(1,1); //default mux values
   
   //wait for a start signal, either from the sound or from a button press
   int isReady = 0; 
@@ -71,10 +60,15 @@ void setup() {
     if(digitalRead(roboStart) == LOW){
       isReady =1;
     }
+    if(digitalRead(8) == HIGH){
+      isReady =1;
+      Serial.println("heard noise");
+    }
   }
   
   visitStack.push(0);
   visitStack.push(1);
+  totalSquares[0, 0] = 1;
   
   radio.begin();
 radio.setRetries(15,15);
@@ -106,13 +100,6 @@ radio.startListening();
 
 void loop() {
   follow_line();
-}
-
-//set mux value: this is for wall sensors as well as audio input  
-void set_select(int y, int z)
-{
-      digitalWrite(pin_out_s0W, z);
-      digitalWrite(pin_out_s1W, y);
 }
 
 //turn left
@@ -187,23 +174,20 @@ void robot_stop(){
 
 bool frontw()
 {
-  set_select(0,1);
-  int val = analogRead(sensor);
+  int val = analogRead(frontWall);
   if(val>frontwallThresh)return true;
   else return false;
 }
 bool leftw()
 {
-  set_select(0,0);
-  int val = analogRead(sensor);
+  int val = analogRead(leftWall);
   if(val>sidewallThresh) return true;
   else return false;
 }
 
 bool rightw()
 {
-  set_select(1,1);
-  int val = analogRead(sensor);
+  int val = analogRead(rightWall);
   if(val>sidewallThresh)  return true;
   else return false;
 }
@@ -355,15 +339,15 @@ void follow_line(){
     }
      
      Serial.print("Current Square X: " + String(dataArray[0]));
-    Serial.println(" Current Square Y: " + String(dataArray[1]));
+    Serial.println("Current Square Y: " + String(dataArray[1]));
     Serial.print("Next Square X: " + String(nextSquare[0]));
-    Serial.println(" Next Square Y: " + String(nextSquare[1]));
+    Serial.println("Next Square Y: " + String(nextSquare[1]));
 
       deltaX = dataArray[0] - nextSquare[0];
       deltaY = dataArray[1] - nextSquare[1];
     
     Serial.print("Delta X: " + String(deltaX)); 
-    Serial.println(" Delta Y: " + String(deltaY));
+    Serial.println("Delta Y: " + String(deltaY));
 
       if      (dir_facing == North) Serial.println("facing north"); // If robot is facing north
       else if (dir_facing == East)  Serial.println("facing east"); // If robot is facing east
@@ -373,11 +357,11 @@ void follow_line(){
 
 
       int turnedAround = 0;
-      if (0){
+      if (digitalRead(7)==HIGH){
         parallax1.write(90);
         parallax2.write(90);
         delay(5000);
-        if (digitalRead(2) == HIGH){
+        if (digitalRead(7) == HIGH){
           turn_around();
           turnedAround = 1;
         }
@@ -424,7 +408,7 @@ void follow_line(){
 
     parallax1.write(92);
     parallax2.write(88);
-     
+    
     
     
     Serial.println();
@@ -458,4 +442,4 @@ int radioWrite(int dataArray[]){
       unsigned long got_time;
       radio.read( &got_time, sizeof(unsigned long) );// Grab the response, compare, and send to debugging spew
     }
-}\
+}

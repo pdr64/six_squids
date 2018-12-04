@@ -112,7 +112,7 @@ void turn_left(){
   //turn away from the line so we can detect it again
   parallax1.write(85);
   parallax2.write(82);
-  delay(400);
+  delay(600);
   //Serial.println("right sens: " + String(analogRead(rightSen)));
   //wait until we are back on the line 
   while(analogRead(rightSen)>thresh)
@@ -169,7 +169,7 @@ void turn_right(){
   delay(600);
   parallax1.write(95);
   parallax2.write(95);
-  delay(400);
+  delay(600);
   while(analogRead(leftSen)>thresh)
   {
     parallax1.write(95);

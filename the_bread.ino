@@ -43,7 +43,7 @@ int  roboStart  = 2;
 //thresholds for movement
 int thresh          = 300; //ground threshhold (for line following)
 int frontwallThresh = 90;
-int sidewallThresh  = 150;
+int sidewallThresh  = 250;
 
 void setup() {
   
@@ -112,7 +112,7 @@ void turn_left(){
   //turn away from the line so we can detect it again
   parallax1.write(85);
   parallax2.write(82);
-  delay(600);
+  delay(200);
   //Serial.println("right sens: " + String(analogRead(rightSen)));
   //wait until we are back on the line 
   while(analogRead(rightSen)>thresh)
@@ -164,12 +164,12 @@ void turn_right(){
   if (dir_facing == 3) dir_facing = 0;
   else dir_facing ++; // Update dir_facing for right turning robot
   
-  parallax1.write(95);
-  parallax2.write(85);
-  delay(600);
-  parallax1.write(95);
-  parallax2.write(95);
-  delay(600);
+  parallax1.write(100);
+  parallax2.write(80);
+  delay(550);
+  parallax1.write(85);
+  parallax2.write(82);
+  delay(200);
   while(analogRead(leftSen)>thresh)
   {
     parallax1.write(95);
@@ -340,11 +340,12 @@ void follow_line(){
       
     if (((abs(deltaX) + abs(deltaY)) != 1) || (totalSquares[nextSquare[0]][nextSquare[1]] == 1)) {
       Serial.println("backtracking");
+      visitStack.push(nextSquare[1]);
+      visitStack.push(nextSquare[0]);
       nextSquare[0] = history.pop(); //pop off history stack 
       nextSquare[1] = history.pop();
       Serial.println("bang");
-      visitStack.push(nextSquare[1]);
-      visitStack.push(nextSquare[0]);
+      
     }
     else {
       Serial.println("moving to next available square");

@@ -64,6 +64,8 @@ void setup() {
   
   visitStack.push(0);
   visitStack.push(1);
+  history.push(0);
+  history.push(0);
   totalSquares[0][0] = 1;
   
   radio.begin();
@@ -110,14 +112,18 @@ void turn_left(){
   //turn away from the line so we can detect it again
   parallax1.write(85);
   parallax2.write(82);
-  delay(500);
+  delay(400);
+  //Serial.println("right sens: " + String(analogRead(rightSen)));
   //wait until we are back on the line 
   while(analogRead(rightSen)>thresh)
   {
-    Serial.println("turning");
+    //Serial.println("right sens: " + String(analogRead(rightSen)));
     parallax1.write(85);
-    parallax2.write(85);
+    parallax2.write(82);
   }
+
+  //Serial.println("right sens: " + String(analogRead(rightSen)));
+  
 }
 
 //turn around
@@ -133,15 +139,22 @@ void turn_around(){
   parallax1.write(95);
   parallax2.write(85);
   delay(300);
+  Serial.println("getting away");
   parallax1.write(0);
   parallax2.write(0);
-  delay(1200);
-  while(analogRead(rightSen)>thresh)
+  delay(680);
+  Serial.println("right sens: " +String(analogRead(leftSen)));
+  while(analogRead(leftSen)>thresh)
   {
-    Serial.println("right sens: " +String(analogRead(rightSen)));
-    parallax1.write(75);
-    parallax2.write(75);
+    //Serial.println("right sens: " +String(analogRead(leftSen)));
+    parallax1.write(55);
+    parallax2.write(55);
   }
+  Serial.println("right sens: " + String(analogRead(leftSen)));
+  Serial.println("done turning");
+  //parallax1.write(87);
+  //parallax2.write(84);
+  //delay(200);
 }
 
 //turn right
@@ -156,7 +169,7 @@ void turn_right(){
   delay(600);
   parallax1.write(95);
   parallax2.write(95);
-  delay(600);
+  delay(400);
   while(analogRead(leftSen)>thresh)
   {
     parallax1.write(95);
@@ -199,16 +212,19 @@ void follow_line(){
   if(center<thresh && right>thresh && left>thresh){
     parallax1.write(100);
     parallax2.write(80); 
+    //Serial.println("going straight");
   }
   // correct for veer right
   else if(right<thresh && left>thresh){
     parallax1.write(100);
     parallax2.write(90); 
+    //Serial.println("veering right");
   }
   //correct for veer left
   else if(right>thresh && left<thresh){
     parallax1.write(90);
     parallax2.write(80); 
+    //Serial.println("veering left");
   }
  
   //at intersection
@@ -326,6 +342,7 @@ void follow_line(){
       Serial.println("backtracking");
       nextSquare[0] = history.pop(); //pop off history stack 
       nextSquare[1] = history.pop();
+      Serial.println("bang");
       visitStack.push(nextSquare[1]);
       visitStack.push(nextSquare[0]);
     }
@@ -371,6 +388,7 @@ void follow_line(){
                (dir_facing == South && deltaY == -1) ||
                (dir_facing == West  && deltaX == 1)){
           //go straight
+          Serial.println("straight");
           parallax1.write(92);
           parallax2.write(88); 
           delay(300);
@@ -379,6 +397,7 @@ void follow_line(){
                  (dir_facing == East  && deltaY == 1) || 
                  (dir_facing == South && deltaX == -1) ||
                  (dir_facing == West  && deltaY == -1)) {
+                  Serial.println("left");
                   turn_left();
                  }
   
@@ -386,15 +405,17 @@ void follow_line(){
                  (dir_facing == East  && deltaY == -1) || 
                  (dir_facing == South && deltaX == 1) ||
                  (dir_facing == West  && deltaY == 1)) {
+                  Serial.println("right");
                   turn_right();
-                 }
+                  }
         else {
+          Serial.println("around");
           turn_around();
         }
       }
 
       Serial.println("write");
-    radioWrite(dataArray);
+      radioWrite(dataArray);
     
       if      (dir_facing == North) dataArray [1] --; // If robot is facing north
       else if (dir_facing == East)  dataArray [0] ++; // If robot is facing east
@@ -405,8 +426,8 @@ void follow_line(){
       Serial.print("     right space: " + String(right_space[0]) + ", " + String(right_space[1]));
       Serial.println("   front space: " + String(front_space[0]) + ", " + String(front_space[1]));
 
-    parallax1.write(92);
-    parallax2.write(88);
+    //parallax1.write(92);
+    //parallax2.write(88);
     
     
     
@@ -414,6 +435,7 @@ void follow_line(){
     for ( int i = 2; i < 6; i++){
       dataArray[i] = 0;
     }
+    follow_line();
   }
 }
 

@@ -313,6 +313,13 @@ bool rightw()
                }
       </pre></code>
       <br>
+<p> Below are a few videos where Gary navigates a few mazes using this algorithm! </p>
+<br>
+<center><iframe width="560" height="315" src="https://www.youtube.com/embed/br6i-jtCzio" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></center>
+<br>
+<center><iframe width="560" height="315" src="https://www.youtube.com/embed/hjXwjLVKnc4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></center>
+<br>
+
     <h3>Treasure Detection</h3>
     <p>Getting the camera to detect treasures was a long and tedious process but ultimately, we have something we are happy with. 
       Here's how we got it to work.
@@ -436,7 +443,7 @@ bool rightw()
        of blue or red, we set that pixel to pure blue or red. In code, we set the pixels equal to 8'b000_000_11 and 8"b111_000_00. We are able to exploit this in our color detection.
        Firstly, we only detect color if it is within a certain region we have specified. Inside of this region, we examine each pixel and determine whether it is red, blue, or neither.
        If it is red or blue, we increment a variable that counts the amount of pixels of each color. Finally, if either count is above a specified threshold, we assume that one, we
-       seeing a treasure and two, that it is that color. If this criteria is not met, we display "NULL." An overview of the code used as well as a demonstration are shown below.
+       seeing a treasure and two, that it is that color. If this criteria is not met, we display "NULL." An overview of the code used is shown below.
 	   
     <code><pre>
     	if(VGA_PIXEL_X>((`SCREEN_WIDTH/2)-30)&& VGA_PIXEL_X<((`SCREEN_WIDTH/2)+30) && VGA_PIXEL_Y<((`SCREEN_HEIGHT/2)+50)&& VGA_PIXEL_Y>((`SCREEN_HEIGHT/2)-50)) begin
@@ -457,7 +464,7 @@ bool rightw()
 			display NULL																				
 		end
       </pre></code> 
-      <center><iframe width="560" height="315" src="https://www.youtube.com/embed/mjlxl8KlYC8" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></center>
+      
     </p>
       <center><h2>Detecting Shape</h2></center>
     <p>We used a unique strategy to detect our shapes by counting pixels in segments of our figure. We first located the first pixel and last pixel in the image with the right color.

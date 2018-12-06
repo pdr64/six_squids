@@ -411,8 +411,10 @@ bool rightw()
     <br>
     <h4>Reading Pixels</h4>
     <p>
-	    In order to know what color our camera is seeing without using the VGA driver to output to screen, we need to read the pixels that come from the camera. We did so by implementing another code in our downsamplier to make the colors vivid. 
-	    below is a diagram showing the logic behind the implementation. We used threshold values to make sure that our colors are truly present.
+	    <center><iframe width="560" height="315" src="https://www.youtube.com/embed/Hzma60ngr5E" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></center>
+	    In order to know what color our camera is seeing without using the VGA driver to output to screen, we need to read the pixels that come from the camera. From the video above, it can be seen that the colors are not very red or blue and
+	    the background could pose a problem for reading the pixels. We read pixels by implementing another code in our downsamplier to make the colors vivid. 
+	    below is a diagram showing the logic behind the implementation. We used threshold values to make sure that our colors are truly present. This enabled us to read what we wrote; perfect blues and perfect reds.
 	    <center><img src="colorVivid.PNG" class="img-rounded" alt="Color vivid" width="600" height="450">
       	    <p><b>Fig.4:</b> Making our colors look right</p></center>
 	    We do not care about green as shown in the diagram because there will not be any green treasures during the competition.
@@ -502,11 +504,14 @@ bool rightw()
 <h4>Conclusions and Results</h4>
 <p>
 	At the end of the day, we couldn't quite get Gary to function to his full potential. In the competition, we were unable to implement our camera
-	or treasure detection due to lack of time and power, and we did not manage to start at the 660 hz frequency. Due to the issues we 
-	had with power, we ended up retuning our line sensing and wall following code, which turned out to be a big mistake, because in the maze 
+	or treasure detection due to lack of time and power, and we did not manage to start at the 660 hz frequency. Moreover, we could not detect other robots and often run into them during the competition.
+	Due to the issues we had with power, we ended up retuning our line sensing and wall following code, which turned out to be a big mistake, because in the maze 
 	Gary often sensed walls that were not there or visa versa. Also, one of our wall sensors broke day-of, so we had to swap in a new one that 
 	we did not get to test fully. Overall, it would have been nice to have a little more time to work on it in the end, but we know that we could 
 	complete all the challenges had we had time to integrate. 
+	<br>If we are given the chance to do this again, we would give the sound and audio detection, and the camera their own voltage sources thereby reducing the work load on the main Arduino board. 
+	We would also invest more time into integrating the codes as we added to the functions. Doing so at the last minute was not conducive and effective. We would also avoid changing our treshold for 
+	sensors and other components we know worked well in the past. Our minor mistakes have been a lesson to us and given another project, we now know how best to handle it.
 	<br>
 	In all, this class was very challenging, yet very rewarding. Every time you managed to accomplish something, it immediately shot you down by not working the next time you powered up 
 	your robot. Things didn't make sense. Sensors broke. Tears were shed. Friends were lost. Parts were stolen. Souls were crushed... Yet despite this constant heartbreak and stuggle and the countless weekends lost to Phillips 427, a whole
